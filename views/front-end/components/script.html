@@ -1,0 +1,43 @@
+{% block script %}
+<script type="text/javascript" src="/public/js/jquery-3.1.1.js" ></script>
+<script type="text/javascript" src="/public/owlcarousel/owl.carousel.min.js"></script>
+<script type="text/javascript" src="/public/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/public/js/axios.min.js"></script>
+<script type="text/javascript" src="/public/js/script.js" ></script>
+<script>
+    function checkEmail() {
+        var email = document.getElementById('email_reg').value
+        var email_err = document.getElementById('email_err')
+        if(email_err.innerText) email_err.innerText = ''
+
+        axios({
+            method: 'post',
+            url: '/checkInfo',
+            data: {
+                email: email
+            }
+        })
+        .then(function (res) {
+            email_err.innerText = res.data
+            console.log(res.data)
+        })
+    }
+    function checkPass() {
+        var password = document.getElementById('password_reg').value
+        var pass_err = document.getElementById('pass_err')
+        if(pass_err.innerText) pass_err.innerHTML =''
+        
+        axios({
+            method: 'post',
+            url:'checkInfo',
+            data: {
+                password: password
+            }
+        })
+            .then(function (res) {
+                pass_err.innerText = res.data
+                console.log(res.data)
+            })
+    }
+</script>
+{% endblock %}

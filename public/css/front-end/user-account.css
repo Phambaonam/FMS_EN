@@ -1,0 +1,257 @@
+.account-main .tab-content h3 {
+    padding-left: 10px;
+    margin: 20px 0 30px;
+    line-height: 0.8;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.account-main .tab-content p {
+    font-size: 15px;
+}
+
+#account-info, .address-change {
+    background: #fff;
+    padding: 15px;
+    font-size: 15px;
+}
+
+#account-info input[type="text"], .address-change input[type="text"] {
+    /*width: 100%;*/
+    background: #e7e7e7;
+    border: 0;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+div#account-info form ul li div input {
+    width: 300px;
+}
+
+div#account-info form ul li div input.radio-update {
+    width: 50px;
+}
+
+#account-info .disabled-input {
+    border: 1px solid;
+    padding: 7px 13px;
+}
+
+#account-info .disabled-input + button {
+    margin: 10px 0;
+    border: 0;
+    padding: 5px 20px;
+    background: #336699;
+    color: #fff;
+    transition: all 0.4s ease;
+}
+
+#account-info .disabled-input + button:hover {
+    background: #264d73;
+}
+
+#account-info select {
+    width: 90px;
+    margin: 10px 0;
+    padding: 4px;
+}
+
+#account-info form > ul, .address-change form > ul {
+    list-style: none;
+    padding: 0;
+}
+
+#account-info form > ul > li, .address-change form > ul > li {
+    width: 100%;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border-top: solid 1px #e7e7e7;
+}
+
+#account-info form > ul > li > label, .address-change form > ul > li > label {
+    width: 25%;
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+
+.radio-field {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding-left: 10px;
+}
+
+.radio-field input[type="radio"], .radio-field label {
+    margin: 0;
+}
+
+.radio-field input[type="radio"] {
+    margin-right: 5px;
+}
+
+.radio-field label + input[type="radio"] {
+    margin-left: 25px;
+}
+
+#account-info form > ul > li > .input-field, .address-change form > ul > li > .input-field {
+    width: 75%;
+}
+
+@media (max-width: 767px) {
+    #account-info form > ul > li > label, #account-info form > ul > li > .input-field, .address-change form > ul > li > .input-field, .address-change form > ul > li > label {
+        width: 100%;
+    }
+}
+
+button.save-change {
+    padding: 10px 20px;
+    color: #fff;
+    background: #336699;
+    border: none;
+    margin: auto;
+    transition: all 0.4s ease;
+}
+
+button.save-change:hover {
+    background: #264d73;
+}
+
+.address-change button.save-change {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.cancel {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #e7e7e7;
+    border: none;
+    transition: all 0.4s ease;
+}
+
+#account-info button.save-change {
+    margin-top: 25px;
+}
+
+.default-address, .address-list {
+    background: #fff;
+    float: left;
+    padding: 15px;
+}
+
+.address-list {
+    margin-top: 15px;
+}
+
+.default-address h3 {
+    margin-bottom: 20px;
+}
+
+.add-details span::after {
+    content: ',';
+}
+
+.add-details span:last-child::after {
+    content: '.';
+}
+
+.add-details span.add-no {
+    font-weight: 600;
+    display: block;
+}
+
+.add-details span.add-ward::before {
+    content: 'Phường ';
+}
+
+.add-details span.add-district::before {
+    content: 'Quận ';
+}
+
+.add-details span.add-city::before {
+    content: 'TP ';
+}
+
+.add-name {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.deli-info h4, .payment-info h4 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    display: inline-block;
+    border-bottom: solid 1px #e7e7e7;
+    text-transform: uppercase;
+}
+
+.add-item {
+    border-top: solid 1px #e7e7e7;
+}
+
+.add-item .add-name {
+    padding-top: 20px;
+    display: inline-block;
+}
+
+.add-item .add-details {
+    margin-bottom: 0;
+}
+
+.add-item .add-phone {
+    margin-bottom: 20px;
+}
+
+.default-address .edit-detail {
+    margin: 0;
+}
+
+.add-item .edit-detail {
+    margin-top: 0;
+    padding-top: 20px;
+    margin-right: 20px;
+}
+
+.add-item .add-remove {
+    background: none;
+    border: 0;
+    padding-top: 20px;
+    color: #BD081C;
+    text-transform: uppercase;
+}
+
+.default-mark {
+    margin-left: 15px;
+    color: #339966;
+}
+
+.default-mark + button.add-remove {
+    color: #aaa;
+    pointer-events: none;
+}
+
+.address-add {
+    border-top: solid 1px #e7e7e7;
+    border-bottom: solid 1px #e7e7e7;
+    padding: 15px;
+    text-align: center;
+    font-size: 15px;
+    text-transform: uppercase;
+    margin: 25px 0;
+}
+
+.address-add a {
+    color: #336699;
+}
+
+.address-change select {
+    width: 100%;
+    margin: 10px 0;
+    padding: 4px;
+}
+
+.address-change .check-field {
+    margin: 15px 0;
+}

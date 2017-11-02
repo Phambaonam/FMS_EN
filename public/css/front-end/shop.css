@@ -1,0 +1,161 @@
+.shop-main {
+    transform: translateY(-25px);
+    position: relative;
+}
+#shop-menu .form-control {
+    width: 200px;
+    position: absolute;
+    top: 0;
+    right: 15px;
+    bottom: 0;
+    margin: auto;
+    padding: 6px;
+}
+
+#shop-menu.navbar {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    /*position: relative;*/
+    border-radius: 0;
+}
+.item-list, .product-list {
+    float: left;
+}
+
+.product-list {
+    width: 100%;
+}
+
+.nav-stacked.shop-nav {
+    background: #fff;
+    padding-right: 0;
+    padding-left: 0;
+    width: 25%;
+}
+
+.nav-stacked.shop-nav {
+    border: solid 1px #e7e7e7;
+}
+
+.nav-stacked > li.nav-title {
+    border-bottom: solid 1px #e7e7e7;
+    /*border-top: double 5px #e7e7e7;*/
+    /*margin-top: 15px;*/
+}
+
+.nav-title {
+    padding: 5px 15px 0;
+    text-transform: uppercase;
+}
+
+
+.nav-title h4, .product-group h4, .sub-group h5 {
+    padding-left: 15px;
+    position: relative;
+}
+
+.sub-group h5 {
+    padding-left: 30px;
+}
+
+.nav-title h4 {
+    color: #336699;
+}
+
+.nav > li.nav-title > a {
+    padding: 0;
+    cursor: pointer;
+}
+
+.nav > li.nav-title > a:hover {
+    background: none;
+}
+
+.nav-title h4::before, .product-group h4::before, .sub-group h5::before {
+    content: '';
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #336699;
+}
+
+.product-group, .sub-group {
+    padding: 0 15px;
+    background: transparent;
+    border: none;
+}
+
+.product-group:focus, .sub-group:focus {
+    outline: none;
+}
+
+.product-group, .sub-group {
+    /*border:1px solid green;*/
+    width: 100%;
+    text-align: left;
+    transition: all 0.4s ease;
+}
+
+.product-group h4::before, .sub-group h5::before {
+    transform: scaleY(0.2);
+    transition: all 0.4s ease;
+}
+
+.product-group:hover h4, .sub-group:hover h5, .product-group.active h4, .sub-group.active h5 {
+    color: #336699;
+}
+
+.product-group.active h4, .sub-group.active h5 {
+    font-weight: bold;
+
+}
+
+.product-group.active, .sub-group.active {
+    background: #e7e7e7;
+}
+
+.product-group:hover h4::before, .sub-group:hover h5::before, .product-group.active h4::before, .sub-group.active h5::before {
+    transform: scaleY(1);
+}
+
+.nested-tab {
+    list-style: none;
+    padding-left: 0;
+}
+
+.submenu {
+    position: relative;
+}
+
+.submenu-content {
+    display: none;
+    position: absolute;
+    background: #ffffff;
+    min-width: 210px;
+    margin-left: 96%;
+    padding-left: 4%;
+    margin-top: -13%;
+    z-index: 1;
+}
+
+.submenu-content li a:hover {
+    color: green;
+    background: #DFDEDA;
+}
+
+.submenu:hover .submenu-content {
+    display: block;
+}
+
+.sign {
+    position: absolute;
+    top: 10px;
+    left: 7px;
+    color: black;
+    cursor: pointer;
+}
+
+

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<!-- Head -->
+{% include '../../components/head.html' %}
+<!-- End Head -->
+
+<body>
+    <!-- Header -->
+    {% include '../../components/header.html' %}
+    <!-- End Header -->
+
+    <div class="container-fluid page-heading shop-heading">
+        <div class="heading-content">
+            <h1>Sản phẩm</h1>
+            <p>Mỗi món đồ là một câu chuyện nhỏ. MIN cùng bạn viết nên câu chuyện ngôi nhà mình.</p>
+            <ol class="breadcrumb">
+                {% if data.category_id != null %}
+                <li id="all" class="{{ data.url[0] }}_{{ data.category_id }}">
+                    <a href="home.html">Trang chủ</a>
+                </li>
+                {% elif data.category_product_id != null %}
+                <li id="all" class="{{ data.url[0] }}_{{ data.category_product_id }}">
+                    <a href="home.html">Trang chủ</a>
+                </li>
+                {% else %}
+                <li id="all" class="{{ data.url[0] }}">
+                    <a href="home.html">Trang chủ</a>
+                </li>
+                {% endif %}
+                <li class="active">Sản phẩm</li>
+            </ol>
+        </div>
+    </div>
+    <div class="container shop-main">
+        <div class="row">
+            <nav class="navbar navbar-default" id="shop-menu">
+                <button type="button" class="navbar-toggle collapsed pull-left" data-toggle="slide-collapse" data-target=".shop-nav">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <div class="collapse navbar-collapse pull-left shop-nav">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <form>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lọc theo hãng sản xuất
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="brand1" value="brand1">IKEA</label>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="brand2" value="brand2">Hooker</label>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="brand3" value="brand3">Ashley</label>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="brand4" value="brand4">Stanford</label>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="brand5" value="brand5">Stickley</label>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                </ul>
+                            </form>
+                        </li>
+                        <li class="dropdown">
+                            <form>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lọc theo mức giá
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="price1" value="price1">Dưới 1 triệu
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="price2" value="price2">Từ 1 triệu đến 3 triệu
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="price3" value="price3">Từ 3 triệu đến 5 triệu
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="price4" value="price4">Từ 5 triệu đến 10 triệu
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="price5" value="price5">Trên 10 triệu
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                </ul>
+                            </form>
+                        </li>
+
+                        <li class="dropdown">
+                            <form>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lọc theo Chất liệu
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="color1" value="color1">Gỗ</li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="color2" value="color2">Kính</li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="color3" value="color3">Plastic</li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="checkbox">
+                                        <input type="checkbox" name="color4" value="color4">Kim loại</li>
+                                    <li role="separator" class="divider"></li>
+                                </ul>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+
+                <form>
+                    <select id="data" class="form-control pull-right">
+                        <option disabled selected hidden>Sắp xếp</option>
+                        <option value="sort1">Thứ tự theo sản phẩm mới</option>
+                        <option value="sort2">Thứ tự theo giá: thấp đến cao</option>
+                        <option value="sort3">Thứ tự theo giá: cao đến thấp</option>
+                        <option value="sort4">Thứ tự theo lượng review</option>
+                        <option value="sort5">Sản phẩm giảm giá</option>
+                    </select>
+                </form>
+            </nav>
+
+            <div class="product-list">
+
+                <!- menu danh muc san pham start ->
+                <ul class="nav nav-stacked col-xs-3 collapse navbar-collapse shop-nav">
+                    <li class="nav-title">
+                        <a data-toggle="display-all">
+                            <h4>Danh mục </h4>
+                        </a>
+                    </li>
+                    <li>
+                        <button class=" product-group" type="button">
+                            <h4>Thiết kế theo phòng</h4>
+                        </button>
+                    </li>
+                    <li>
+                        <ul class="nested-tab">
+                            {% for item in data.menuArea %}
+                            <li class="submenu">
+                                <button class="sub-group" type="button">
+                                    <h5>
+                                        <a href="javascript:void(0)">{{ item.area_name | upper }} </a>
+                                    </h5>
+                                </button>
+
+                                <ul id="areas" class="submenu-content">
+                                    <div class="sign">
+                                        <i class="fa  fa-caret-right"></i>
+                                    </div>
+                                    <div id="">
+                                        {% for category_product in item.category_product %} {% if category_product.group_by_category === false %}
+                                        <li class="san-pham_{{ category_product.category_product_id }}">
+                                            <a href="/san-pham/{{ category_product.category_product_alias }}">{{ category_product.name_category_product | title }}</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="san-pham-group_{{ category_product.category_id }}">
+                                            <a href="/san-pham-group/{{ category_product.category_product_alias }}">{{ category_product.name_category_product | title }}</a>
+                                        </li>
+                                        {% endif %} {% endfor %}
+                                    </div>
+
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li style="height: 15px"></li>
+                    <li>
+                        <button class=" product-group" type="button">
+                            <h4>Lựa chọn theo sản phẩm</h4>
+                        </button>
+                    </li>
+                    <li>
+                        <ul class="nested-tab">
+                            {% for item in data.menuCategory %}
+                            <li class="submenu">
+                                <button class="sub-group" type="button">
+                                    <h5>
+                                        <a href="/san-pham/{{ item.category_alias }}">{{ item.name_category | upper }}</a>
+                                    </h5>
+                                </button>
+                                <ul id="category" class="submenu-content">
+                                    <div class="sign">
+                                        <i class="fa  fa-caret-right"></i>
+                                    </div>
+                                    <!-- Use loop -->
+                                    {% for category_product in item.category_product %}
+                                    <li>
+                                        <a href="/san-pham/{{ category_product.category_product_alias }}">{{ category_product.name_category_product | title }}</a>
+                                    </li>
+                                    {% endfor %}
+                                    <!-- end use loop -->
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                <!-- end menu danh muc san pham -->
+                <div id="output">
+                    {% include './product.html' %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include '../../components/footer.html' %}
+    <!-- End Footer -->
+
+    <!-- script -->
+    {% include '../../components/script.html' %}
+    <!-- End script -->
+
+
+    <!--  Sort product  -->
+    <script>
+        (function () {
+
+            var output = document.getElementById('output');
+            document.getElementById('data').onclick = function () {
+                var data = document.getElementById('data').value
+                var id = document.querySelector('#all').className
+                console.log(id)
+                axios.post('/sort/products', {
+                    data: data,
+                    path: id.split('_')[0],
+                    category_product: id.split('_')[1]
+                })
+                    .then(function (res) {
+                        console.log(res.data)
+                        //   output.className = 'container';
+                        output.innerHTML = res.data;
+                    })
+                    .catch(function (err) {
+                        console.log(err.message)
+                    })
+            }
+
+        })();
+    </script>
+
+    <!-- add product to cart -->
+    <script>
+        var add_to_cart = document.querySelectorAll('.add_to-cart')
+        var total = document.getElementById('cart-count')
+        add_to_cart.forEach(function (item) {
+            item.onclick = function () {
+                axios({
+                    method: 'post',
+                    url: '/add_to_cart',
+                    data: {
+                        product_id: item.id,
+                        quantity: 1
+                    }
+                })
+                    .then(function (res) {
+                        total.innerHTML = res.data
+                        console.log(res.data)
+                    })
+
+            }
+        })
+
+    </script>
+
+
+    <!--  -->
+    <script type="text/javascript">
+        $(window).bind('scroll', function () {
+            if ($(window).scrollTop() > 460) {
+                $('header').addClass('fixed');
+                $('button#menu-scroll.navbar-toggle').css('display', 'block');
+                $('header').css({ 'height': '71px', });
+            } else {
+                $('header').removeClass('fixed');
+                $('button#menu-scroll.navbar-toggle').css('display', 'none');
+                $('header').css({ 'height': '151px' });
+            }
+        });
+        var click = 'onclicked'
+        //    var temp = 1
+        $(".form-search button").click(function () {
+
+            if (click === 'onclicked') {
+                $('header').css('height', '151px');
+                $('header .navbar').css('display', 'flex');
+                click = 'clicked again'
+            } else if (click === 'clicked again') {
+                $('header').css('height', '71px');
+                $('header .navbar').css('display', 'none');
+                click = 'onclicked';
+            }
+        });
+    </script>
+</body>
+
+</html>

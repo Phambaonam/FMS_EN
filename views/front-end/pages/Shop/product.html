@@ -1,0 +1,64 @@
+{% block product %}
+    <div class="item-list col-xs-12 col-sm-9">
+        <div class="row">
+            {% for product in data.products %}
+            <div class="col-item chair arm-chair col-xs-6 col-lg-4">
+                <div class="item-container">
+                    <div class="photo">
+
+                        <img src="/public/images/products/{{ product.images["0"]}}" style="width:100%; max-height:100%;">
+                        <div class="vertical-icon">
+                            <a href="#"><i class="fa fa-heart-o"></i></a>
+                            <a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart" ><i class="fa fa-shopping-cart"></i></a>
+                            <a href="/san-pham/{{ product.product_alias}}-{{ product.upc }}"><i class="fa fa-search-plus"></i></a>
+                        </div>
+
+                    </div>
+                    <div class="name description">
+                        <h3><a href="#">{{ product.product_name }}</a></h3>
+                        <p class="manufacturer" style="height:20px"><a href="#">{{ product.attributes.manufacturer }}</a></p>
+                        <p>
+                           <span class="price">
+                                <strong> {{ product.product_price }}.000 Đ</strong>
+                                <del class="sale-off">{{ product.original_price }}.000 Đ</del>
+                           </span>
+                        </p>
+
+                        <div class="rating">
+                            <span id="star1" class="star fa fa-star" data-rating="1"></span>
+                            <span id="star2" class="star fa fa-star" data-rating="2"></span>
+                            <span id="star3" class="star fa fa-star" data-rating="3"></span>
+                            <span id="star4" class="star fa fa-star" data-rating="4"></span>
+                            <span id="star5" class="star fa fa-star" data-rating="5"></span>
+                            <span id="numberStar">&#40<span id="number_rating">{{ product.attributes[0]['sum_of_rating'] }}</span>&#41</span>
+                        </div>
+                        {% if product.option_status.new_product %}
+                            <div class="tag tag-left new"></div>
+                            <div class="tag-name-left">New!</div>
+                        {% endif %}
+                        {% if product.option_status. sale_off_price %}
+                            <div class="tag tag-right sale"></div>
+                            <div class="tag-name-right">Sale!</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <nav>
+            <div class="pagination">
+                <a class="prev page-no" href="#">
+                    <i class="fa fa-long-arrow-left"></i>
+                </a>
+                <a href="#" class="page-no">1</a>
+                <a href="#" class="page-no current">2</a>
+                <a href="#" class="page-no">3</a>
+                <a href="#" class="page-no">4</a>
+                <a href="#" class="page-no">5</a>
+                <a class="next page-no" href="#">
+                    <i class="fa fa-long-arrow-right"></i>
+                </a>
+            </div>
+        </nav>
+    </div>
+{% endblock %}

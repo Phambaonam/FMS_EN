@@ -1,0 +1,79 @@
+.account-main {
+    margin: 80px auto;
+}
+.wishlist-container {
+    margin: 80px 0;
+}
+.cart-container {
+    background: #ffffff;
+    padding: 40px 30px;
+    margin: 40px 0;
+    border: 1px solid #e7e7e7;
+}
+.cart-container table.cart {
+    text-align: left;
+    width: 100%;
+    table-layout: fixed;
+}
+.cart-container table.cart img {
+    width: 85px;
+    height: auto;
+    border: 1px solid #e7e7e7;
+}
+.cart-container table.cart td {
+    border-top: 1px solid #e7e7e7;
+    padding: 30px 0;
+    font-size: 14px;
+    font-weight: 600;
+    /*text-transform: uppercase;*/
+}
+.cart-container table.cart th {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 20px 0;
+    color: #ffffff;
+    background: #336699;
+}
+.cart-container table.cart .product-name {
+    width: 75%;
+    float:right;
+    margin-top:-5px;
+}
+.cart-container table.cart .product-price {
+    width: 6%;
+    text-align: center;
+}
+.cart-container table.cart .product-thumbnail {
+    width: 20%;
+    padding-left: 20px;
+    text-align: center;
+}
+.wishlist-container .product-status {
+    width: 5%;
+    text-align: center;
+}
+.wishlist-container .product-action {
+    width: 6%;
+    text-align: center;
+}
+td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after, .product-total-price::after {
+    content: '₫';
+}
+
+.cart-container table.cart .product-total-price ,.product-total{
+    width: 6%;
+    text-align: center;
+}
+a.link-to, .form-submit, button.link-to {
+    margin: 50px auto;
+    padding: 10px 20px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    background: #336699;
+    color: #fff;
+    position: relative;
+}

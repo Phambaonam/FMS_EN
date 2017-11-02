@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <!-- Head -->
+        {% include '../../../components/head.html' %}
+    <!-- End Head -->
+<body>
+     <!-- Header -->
+        {% include '../../../components/header.html' %}
+     <!-- End Header -->
+<div class="container-fluid page-heading cart-heading">
+    <div class="heading-content">
+        <h1>Giỏ hàng</h1>
+        <p></p>
+        <ol class="breadcrumb">
+            <li><a href="home.html">Trang chủ</a></li>
+            <li class="active">Giỏ hàng</li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="cart-container">
+                <table class="cart">
+                    <thead>
+                    <tr>
+                        <th class="product-thumbnail">Sản phẩm</th>
+                        <th class="product-name"><span class="hidden-mobile">Tên sản phẩm</span></th>
+                        <th class="product-price"><span class="hidden-mobile">Đơn giá</span></th>
+                        <th class="product-quantity"><span class="hidden-mobile">Số lượng</span></th>
+                        <th class="product-subtotal">Thành tiền</th>
+                        <th class="product-remove">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody id="products">
+                    {% for product in products %}    
+                        <tr class="cart-item">
+                            <td class="product-thumbnail">
+                                <a href="shop-detail.html">
+                                    <img src="public/images/products/{{ product.images["0"] }}">
+                                </a>
+                            </td>
+                            <td class="product-name">
+                                <a href="shop-detail.html">{{ product.product_name }}</a>
+                            </td>
+                            <td class="product-price">{{product.product_price}}</td>
+                            <td class="product-quantity">
+                                <div class="quantity">
+                                    <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}" type="text" name="quantity" value="{{ product.quantity }}"  size="4"><button class="qty-increase" onclick="" type="button">+</button>
+                                </div>
+                            </td>
+                            <td class="product-subtotal">0</td>
+                            <td class="product-remove">
+                                <button id="{{ product.product_id }}"><i class="fa fa-trash-o"></i></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="6" class="actions">
+                            <a href="/empty-cart" class="empty-cart link-to hidden-mobile">Xóa toàn bộ</a>
+                            <a href="/san-pham" class="link-to continue">Tiếp tục mua hàng <i class="fa fa-angle-right"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="cart-checkout container">
+                <div class="col-xs-12 col-sm-6">
+                    <div class="cart-coupon">
+                        <h3>Mã giảm giá</h3>
+                        <input type="text" value="" placeholder="Nhập mã giảm giá">
+                        <button class="apply-coupon link-to">Áp dụng mã giảm giá</button>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="cart-total">
+                        <h3>Tổng tiền</h3>
+                        <table>
+                            <tbody>
+                            <tr class="cart-subtotal">
+                                <th>Tạm tính</th>
+                                <td>0</td>
+                            </tr>
+                            <tr class="cart-discount">
+                                <th>Giảm giá<span class="discount-rate"></span></th>
+                                <td>0</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Tổng tiền</th>
+                                <td class="amount">0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="checkout-proceed">
+                            <a href="shipping.html" class="link-to checkout-button">Tiến hành đặt hàng <i class="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                 <!-- Footer -->
+    {% include '../../../components/footer.html' %}
+                 <!-- End Footer -->
+ 
+                  <!-- script -->
+     {% include '../../../components/script.html' %}
+                 <!-- End script -->
+    <script src="/public/js/axios.min.js"></script>             
+    <script>
+        // var qty = document.getElementById('qty').value
+        var removeProducts = document.querySelectorAll('.product-remove button')
+        removeProducts.forEach(function (item) {
+            item.onclick = function () {
+                axios.post('delete/product', {
+                    product_id: item.id
+                })
+                    .then(function (res) {
+                        document.write(res.data)
+                        console.log(res.data)
+                    })
+            }
+        })
+
+        var qtyDecrease = document.querySelectorAll('.qty-decrease')
+        qtyDecrease.forEach(function (item) {
+            item.onclick = function () {
+                var product_idDe = item.nextSibling.className
+                if (item.nextSibling.value > 1) {
+                    axios.get('/decrease/qty/' + product_idDe)
+                    function timedRefresh(timeoutPeriod) {
+	                 setTimeout("location.reload(true);",timeoutPeriod);
+                    }
+                    window.onload = timedRefresh(1000);
+                }
+            }
+        })
+
+        var qtyIncrease = document.querySelectorAll('.qty-increase')
+        qtyIncrease.forEach(function (item) {
+            item.onclick = function () {
+                var product_idIn = item.previousSibling.className
+                axios.get('/increase/qty/' + product_idIn)
+                
+                function timedRefresh(timeoutPeriod) {
+	                 setTimeout("location.reload(true);",timeoutPeriod);
+                }
+
+                window.onload = timedRefresh(1000);  
+            }
+        })
+    </script>          
+</body>
+</html>

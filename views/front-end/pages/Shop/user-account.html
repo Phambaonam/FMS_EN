@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<!-- Head -->
+{% include '../../components/head.html' %}
+<!-- End Head -->
+
+<body>
+    <!-- Header -->
+    {% include '../../components/header.html' %}
+    <!-- End Header -->
+    <div style="height:80px; text-align:center"></div>
+     {% if message !== true %}
+    <div class="message">
+        <h3>{{ message }}</h3>
+    </div>
+    {% endif %}
+    <div class="container account-main">
+        <div class="row">
+            <nav class="side-nav">
+                <div class="user-top-wrap">
+                    <div class="user-top">
+                        <img src="/public/img/feedback_1.jpg">
+                        <span>{{ data.username }}</span>
+                    </div>
+                </div>
+                <ul class="nav nav-stacked">
+                    <li class="active">
+                        <a href="/tai-khoan-cua-toi">Tài khoản của tôi</a>
+                    </li>
+                    <li>
+                        <a href="/don-hang">Quản lý đơn hàng</a>
+                    </li>
+                    <li>
+                        <a href="/yeu-thich">Danh sách yêu thích</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="tab-content">
+                <div id="account-info">
+                    <h3>Thông tin cá nhân</h3>
+                    <form method="post" action="/updateInfo">
+                        <ul>
+                            <form action="#" method="get">
+                                <li>
+                                    <label>Email</label>
+                                    <div class="input-field">
+                                        <input type="email" name="Email" value="{{ info.email }}">
+                                    </div>
+                                </li>
+                                <!-- <li>
+                                    <label>Password</label>
+                                    <div class="input-field">
+                                        <input type="password" name="Password" value="min030515" />
+                                    </div>
+                                </li> -->
+                                <li>
+                                    <label>Họ tên</label>
+                                    <div class="input-field">
+                                        <input type="text" name="Name" id="name" value="{{ info.username }}" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <label>Điện thoại</label>
+                                    <div class="input-field">
+                                        <input type="text" name="Phone" id="phone" value="{{ info.phone }}" />
+                                    </div>
+                                </li>
+                                <li>
+                                    <label for="month">Ngày sinh:</label>
+                                    <div class="input-field">
+                                        <select name="date" id="date">
+                                            <option>Ngày</option>
+                                        </select>
+                                        <select name="month" id="month">
+                                            <option>Tháng</option>
+
+                                        </select>
+
+                                        <select name="year" id="year">
+                                            <option>Năm</option>
+                                        </select>
+                                    </div>
+                                </li>
+                                <li>
+                                    <label for="gender">Giới tính:</label>
+                                    <div>
+                                        <input type="radio" class="gender radio-update" name="Gender" id="male" value="Nam" />
+                                        <label class="gender" for="male">Nam</label>
+                                        <input type="radio" class="gender radio-update" name="Gender" id="female" value="Nữ" />
+                                        <label class="gender" for="female">Nữ</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <button type="submit" class="save-change">
+                                        <i class="fa fa-floppy-o"></i> Lưu thông tin
+                                    </button>
+                                </li>
+                            </form>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    {% include '../../components/footer.html' %}
+    <!-- End Footer -->
+    <!-- script -->
+    {% include '../../components/script.html' %}
+    <script>
+        for (var i = 1; i <= 31; i++) {
+            var node = document.createElement("OPTION")
+            var textnode = document.createTextNode(i)
+            node.appendChild(textnode);
+            document.getElementById("date").appendChild(node)
+        }
+        for (var i = 1; i <= 12; i++) {
+            var node = document.createElement("OPTION")
+            var textnode = document.createTextNode(i)
+            node.appendChild(textnode);
+            document.getElementById("month").appendChild(node)
+        }
+        for (var i = 1970; i <= 2010; i++) {
+            var node = document.createElement("OPTION")
+            var textnode = document.createTextNode(i)
+            node.appendChild(textnode);
+            document.getElementById("year").appendChild(node)
+        }
+    </script>
+</body>
+
+</html>

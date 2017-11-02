@@ -1,0 +1,114 @@
+.order-success {
+    border: 1px solid #DDDDDD;
+    padding: 20px 15px 0;
+    background: #F7F7F7;
+    margin-top: 40px;
+}
+.order-success h5 a {
+    color:#00B6F0;
+}
+.code-order {
+    width: 100%;
+    height: 45px;
+    background: #58B712;
+    text-align: center;
+}
+.code-order span {
+    color: #fff;
+    font-size: 30px;
+}
+.shipping-header {
+    background: #fff;
+    padding-top: 25px;
+    padding-bottom: 15px;
+}
+.visible-lg-block {
+    display: block!important;
+}
+.shipping-header .bs-wizard>.bs-wizard-step {
+    padding: 0;
+    position: relative;
+}
+.shipping-header .bs-wizard>.bs-wizard-step .bs-wizard-stepnum {
+    color: #595959;
+    font-size: 18px;
+}
+.text-center {
+    text-align: center;
+}
+.shipping-header .bs-wizard>.bs-wizard-step:first-child>.progress {
+    left: 50%;
+    width: 50%;
+    float: right;
+}
+.shipping-header .bs-wizard>.bs-wizard-step.complete>.progress>.progress-bar {
+    width: 100%;
+}
+.shipping-header .bs-wizard>.bs-wizard-step>.progress>.progress-bar {
+    /* width: 0; */
+    box-shadow: none;
+    background: #00b6f0;
+    /* -webkit-transition: none; */
+    -o-transition: none;
+    transition: none;
+}
+
+.shipping-header .bs-wizard>.bs-wizard-step>.bs-wizard-dot {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    display: block;
+    top: 50px;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+    border-radius: 50%;
+    text-align: center;
+    background: #00b6f0;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    line-height: 26px;
+    box-shadow: #666 0 0 2px;
+}
+.shipping-header .row-style-1 .hotline {
+    padding-left: 0;
+    line-height: 66px;
+}
+.progress {
+    overflow: hidden;
+    height: 20px;
+    background-color: #f5f5f5;
+    border-radius: 0px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+.progress-bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    line-height: 20px;
+    color: #fff;
+    background-color: #337ab7;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    transition: width .6s ease;
+}
+.shipping-header .bs-wizard>.bs-wizard-step>.progress {
+    height: 6px;
+    margin: 20px 0;
+    background: #ebebeb;
+}
+.shipping-header .bs-wizard>.bs-wizard-step.active>.progress>.progress-bar {
+    width: 50%;
+}
+.shipping-header .bs-wizard>.bs-wizard-step:last-child>.progress {
+    width: 50%;
+}
+.shipping-header .bs-wizard>.bs-wizard-step:last-child.active>.progress>.progress-bar {
+    width: 100%;
+}
+.ship-form {
+    max-width: 550px;
+    margin: 0 auto;
+    background: #F7F7F7;
+    margin-bottom: 30px;
+}

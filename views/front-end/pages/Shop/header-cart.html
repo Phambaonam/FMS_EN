@@ -1,0 +1,7 @@
+{% block cart %}
+    {% if carts %}
+        <span id ="cart-count" class='cart-count total'>{{ carts }}</span>
+    {% else %}
+        <span id ="cart-count" class='cart-count total'>0</span>
+    {% endif %}
+{% endblock %}

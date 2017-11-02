@@ -1,0 +1,136 @@
+.cart-container {
+    background: #ffffff;
+    padding: 40px 30px;
+    margin: 40px 0;
+    border: 1px solid #e7e7e7;
+}
+.cart-container table.cart {
+    text-align: left;
+    width: 100%;
+    table-layout: fixed;
+}
+.cart-container table.cart img {
+    width: 85px;
+    height: auto;
+    border: 1px solid #e7e7e7;
+}
+.cart-container table.cart .product-thumbnail {
+    width: 20%;
+    padding-left: 20px;
+}
+.cart-container table.cart .product-name, .cart-container table.cart .product-quantity {
+    width: 22%;
+}
+.cart-container table.cart .product-price, .cart-container table.cart .product-subtotal {
+    width: 16%;
+}
+.cart-container table.cart .product-remove {
+    width: 4%;
+    text-align: center;
+}
+.cart-container table.cart th {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 20px 0;
+    color: #ffffff;
+    background: #336699;
+}
+.cart-container table.cart td {
+    border-bottom: 1px solid #e7e7e7;
+    padding: 30px 0;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.cart-container table.cart .product-remove {
+    width: 4%;
+    text-align: center;
+}
+td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after, td.product-action::after {
+    content: '₫';
+}
+.cart-checkout {
+    margin: 0 -15px 50px;
+    padding: 0;
+    float: left;
+}
+
+.cart-coupon, .cart-total, .payment-tabs {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e7e7e7;
+}
+.cart-coupon {
+    margin-bottom: 40px;
+}
+
+.cart-coupon input {
+    color: #777;
+    border: 1px solid #ccc;
+    height: 40px;
+    display: block;
+    width: 100%;
+    padding: 0 15px;
+    margin: 25px 0 10px;
+    font-size: 16px;
+}
+
+.cart-coupon h3, .cart-total h3, .payment-tabs h3 {
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    display: block;
+    color: #336699;
+    font-weight: 500;
+    position: relative;
+    line-height: 0.8;
+}
+.cart-coupon h3::before, .cart-total h3::before, .payment-tabs h3::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    content: '';
+    background: #336699;
+}
+button.link-to.apply-coupon {
+    border: 0;
+    margin: 30px 0 10px 10px;
+    outline: none;
+}
+.cart-total table {
+    border: none;
+    margin-top: 25px;
+    text-align: left;
+    width: 100%;
+}
+
+.cart-total > table th {
+    width: 70%;
+    font-size: 16px;
+    padding: 6px;
+}
+
+.cart-total > table .order-total .amount {
+    font-weight: 700;
+    font-size: 22px;
+    color: #336699;
+}
+
+.checkout-proceed {
+    text-align: right;
+}
+
+.checkout-button:hover {
+    color: #fff;
+}
+.cart-container a.link-to.continue {
+    float: right;
+    margin: 10px 10px 10px 0;
+}
+
+a.link-to.checkout-button {
+    margin: 30px 10px 10px 0;
+}

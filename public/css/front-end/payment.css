@@ -1,0 +1,256 @@
+
+.shipping-header {
+    background: #fff;
+    padding-top: 25px;
+    padding-bottom: 15px;
+}
+.visible-lg-block {
+    display: block!important;
+}
+.shipping-header .bs-wizard>.bs-wizard-step {
+    padding: 0;
+    position: relative;
+}
+.shipping-header .bs-wizard>.bs-wizard-step .bs-wizard-stepnum {
+    color: #595959;
+    font-size: 18px;
+}
+.text-center {
+    text-align: center;
+}
+.shipping-header .bs-wizard>.bs-wizard-step:first-child>.progress {
+    left: 50%;
+    width: 50%;
+    float: right;
+}
+.shipping-header .bs-wizard>.bs-wizard-step.complete>.progress>.progress-bar {
+    width: 100%;
+}
+.shipping-header .bs-wizard>.bs-wizard-step>.progress>.progress-bar {
+    /* width: 0; */
+    box-shadow: none;
+    background: #00b6f0;
+    /* -webkit-transition: none; */
+    -o-transition: none;
+    transition: none;
+}
+
+.shipping-header .bs-wizard>.bs-wizard-step>.bs-wizard-dot {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    display: block;
+    top: 50px;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+    border-radius: 50%;
+    text-align: center;
+    background: #00b6f0;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    line-height: 26px;
+    box-shadow: #666 0 0 2px;
+}
+.shipping-header .row-style-1 .hotline {
+    padding-left: 0;
+    line-height: 66px;
+}
+.progress {
+    overflow: hidden;
+    height: 20px;
+    background-color: #f5f5f5;
+    border-radius: 0px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+.progress-bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    line-height: 20px;
+    color: #fff;
+    background-color: #337ab7;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    transition: width .6s ease;
+}
+.shipping-header .bs-wizard>.bs-wizard-step>.progress {
+    height: 6px;
+    margin: 20px 0;
+    background: #ebebeb;
+}
+.shipping-header .bs-wizard>.bs-wizard-step.active>.progress>.progress-bar {
+    width: 50%;
+}
+.shipping-header .bs-wizard>.bs-wizard-step:last-child>.progress {
+    width: 50%;
+}
+.shipping-header .bs-wizard>.bs-wizard-step:last-child.active>.progress>.progress-bar {
+    width: 100%;
+}
+.ship-form {
+    max-width: 550px;
+    margin: 0 auto;
+    background: #F7F7F7;
+    margin-bottom: 30px;
+}
+
+.payment-tabs .form-control {
+    margin-bottom: 15px;
+}
+
+.payment-tabs .checkbox {
+    margin-left: 0;
+    margin-top: 0;
+}
+
+.payment-main {
+    margin-bottom: 30px;
+}
+
+.payment-main .payment-tabs, .payment-main .cart-total {
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.payment-tabs .nav-tabs, .payment-tabs .nav-tabs > li > a, .payment-tabs .nav-tabs > li.active > a, .payment-tabs .nav-tabs > li.active > a:focus {
+    border: 0;
+    margin: 0;
+    background: none;
+}
+
+.payment-tabs .tab-content {
+    margin-top: 15px;
+}
+
+.payment-tabs .nav-tabs > li {
+    width: 50%;
+    text-align: center;
+}
+
+.payment-tabs .nav-tabs > li + li {
+    border-left: solid 1px #e7e7e7;
+}
+
+.payment-tabs .nav-tabs > li > a:hover, .payment-tabs .nav-tabs > li.active > a {
+    background: none;
+    color: #666;
+}
+
+.payment-tabs .nav-tabs > li > a {
+    text-decoration: none;
+    position: relative;
+    padding: 0 0 8px 0;
+    font-size: 16px;
+    color: #ccc;
+    display: inline-block;
+}
+
+.payment-tabs .nav-tabs > li > a:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 40px;
+    margin-left: -20px;
+    bottom: 0;
+    height: 2px;
+    background: #336699;
+    transition: all 0.3s ease-out;
+    transform: scaleX(0);
+}
+
+.payment-tabs .nav-tabs > li.active > a:before, .featured .nav-tabs > li > a:hover:before {
+    transform: scaleX(1);
+}
+
+.payment-main .cart-total {
+    padding-bottom: 30px;
+}
+
+.payment-main .order-final {
+    margin-top: 30px;
+    width: 100%;
+    padding: 10px;
+    background: #336699;
+    color: #fff;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+.cart-brief tr {
+    border-top: solid 1px #e7e7e7;
+}
+
+.cart-brief tr:last-child {
+    border-bottom: solid 1px #e7e7e7;
+}
+
+.cart-brief .cart-p-thumbnail {
+    width: 70px;
+    height: 100px;
+    padding: 20px 10px 20px 0;
+    position: relative;
+}
+
+.cart-brief .cart-p-thumbnail img {
+    border: solid 1px #ccc;
+}
+
+.cart-brief .cart-p-thumbnail > .cart-p-qty {
+    position: absolute;
+    top: 12px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    background: #336699;
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+}
+
+.cart-brief .cart-p-price {
+    width: 80px;
+    text-align: right;
+}
+.cart-total > table th {
+    width: 70%;
+    font-size: 16px;
+    padding: 6px;
+}
+td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after {
+    content: '₫';
+}
+.cart-total > table .order-total .amount {
+    font-weight: 700;
+    font-size: 22px;
+    color: #336699;
+}
+.plan-shipping {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #DDDDDD;
+    background: #F7F7F7;
+    padding-left: 35px;
+    padding-top: 15px;
+}
+.payment-method {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #DDDDDD;
+    background: #F7F7F7;
+    padding-left: 35px;
+    padding-top: 15px;
+}
+.btn-goto, .btn-goto:hover  {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    color: #fff;
+    margin-bottom: 20px;
+    padding: 9px 12px;
+    width: 225px;
+    /*margin-left: 85px;*/
+    margin-top: 15px;
+}

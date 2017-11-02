@@ -1,0 +1,289 @@
+.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.event-heading {
+    background: url(../img/shop-banner.jpeg);
+    background-size: cover;
+}
+
+#introduction {
+    width: 100%;
+    height: 102px;
+    padding-top: 1px;
+    background: #42941a;
+    text-align: center;
+}
+
+#introduction h2 {
+    color: #ffffff;
+}
+
+#introduction i {
+    color: #ffffff;
+    font-size: 1.2em;
+}
+
+.sale-off-box {
+    float: left;
+}
+
+.code-sale-off {
+    border-radius: 5px;
+    border: 1px solid #D9D9D6;
+    margin: 0 0 10px;
+    min-height: 120px;
+    width: 700px;
+    overflow: hidden;
+    padding: 10px 10px 10px 15px;
+    position: relative;
+}
+
+.sale-off-left {
+    float: left;
+    width: 72px;
+}
+
+.sale-off-left-box {
+    border-radius: 6px;
+    border: 1px solid #7bb12f;
+    float: left;
+    font-size: 14px;
+    font-weight: 600;
+    height: 72px;
+    margin: 9px 0 0 0;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    width: 72px;
+}
+
+.sale-off-left-text {
+    background-color: #7BB12F;
+    border-radius: 4px 4px 0 0;
+    color: #fff;
+    float: left;
+    font-size: 14px;
+    line-height: 1.3;
+    padding: 3px 1px;
+    width: 70px;
+}
+
+.sale-off-left-bigText {
+    color: #7bb12f;
+    float: left;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 12px 0;
+    width: 72px;
+}
+
+.sale-off-middle {
+    float: left;
+    margin: 0 0 0 20px;
+    width: 64%;
+}
+
+.sale-off-middle p {
+    color: #666;
+    margin: 0 0 3px;
+    font-size: 1.2em;
+}
+
+.sale-off-middle-title {
+    margin-bottom: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 30px;
+    margin-top: 2px;
+}
+
+.sale-off-middle-expires {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.sale-off-middle-mggicon {
+    background-image: url("../img/coupon-icon-sprite.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin: -3px 3px 0 0;
+    vertical-align: middle;
+}
+
+.sale-off-middle-expires .sale-off-middle-mggicon {
+    background-position: 0 -1704px;
+    height: 18px;
+    width: 18px;
+}
+
+.sale-off-middle-cat .sale-off-middle-mggicon {
+    background-position: 0 -1523px;
+    height: 18px;
+    width: 16px;
+}
+
+.sale-off-middle-note .sale-off-middle-mggicon {
+    background-position: -21px -319px;
+    height: 18px;
+    width: 18px;
+}
+
+.sale-off-middle-cat strong, .sale-off-middle-expires strong, .sale-off-middle-note strong {
+    color: #7bb12f;
+    font-weight: 600;
+}
+
+.sale-off-right {
+    float: right;
+    text-align: center;
+    width: 19%;
+}
+
+.sale-off-right-button {
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    line-height: 44px;
+    margin: 0 auto;
+    position: relative;
+    width: 130px;
+
+}
+
+.code-sale-box {
+    margin-top: 15%;
+}
+
+.code-sale-modal {
+    width: 60%;
+    margin-bottom: 15vh;
+    padding: 16px 24px 24px;
+    background-color: #fafafa;
+    border-radius: 2px;
+    margin-left: 25%;
+}
+
+.code-sale-modal .modal-footer {
+    padding-top: 10px;
+    margin-bottom: -30px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+}
+
+.code-sale-modal .modal-footer button {
+    color: #ffffff;
+    background-color: #00BFA5;
+}
+
+.code-sale-modal .modal-footer button:hover {
+    background-color: #00BFA5;
+}
+
+.code-sale-modal .modal-footer button.btn.btn-default {
+    color: #ffffff;
+}
+
+.sale-off-right-button > .sale-off-right-code-cover {
+    background-color: #0393be;
+    border-radius: 6px 0 0 6px;
+    border-right: none;
+    border: 1px solid #127aad;
+    box-shadow: inset 0 1px 0 0 #04baf0;
+    color: white;
+    font-size: 15px;
+    height: 42px;
+    margin: 30px 0 0 -20px;
+    position: relative;
+    width: 90px;
+    z-index: 1;
+}
+
+.sale-off-right-button > .sale-off-right-code-text {
+    width: 70px;
+    background: #e6f4f9;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    color: #333;
+    font-weight: 700;
+    height: 42px;
+    margin-right: 10px;
+    overflow: hidden;
+    padding: 0 6px 0 20px;
+    position: absolute;
+    right: 0;
+    text-shadow: none;
+    top: 0;
+    z-index: 0;
+}
+
+.sale-off-right-code-cover::after {
+    background: url(https://thatlare.vn/img/coupon-icon-sprite.png) 0 -796px no-repeat;
+    content: '';
+    height: 43px;
+    position: absolute;
+    right: -36px;
+    top: -2px;
+    width: 38px;
+}
+
+.code-sale-modal-title {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: rgba(7, 128, 0, 0.91);
+    border: 1px solid;
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+.code-sale-modal-content {
+    margin-bottom: 25px;
+    height: auto;
+}
+
+.code-sale-modal-content .code {
+    height: 43px;
+    width: 90px;
+    margin-bottom: 20px;
+    padding: 9px 8px 9px 12px;
+    font-size: 19px;
+    background-color: rgba(193, 186, 186, 0.35);
+}
+
+.code-sale-modal-content button {
+    margin-left: 6px;
+    margin-top: -6px;
+    color: #ffffff;
+    background-color: #189EFF;
+}
+
+.code-sale-modal-content button:hover, .code-sale-modal-content button:focus {
+    color: #ffffff;
+}
+
+#copy-code {
+    width: 13%;
+    height: 45px;
+    text-align: center;
+    padding-top: 9px;
+    border-radius: 10px;
+    color: white;
+    float: right;
+    margin-top: 5%;
+    font-size: 15px;
+    background-color: #323232;
+    display: none;
+}
+
+#copy-code > .tick {
+    width: 25px;
+    text-align: center;
+    padding-top: 5px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #00BFA5;
+    color: #323232;
+    margin-right: 10px;
+}

@@ -1,0 +1,223 @@
+.contact {
+    display: table;
+    padding: 20px 0;
+    width: 100%;
+    background: #fff;
+}
+
+.contact-icon, .contact-content {
+    display: table-cell;
+}
+
+.contact-content h3 {
+    margin-top: 0;
+}
+
+.contact-content p:last-child {
+    margin-bottom: 0;
+}
+
+.contact-icon .fa {
+    font-size: 24px;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #336699;
+}
+
+.contact-icon {
+    width: 50px;
+    /*text-align: center;*/
+    position: relative;
+    border-right: solid 1px #e7e7e7;
+}
+
+.contact-content {
+    padding-left: 15px;
+}
+
+.contact-content .fa {
+    width: 16px;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.contact-content p:last-child .fa {
+    font-size: 12px;
+}
+
+.contact-main {
+    background: #fff;
+    margin: 80px 0;
+}
+
+.contact-wrap {
+    padding: 30px 15px;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .map-wrap {
+        float: right;
+    }
+}
+
+.contact-main + .respond-wrap {
+    background: #fff;
+    padding: 10px 30px 50px;
+    margin-bottom: 80px;
+}
+
+.comments-section {
+    background: #fff;
+    padding: 50px 30px;
+    margin-top: 30px;
+    margin-bottom: 80px;
+}
+
+h3.comments-section-title, h3.comment-reply-title {
+    text-transform: uppercase;
+    /*letter-spacing: 0.5px;*/
+    line-height: 0.8;
+    margin: 0 0 15px;
+    padding-left: 10px;
+    border-left: solid 3px #336699;
+}
+
+.comments-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.comments-section > ul {
+    margin: 0 0 45px;
+}
+
+.comments-section ul > li {
+    border-bottom: 1px solid #f2f2f2;
+    padding: 20px 0;
+    margin: 0;
+}
+
+.comments-section ul > li .comment-img {
+    float: left;
+    padding: 4px;
+}
+
+.comments-section ul > li .comment-img img {
+    border-radius: 50%;
+    max-width: 72px;
+}
+
+.comments-section ul > li .comment-block {
+    padding-left: 100px;
+}
+
+.comments-section ul > li .comment-header {
+    color: #666;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.comments-section ul > li .comment-author {
+    font-weight: bold;
+}
+
+.comments-section ul > li .comment-author::after {
+    content: "\f111";
+    color: #e2e2e2;
+    display: inline-block;
+    font-family: "FontAwesome";
+    font-size: 5px;
+    margin: 0 12px 0 14px;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .comments-section ul > li .comment-block {
+        padding-left: 0;
+    }
+
+    .comments-section ul > li .comment-img {
+        width: 100%;
+    }
+
+    .comments-section ul > li .comment-header span.hidden-sm {
+        display: none;
+    }
+
+    .comments-section ul > li .comment-author::after {
+        margin: 0 6px 0 8px;
+    }
+}
+
+.comments-section ul > li a.comment-reply-link {
+    color: #bbb;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.comments-section ul > li a.comment-reply-link i.fa {
+    margin-right: 3px;
+}
+
+.comments-section ul > li .comment-content p {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+    line-height: 24px;
+}
+
+.comments-section ul > li .children {
+    margin: 18px 0 -20px 100px;
+}
+
+@media (max-width: 991px) {
+    .comments-section ul > li .children {
+        margin: 18px 0 -20px 40px;
+    }
+}
+
+.comments-section ul > li .children li {
+    border: none;
+    border-top: 1px solid #f3f3f3;
+    margin: 0;
+    padding: 20px 0;
+}
+
+h3.comment-reply-title {
+    margin-bottom: 30px;
+}
+
+.comment-form input[type="text"], .comment-form textarea {
+    border: 1px solid #e7e7e7;
+    background: #f8f8f8;
+    color: #666666;
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    line-height: 22px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.comment-form textarea {
+    padding: 15px 20px;
+}
+
+.comment-form input.submit {
+    background: none;
+    border: 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+.comment-form .form-submit {
+    margin: 40px 0 0;
+}
+
+.comment-form .submit-wrap {
+    text-align: center;
+}

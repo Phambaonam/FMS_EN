@@ -1,0 +1,55 @@
+"id","name_category_product","group_by_category","areas","category_product_alias","time_create","category_id"
+1,"giường ngủ",False,"{phòng ngủ}","giuong-ngu","2017-09-11",1
+2,"nệm",False,"{phòng ngủ}","nem","2017-09-11",1
+3,"ghế ăn",False,"{phòng ăn}","ghe-an","2017-09-11",2
+4,"đôn có bậc & thang",False,"{phòng ăn}","don-co-bac-va-thang","2017-09-11",2
+5,"đôn & ghế dài",False,"{phòng ăn}","don-va-ghe-dai","2017-09-11",2
+6,"hoa & cây cảnh nhân tạo ",True,"{phòng khách, phòng ăn, phòng ngủ, phòng học & làm việc, nhà bếp, sảnh & lối vào}","hoa-va-cay-canh-nhan-tao","2017-09-11",3
+7,"nến & giá đỡ nến",True,"{phòng ăn, nhà bếp}","nen-va-gia-do-nen","2017-09-11",3
+8,"đồng hồ",True,"{phòng khách, phòng ăn, phòng ngủ, phòng học & làm việc, nhà bếp}","dong-ho","2017-09-11",3
+9,"khung ảnh",True,"{phòng khách, phòng ngủ, phòng học & làm việc}","khung-anh","2017-09-11",3
+10,"tranh ảnh",True,"{phòng khách, phòng ngủ, phòng học & làm việc, sảnh & lối vào}","tranh-anh","2017-09-11",3
+11,"lọ hoa",True,"{phòng khách, phòng ăn, phòng ngủ, phòng học & làm việc}","lo-hoa","2017-09-11",3
+12,"bàn làm việc",False,"{phòng học & làm việc}","ban-lam-viec","2017-09-11",4
+13,"ghế văn phòng & ghế dài",False,"{phòng học & làm việc}","ghe-van-phong-va-ghe-dai","2017-09-11",4
+14,"tiện ích sắp xếp nhà bếp",False,"{nhà bếp}","tien-ich-sap-xep-nha-bep","2017-09-11",5
+15,"dụng cụ sơ chế",False,"{nhà bếp}","dung-cu-so-che","2017-09-11",5
+16,"bảo quản thực phẩm",False,"{nhà bếp}","bao-quan-thuc-pham","2017-09-11",5
+17,"tủ bếp",False,"{nhà bếp}","tu-bep","2017-09-11",6
+18,"tiện ích lưu trữ nhà bếp",False,"{nhà bếp}","tien-ich-luu-tru-nha-bep","2017-09-11",6
+19,"đèn trần",True,"{phòng khách, phòng ăn, phòng ngủ, phòng học & làm việc, phòng tắm, nhà bếp, sảnh & lối vào}","den-tran","2017-09-11",7
+20,"đèn đứng",True,"{phòng khách, phòng ngủ, phòng học & làm việc}","den-dung","2017-09-11",7
+21,"đèn bàn",True,"{phòng khách, phòng ăn, phòng ngủ, phòng học & làm việc}","den-ban","2017-09-11",7
+22,"gương đứng",True,"{phòng ngủ, phòng tắm}","guong-dung","2017-09-11",8
+23,"gương trang điểm",True,"{phòng ngủ, phòng tắm}","guong-trang-diem","2017-09-11",8
+24,"gương treo tường",True,"{phòng khách, phòng ngủ, phòng tắm}","guong-treo-tuong","2017-09-11",8
+25,"thảm",True,"{phòng khách, phòng ăn, phòng ngủ, sảnh & lối vào}","tham","2017-09-11",9
+26,"Phụ kiện phòng tăm",False,"{phòng tắm}","phu-kien-phong-tam","2017-09-11",10
+27,"nội thất phòng tắm",False,"{phòng tắm}","noi-that-phong-tam","2017-09-11",10
+28,"sofa",False,"{phòng khách}","sofa","2017-09-11",11
+29,"ghể phòng khách",False,"{phòng khách}","ghe-phong-khach","2017-09-11",11
+30,"sofa giường",False,"{phòng khách}","sofa-giuong","2017-09-11",11
+31,"tủ ngăn kéo",False,"{phòng ngủ}","tu-ngan-keo","2017-09-11",12
+32,"kệ sách",False,"{phòng khách, phòng ngủ, phòng học & làm việc}","ke-sach","2017-09-11",12
+33,"kệ trang trí",False,"{phòng khách}","ke-trang-tri","2017-09-11",12
+34,"nội thất sảnh",False,"{sảnh & lối vào}","noi-that-sanh","2017-09-11",12
+35,"kệ cho sảnh",False,"{sảnh & lối vào}","ke-cho-sanh","2017-09-11",12
+36,"tủ phòng khách",False,"{phòng khách}","tu-phong-khach","2017-09-11",12
+37,"tủ bát đĩa",False,"{nhà bếp}","tu-bat-dia","2017-09-11",12
+38,"bàn ăn",False,"{phòng ăn}","ban-an","2017-09-11",13
+39,"bàn kê đầu giường",False,"{phòng ngủ}","ban-ke-dau-giuong","2017-09-11",13
+40,"bàn cà phê",False,"{phòng khách}","ban-ca-phe","2017-09-11",13
+41,"bàn trang điểm",False,"{phòng ngủ}","ban-trang-diem","2017-09-11",13
+42,"bàn góc",False,"{phòng khách}","ban-goc","2017-09-11",13
+43,"đĩa, tô chén & muỗng nĩa",True,"{phòng ăn}","dia,-to-chen-va-muong-nia","2017-09-11",14
+44,"ly",True,"{phòng ăn}","ly","2017-09-11",14
+45,"cốc, tách & ấm trà",True,"{phòng ăn}","coc,-tach-va-am-tra","2017-09-11",14
+46,"đĩa trái cây",True,"{phòng ăn}","dia-trai-cay","2017-09-11",14
+47,"đệm ngồi",False,"{phòng ăn}","dem-ngoi","2017-09-11",15
+48,"ghế lười & đôn mềm",False,"{phòng khách}","ghe-luoi-va-don-mem","2017-09-11",15
+49,"chăn ga",False,"{phòng khách}","chan-ga","2017-09-11",15
+50,"gối trang trí",False,"{phòng khách, phòng ngủ}","goi-trang-tri","2017-09-11",15
+51,"ruột gối & chăn",False,"{phòng ngủ}","ruot-goi-va-chan","2017-09-11",15
+52,"kệ cho thiết bị điện tử",False,"{phòng khách}","ke-cho-thiet-bi-dien-tu","2017-09-11",16
+53,"kệ tv",False,"{phòng khách}","ke-tv","2017-09-11",16
+55,"tiện ích sắp xếp phòng ngủ ",False,"{phòng ngủ}","tien-ich-sap-xep-phong-ngu","2017-09-11",17

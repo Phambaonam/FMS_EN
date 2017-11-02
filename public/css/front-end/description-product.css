@@ -1,0 +1,98 @@
+.item-container {
+    border: solid 1px #e7e7e7;
+    margin: 0 0 15px;
+    transition: all 0.4s ease;
+}
+
+.item-container:hover {
+    box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+}
+.photo {
+    position: relative;
+}
+.photo img {
+    width:100%;
+}
+
+.vertical-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    right: 5%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    text-align: center;
+    z-index: 5;
+}
+
+.vertical-icon i {
+    margin: 5px 0;
+    width: 40px;
+    height: 40px;
+    transform: translateX(30px);
+    opacity: 0;
+    border-radius: 50%;
+    background-color: #f8f8f8;
+    font-size: 20px;
+}
+
+.vertical-icon i::before {
+    height: 40px;
+    line-height: 40px;
+}
+
+.photo:hover .vertical-icon i {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.vertical-icon a {
+    color: #999999;
+}
+
+i.fa-heart-o {
+    transition: all 0.5s ease;
+}
+
+i.fa-shopping-cart {
+    transition: all 0.5s ease 0.15s;
+}
+
+i.fa-search-plus {
+    transition: all 0.5s ease 0.3s;
+}
+
+.name, .price {
+    background-color: #fff;
+}
+
+.price {
+    text-align: center;
+    padding: 15px;
+}
+
+.price strong {
+    color: #339966;
+    font-size: 25px;
+}
+
+.name h3, .name p {
+    margin: 0;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+/* ***********css star tú viết ******* */
+.star, #numberStar {
+    font-size: 20px;
+    color: #8e8877;
+}
+
+.rating {
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+/* ***********end css star tú viết ******* */

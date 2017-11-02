@@ -1,0 +1,188 @@
+{% block header %}
+<header>
+    <div class="header-form-container">
+        <div class="container">
+            <div class="form-search">
+                <button type="button" class="navbar-toggle" id="menu-scroll">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <form action="#" id="search_form">
+                    <div class="search-wrap">
+                        <input type="text" name="q" placeholder="Tìm sản phẩm, danh mục hay thương hiệu mong muốn ...">
+                        <button type="submit">
+                            <span>Tìm Kiếm</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="header-link">
+                <div class="user-profile ">
+                    {% if info.username.length === null %}
+                    <div class="">
+                        <button data-toggle="modal" data-tabs="login" data-target=".user-modal" class="user">Đăng nhập
+                        </button>
+                        <button data-toggle="modal" data-tabs="signup" data-target=".user-modal" class="user">Đăng ký
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="logged">
+                        <!-- <i class="fa fa-user-o"></i> -->
+                        <img src="/public/img/feedback_1.jpg">
+                        <div class="dropdown" style="float:right">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                               {{ info.username }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="/tai-khoan-cua-toi">Tài khoản của tôi</a>
+                                </li>
+                                <li>
+                                    <a href="/gio-hang">Đơn hàng của tôi</a>
+                                </li>
+                                <li>
+                                    <a href="/danh-sach-yeu-thich">Danh sách Yêu thích</a>
+                                </li>
+                                <li>
+                                    <a href="/logout">Đăng xuất</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div id="header-cart">
+                    <div class="cart-box mycart">
+                        <a href="/gio-hang" class="header-cart item">
+                            <i class="fa fa-shopping-cart"></i>
+                            Giỏ Hàng {% include '../pages/Shop/header-cart.html' %}
+                        </a>
+
+                        <a href="wishlist.html" class="header-cart item">
+                            <i class="fa fa-heart-o"></i>
+                            Yêu Thích
+                            <span class='cart-count'>0</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="menu row">
+                <div class="collapse navbar-collapse" id="menu-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <a href="/">Trang chủ</a>
+                        </li>
+                        <li>
+                            <a href="/san-pham">Sản phẩm</a>
+                        </li>
+                        <li>
+                            <a href="project">Dự án</a>
+                        </li>
+                        <li>
+                            <a href="colllection">Bộ sưu tập</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="event.html">Event</a>
+                        </li>
+                        <li>
+                            <a href="about.html">Về Min</a>
+                        </li>
+                        <li>
+                            <a href="blog.html">Blog</a>
+                        </li>
+                        <li>
+                            <a href="contact.html">Liên hệ</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <a class="logo" href="home.html">
+            <img src="/public/img/logo-min.png">
+        </a>
+        <div id="search-form">
+            <form>
+                <input type="text" placeholder="Nhập từ khóa cần tìm">
+                <button type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </nav>
+    <div class="modal fade user-modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li id="login-indicator" class="active">
+                        <a href="#login" role="tab" data-toggle="tab">Đăng nhập</a>
+                    </li>
+                    <li id="signup-indicator">
+                        <a href="#signup" role="tab" data-toggle="tab">Đăng ký</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active fade in" id="login">
+                        <form method="post" action="/login">
+                            <div class="input-field">
+                                <input type="email" name="email" id="email" placeholder="Email" />
+                            </div>
+                            <div class="input-field">
+                                <input type="password" name="password" id="password" placeholder="Mật khẩu" />
+                            </div>
+                            <div class="input-field check-field">
+                                <input type="checkbox" id="remember" name="remember" />
+                                <label for="remember">Ghi nhớ tài khoản
+                                </label>
+                                <br/>
+                            </div>
+                            <div class="input-field">
+                                <input id="login-btn" type="submit"  value="Đăng nhập" />
+                            </div>
+                            <button data-toggle="modal" data-target="#reset-password" data-dismiss="modal" class="btn btn-default">
+                                <i class="fa fa-question-circle-o"></i> Quên mật khẩu?
+                            </button>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="signup">
+                        <form method="post" action="/register">
+                            <div class="input-field">
+                                <p id="email_err" style="color:#fa0500"></p>
+                                <input type="email" name="email" id="email_reg" placeholder="Email" required />
+                            </div>
+                            <div class="input-field">
+                                <p id="pass_err" style="color:#fa0500"></p>
+                                <input onclick="checkEmail()" type="password" name="password" id="password_reg" placeholder="Mật khẩu" required />
+                            </div>
+                            <div class="input-field">
+                                <input onclick="checkPass()" type="text" name="username" id="name" placeholder="Họ tên" required` />
+                            </div>
+                            <!-- <div class="input-field check-field">
+                                <input type="checkbox" id="remember" name="remember"/><label for="remember">Hiển thị mật
+                                khẩu</label><br/>
+                            </div> -->
+                            <!-- <div class="input-field">
+                                <input type="text" name="Phone" id="phone" placeholder="Số điện thoại"/>
+                            </div> -->
+                            <div class="input-field">
+                                <input id="signup-btn" type="submit" value="Đăng ký" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- <script src="/public/js/axios.min.js"></script> -->
+
+{% endblock %}

@@ -2948,7 +2948,7 @@ td.product-price-wishlist::after {
     padding-left: 5px;
 }
 
-td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after, td.product-action::after, td.product-remove::after {
+td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after, td.product-action::after {
     content: '₫';
 }
 

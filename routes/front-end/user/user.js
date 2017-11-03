@@ -32,7 +32,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
 
         const saltRounds = 10
         const insertUser = 'INSERT INTO customer(username,email,password,phone,image,date_of_birth,general,time_register,address_receiver,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},null,null,null,null,null,null,${token_register},null,null);'
-        const getEmail = 'SELECT email FROM customer WHERE email = ${email}'
+        const getEmail = 'SELECT id, username, email, phone, general FROM customer WHERE email = ${email}'
         bcrypt.hash(info.password, saltRounds, (err, hash) => {
             db.task('user resgister accout', function* (t) {
                 yield t.any(insertUser, {
@@ -47,7 +47,10 @@ module.exports.userInfo = function (db, router, frontendPath) {
             })
                 .then(data => {
                     console.log('insert data success!')
-                    if (!req.session.email) req.session.email = data.email
+                    if (!req.session.user) {
+                        req.session.user = {}
+                        req.session.user.info = data
+                    }
                     nodeMail(email, subject, text)
                     res.redirect('/tai-khoan-cua-toi')
                 })
@@ -104,14 +107,12 @@ module.exports.userInfo = function (db, router, frontendPath) {
     router.get('/tai-khoan-cua-toi', (req, res) => {
         const info = req.session
         const passportInfo = req.user
-        // console.log(passportInfo)
         const message = (info.verify_token_register) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí.!'
         const getInfoUser = 'SELECT username, email, phone FROM customer WHERE email=${email}'
         // const email = passportInfo.email || info.email 
         let email
-        if (info.email) email = info.email
+        if (info.user) email = info.user.email
         if (passportInfo) email = passportInfo.email
-        console.log('email', email)
         console.log('message', message)
         if(email) {
             db.one(getInfoUser, {

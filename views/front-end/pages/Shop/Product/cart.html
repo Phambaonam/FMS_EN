@@ -116,10 +116,10 @@
                 axios.post('delete/product', {
                     product_id: item.id
                 })
-                    .then(function (res) {
-                        document.write(res.data)
-                        console.log(res.data)
-                    })
+                function timedRefresh(timeoutPeriod) {
+                    setTimeout("location.reload(true);", timeoutPeriod);
+                }
+                window.onload = timedRefresh(500);
             }
         })
 
@@ -129,10 +129,11 @@
                 var product_idDe = item.nextSibling.className
                 if (item.nextSibling.value > 1) {
                     axios.get('/decrease/qty/' + product_idDe)
+                    
                     function timedRefresh(timeoutPeriod) {
 	                 setTimeout("location.reload(true);",timeoutPeriod);
                     }
-                    window.onload = timedRefresh(1000);
+                    window.onload = timedRefresh(500);
                 }
             }
         })
@@ -142,7 +143,6 @@
             item.onclick = function () {
                 var product_idIn = item.previousSibling.className
                 axios.get('/increase/qty/' + product_idIn)
-                
                 function timedRefresh(timeoutPeriod) {
 	                 setTimeout("location.reload(true);",timeoutPeriod);
                 }

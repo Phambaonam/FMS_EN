@@ -56,10 +56,7 @@ app.use(session({
 }))
 
 app.use(function(req, res, next){
-    if (req.session.sumProduct) {
-        res.locals.carts = req.session.sumProduct
-        console.log('cart middleware', req.session.sumProduct)
-    }
+    if (req.session.sumProduct)  res.locals.carts = req.session.sumProduct
     next()
 })
 

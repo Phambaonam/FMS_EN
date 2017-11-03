@@ -4,7 +4,7 @@
 module.exports.shopPage = function (db, router, frontendPath) {
 
     router.get('/san-pham', (req, res) => {
-        // console.log(req.session.sumProduct)
+        console.log('aaaaaaaaaaaaa',req.session)
         db.task('getAllproduct', function* (t) {
             /**
              * All side bar left 
@@ -134,8 +134,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
+                let info = req.user || req.session.user
 
-                let info = req.user || null
                 res.render(frontendPath + 'Shop/shop', {
                     info: info,
                     data: data,
@@ -144,10 +144,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
     })
 
-
     router.get('/san-pham/:param', (req, res) => {
         const info = req.params
-        db.task('', function* (t) {
+        db.task('get product', function* (t) {
             /**
              * All side bar left 
              */
@@ -283,7 +282,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
 
-                let info = req.user || null
+                let info = req.user || req.session.user
                 res.render(frontendPath + 'Shop/shop', {
                     info: info,
                     data: data,
@@ -295,7 +294,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
     router.get('/san-pham-group/:param', (req, res) => {
         const info = req.params
         // console.log(info)
-        db.task('', function* (t) {
+        db.task('get product', function* (t) {
             /**
              * All side bar left 
              */
@@ -430,7 +429,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
 
-                let info = req.user || null
+                let info = req.user || req.session.user
                 res.render(frontendPath + 'Shop/shop', {
                     info: info,
                     data: data,
@@ -438,7 +437,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 })
             })
     })
-
 
     router.post('/sort/products', (req, res) => {
         const info = req.body
@@ -514,7 +512,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
             }
         })
             .then(data => {
-                // res.json(data)
                 res.render(frontendPath + 'Shop/product', { data: data })
             })
     })
@@ -563,7 +560,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 sessID: sessID
             })
 
-            if (req.session.id) req.session.sumProduct = getSum.sum
+            if (req.session.id) req.session.sumProduct = parseInt(getSum.sum)
             return getSum.sum
         })
             .then(data => {
@@ -575,6 +572,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/gio-hang', (req, res) => {
+        console.log('user', req.session)
         const sessID = req.session.id
         db.task('gio hang', function* (t) {
             const cartDetail = []
@@ -591,6 +589,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 getProduct[0].quantity = getCarts[item].quantity
                 cartDetail.push(getProduct[0])
             }
+
+
             const sum = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID};'
             const getSum = yield t.one(sum, {
                 sessID: sessID
@@ -599,9 +599,13 @@ module.exports.shopPage = function (db, router, frontendPath) {
             return cartDetail
         })
             .then(data => {
+                if (req.session.url !== req.url) req.session.url = req.url
+                let info = req.user || req.session.user
+
                 res.render(frontendPath + 'Shop/Product/cart', {
                     title: 'Giỏ hàng',
-                    products: data
+                    products: data,
+                    info: info
                 })
             })
     })
@@ -621,10 +625,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 product_id: product_id,
                 sessID: sessID
             })
-            
+
+            req.session.sumProduct = parseInt(req.session.sumProduct) - 1
+            return req.session.sumProduct
         })
-            .then(() => {
+            .then(data => {
                 console.log('đã giảm số lượng sản phẩm thành công!')
+                console.log(`Tổng số sản phẩm trong giỏ hàng là: ${data}`)
+                res.json(true)
             })
             .catch(error => {
                 console.log('ERROR:', error) // print the error;
@@ -646,9 +654,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 product_id: product_id,
                 sessID: sessID
             })
+
+            req.session.sumProduct = parseInt(req.session.sumProduct) + 1
+            return req.session.sumProduct
         })
-            .then(() => {
+            .then(data => {
                 console.log('đã tăng số lượng sản phẩm thành công!')
+                console.log(`Tổng số sản phẩm trong giỏ hàng là: ${data}`)
+                res.json(true)
             })
             .catch(error => {
                 console.log('ERROR:', error) // print the error;
@@ -658,13 +671,26 @@ module.exports.shopPage = function (db, router, frontendPath) {
     router.post('/delete/product', (req, res) => {
         const sessID = req.session.id
         const product_id = parseFloat(req.body.product_id)
-        const product = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
-        db.result(product, {
-            product_id: product_id,
-            sessID: sessID
+        
+        db.task('delete product', function* (t) {
+            const product = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+            const cartProduct = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID}; '
+
+            const getCartproduct = yield t.one(cartProduct, {
+                product_id: product_id,
+                sessID: sessID
+            })
+
+            yield t.any(product, {
+                product_id: product_id,
+                sessID: sessID
+            })
+            return getCartproduct
         })
-            .then((result) => {
-                console.log(`đã xóa ${result.rowCount} sản phẩm ra khỏi giỏ hàng`)
+            .then(data => {
+                req.session.sumProduct = parseInt(req.session.sumProduct) - data.quantity
+                console.log(`đã xóa ${data.quantity} sản phẩm ra khỏi giỏ hàng`)
+                res.json(true)
             })
             .catch(error => {
                 console.log('ERROR:', error) // print the error;
@@ -678,6 +704,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             session_user_id: sessID
         })
             .then((result) => {
+                req.session.sumProduct = 0
                 res.redirect('/gio-hang')
                 console.log(`đã xóa hết ${result.rowCount} sản phẩm trong giỏ hàng`)
             })

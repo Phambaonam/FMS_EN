@@ -3,6 +3,8 @@
  */
 module.exports.homePage = function (db, router, frontendPath) {
     router.get('/', (req, res) => {
+        // console.log('req.user trang chu', req.user)
+        // console.log('session trang chu', req.session)
         let data
         if (req.session.url !== req.url) req.session.url = req.url
         if (req.user) data = req.user

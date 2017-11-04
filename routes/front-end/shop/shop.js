@@ -4,7 +4,6 @@
 module.exports.shopPage = function (db, router, frontendPath) {
 
     router.get('/san-pham', (req, res) => {
-        console.log('aaaaaaaaaaaaa',req.session)
         db.task('getAllproduct', function* (t) {
             /**
              * All side bar left 
@@ -134,8 +133,13 @@ module.exports.shopPage = function (db, router, frontendPath) {
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
+                /**
+                 * Khi user đăng kí thì thông tin của user được lưu trong session
+                 * Khi user đăng nhập thì thông tin của user được lưu  trong req.user
+                 */
+                // if (req.user) console.log('user dang nhap thanh cong', req.user)
+                // if (req.session.user) console.log('user dang ki thanh cong', req.session.user)
                 let info = req.user || req.session.user
-
                 res.render(frontendPath + 'Shop/shop', {
                     info: info,
                     data: data,
@@ -520,50 +524,69 @@ module.exports.shopPage = function (db, router, frontendPath) {
         const quantity = req.body.quantity
         const product_id = req.body.product_id
         const sessID = req.session.id
+        // if exists req.user, user_id = req.user.id or user_id =  null
+        let user_id = (req.user) ? req.user.id : 0
+        console.log('namduyen', req.user)
+
         db.task('add product to cart', function* (t) {
-            const status = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const status1 = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const status2 = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const status = (!req.user) ? status1 : status2
             const productExistsIncart = yield t.one(status, {
                 product_id: product_id,
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
+
             switch (productExistsIncart.count) {
                 case '0':
                     {
-                        const cart = 'INSERT INTO cart(session_user_id,attribute_product_id,quantity,event_id,total) VALUES(${sessID}, ${product_id},${quantity},null,null);'
+                        const cart = 'INSERT INTO cart(session_user_id,attribute_product_id,quantity,user_id,event_id,total) VALUES(${sessID}, ${product_id},${quantity},${user_id},null,null);'
                         yield t.any(cart, {
                             sessID: sessID,
                             product_id: product_id,
-                            quantity: quantity
+                            quantity: quantity,
+                            user_id: user_id
                         })
                     }
                     break
 
                 case '1':
                     {
-                        const quantity = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+                        const quantity1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+                        const quantity2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id =${user_id};'
+                        const quantity =  (!req.user) ? quantity1 : quantity2
                         let getQuality = yield t.any(quantity, {
                             product_id: product_id,
-                            sessID: sessID
+                            sessID: sessID,
+                            user_id: user_id
                         })
-                        const updateQuantity = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+                        const updateQuantity1= 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID} ;'
+                        const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id =${user_id};'
+                        const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
                         yield t.any(updateQuantity, {
                             quantity: parseInt(getQuality[0].quantity) + 1,
                             product_id: product_id,
-                            sessID: sessID
+                            sessID: sessID,
+                            user_id: user_id
                         })
                     }
                     break
             }
 
-            const sum = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID};'
+            const sum1 = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID} ;'
+            const sum2 = 'SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};'
+            const sum = (!req.user) ? sum1 : sum2
             const getSum = yield t.one(sum, {
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
-
-            if (req.session.id) req.session.sumProduct = parseInt(getSum.sum)
+            // console.log('totalcart khi user them sp vao gio hang', getSum.sum)
+            req.user ? (req.session.passport.user.sumProduct = parseInt(getSum.sum)) : (req.session.sumProduct = parseInt(getSum.sum)) 
             return getSum.sum
         })
             .then(data => {
+                  
                 res.send(data)
             })
             .catch(err => {
@@ -572,13 +595,17 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/gio-hang', (req, res) => {
-        console.log('user', req.session)
         const sessID = req.session.id
+        let user_id = (req.user) ? req.user.id : 0
+        console.log('session gio hang', req.session)
         db.task('gio hang', function* (t) {
             const cartDetail = []
-            const cart = 'SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = ${session_user_id} ORDER BY id ASC;'
+            const cart1 = 'SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = ${session_user_id} AND user_id = ${user_id} ORDER BY id ASC;'
+            const cart2 = 'SELECT attribute_product_id, quantity FROM cart WHERE  user_id = ${user_id} ORDER BY id ASC;'
+            const cart = (!req.user) ? cart1 : cart2
             const getCarts = yield t.any(cart, {
-                session_user_id: sessID
+                session_user_id: sessID,
+                user_id: user_id
             })
 
             for (let item in getCarts) {
@@ -591,9 +618,12 @@ module.exports.shopPage = function (db, router, frontendPath) {
             }
 
 
-            const sum = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID};'
+            const sum1 = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID} AND user_id = ${user_id};'
+            const sum2 = 'SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};'
+            const sum = (!req.user) ? sum1 : sum2
             const getSum = yield t.one(sum, {
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
             if (req.session.sumProduct !== getSum.sum) req.session.sumProduct = getSum.sum
             return cartDetail
@@ -611,27 +641,34 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/decrease/qty/:product_id', (req, res) => {
+        let user_id = (req.user) ? req.user.id : 0
         const product_id = req.params.product_id
         const sessID = req.session.id
         db.task('decrease quantity product', function* (t) {
-            const quantity = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+            const quantity1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+            const quantity2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const quantity = (!req.user) ? quantity1 : quantity2
             let getQuality = yield t.one(quantity, {
                 product_id: product_id,
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
-            const updateQuantity = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const updateQuantity1 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
             yield t.any(updateQuantity, {
                 quantity: parseInt(getQuality.quantity) - 1,
                 product_id: product_id,
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
 
-            req.session.sumProduct = parseInt(req.session.sumProduct) - 1
-            return req.session.sumProduct
+            let sumCart1 = parseInt(req.session.passport.user.sumProduct)
+            let sumCart2 = parseInt(req.session.sumProduct)
+            req.user ? (req.session.passport.user.sumProduct = sumCart1 - 1) : (req.session.sumProduct = sumCart2 - 1) 
         })
-            .then(data => {
+            .then(() => {
                 console.log('đã giảm số lượng sản phẩm thành công!')
-                console.log(`Tổng số sản phẩm trong giỏ hàng là: ${data}`)
                 res.json(true)
             })
             .catch(error => {
@@ -640,27 +677,35 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/increase/qty/:product_id', (req, res) => {
+        let user_id = (req.user) ? req.user.id : 0
         const product_id = req.params.product_id
         const sessID = req.session.id
         db.task('increase quantity product', function* (t) {
-            const quantity = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+            const quantity1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+            const quantity2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const quantity = (!req.user) ? quantity1 : quantity2
             let getQuality = yield t.one(quantity, {
                 product_id: product_id,
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
-            const updateQuantity = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const updateQuantity1 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
             yield t.any(updateQuantity, {
                 quantity: parseInt(getQuality.quantity) + 1,
                 product_id: product_id,
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
 
-            req.session.sumProduct = parseInt(req.session.sumProduct) + 1
-            return req.session.sumProduct
+            let sumCart1 = parseInt(req.session.passport.user.sumProduct)
+            let sumCart2 = parseInt(req.session.sumProduct)
+            req.user ? (req.session.passport.user.sumProduct = sumCart1 + 1) : (req.session.sumProduct = sumCart2 + 1) 
+
         })
-            .then(data => {
+            .then(() => {
                 console.log('đã tăng số lượng sản phẩm thành công!')
-                console.log(`Tổng số sản phẩm trong giỏ hàng là: ${data}`)
                 res.json(true)
             })
             .catch(error => {
@@ -669,27 +714,32 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.post('/delete/product', (req, res) => {
+        // console.log('anh nho em lam', req.user)
         const sessID = req.session.id
         const product_id = parseFloat(req.body.product_id)
-        
+        let user_id = (req.user) ? req.user.id : 0
         db.task('delete product', function* (t) {
-            const product = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
-            const cartProduct = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID}; '
-
-            const getCartproduct = yield t.one(cartProduct, {
-                product_id: product_id,
-                sessID: sessID
-            })
-
+            const product1 = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID} ;'
+            const product2 = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const product = (!req.user) ? product1 : product2
             yield t.any(product, {
                 product_id: product_id,
-                sessID: sessID
+                sessID: sessID,
+                user_id: user_id
             })
+
+            const cartProduct1 = 'SELECT SUM(quantity) FROM cart WHERE cart.session_user_id = ${sessID};'
+            const cartProduct2 = 'SELECT SUM(quantity) FROM cart WHERE user_id = ${user_id}; '
+            const cartProduct = (!req.user) ? cartProduct1 : cartProduct2
+            const getCartproduct = yield t.one(cartProduct, {
+                user_id: user_id
+            })
+
+            req.user ? (req.session.passport.user.sumProduct = parseInt(getCartproduct.sum)) : (req.session.sumProduct = parseInt(getCartproduct.sum)) 
             return getCartproduct
         })
             .then(data => {
-                req.session.sumProduct = parseInt(req.session.sumProduct) - data.quantity
-                console.log(`đã xóa ${data.quantity} sản phẩm ra khỏi giỏ hàng`)
+                console.log(`Còn lại  ${data.sum} sản phẩm trong giỏ hàng`)
                 res.json(true)
             })
             .catch(error => {
@@ -698,13 +748,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/empty-cart', (req, res) => {
+        let user_id = (req.user) ? req.user.id : 0
         const sessID = req.session.id
-        const emptyCart = 'DELETE FROM cart WHERE session_user_id = ${session_user_id};'
+        const emptyCart1 = 'DELETE FROM cart WHERE session_user_id = ${session_user_id};'
+        const emptyCart2 = 'DELETE FROM cart WHERE user_id = ${user_id};'
+        const emptyCart = (!req.user) ? emptyCart1 : emptyCart2
+
         db.result(emptyCart, {
-            session_user_id: sessID
+            session_user_id: sessID,
+            user_id: user_id
         })
             .then((result) => {
-                req.session.sumProduct = 0
+                req.user ? (req.session.passport.user.sumProduct = 0) : (req.session.sumProduct = 0) 
                 res.redirect('/gio-hang')
                 console.log(`đã xóa hết ${result.rowCount} sản phẩm trong giỏ hàng`)
             })

@@ -47,10 +47,8 @@ module.exports.userInfo = function (db, router, frontendPath) {
             })
                 .then(data => {
                     console.log('insert data success!')
-                    if (!req.session.user) {
-                        req.session.user = {}
-                        req.session.user.info = data
-                    }
+                    // khi user đăng nhập thành công thì lưu thông tin của user vào trong session
+                    if (!req.session.user) req.session.user = data
                     nodeMail(email, subject, text)
                     res.redirect('/tai-khoan-cua-toi')
                 })
@@ -62,6 +60,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
     })
     router.post('/login', (req, res, next) => {
         // https://stackoverflow.com/questions/22858699/nodejs-and-passportjs-redirect-middleware-after-passport-authenticate-not-being
+        
         passport.authenticate('login', (err, user, info) => {
             const url = req.session.url
 

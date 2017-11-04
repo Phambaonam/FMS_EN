@@ -6,11 +6,20 @@ module.exports = function (passport, Strategy, db) {
         passReqToCallback: true,
         session: false
     }, (req, email, password, done) => {
-        // console.log(email)
-        const getUser = 'SELECT * FROM customer WHERE email = ${email};'
-        db.one(getUser, { email: email })
+        db.task('', function* (t) {
+            const user = 'SELECT id, email, password FROM customer WHERE email = ${email};'
+            const sum = 'SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};'
+            const getUser = yield t.one(user, {
+                email: email
+            })
+            const getSum = yield t.one(sum, {
+                user_id: getUser.id
+            })
+
+            if (!getUser.sumProduct) getUser.sumProduct = getSum.sum
+            return getUser
+        })
             .then(data => {
-                // console.log(data)
                 bcrypt.compare(password, data.password, (err, result) => {
 
                     if (err) return done(err)

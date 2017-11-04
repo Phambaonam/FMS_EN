@@ -1,15 +1,16 @@
 module.exports = function (passport, db) {
     passport.serializeUser(function (data, cb) {
-        // console.log('serializeUser', data.email)
-        cb(null, data.email)
+        // console.log('serializeUser', data)
+        cb(null, data)
     })
 
-    passport.deserializeUser(function (email, cb) {
-        // console.log('deserializeUser', email)
-        const getUser = 'SELECT * FROM customer WHERE email = ${email}'
-        db.one(getUser, { email: email })
-            .then(data => {
-                cb(null, data)
+    passport.deserializeUser(function (data, cb) {
+        // console.log('deserializeUser', data)
+        const getUser = 'SELECT id, username, email,phone  FROM customer WHERE email = ${email}'
+        db.one(getUser, { email: data.email })
+            .then(result => {
+                // if (!result.sumProduct) result.sumProduct = data.sumProduct
+                cb(null, result)
             })
             .catch(err => {
                 return cb(err)

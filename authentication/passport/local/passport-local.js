@@ -23,16 +23,15 @@ module.exports = function (passport, Strategy, db) {
                 bcrypt.compare(password, data.password, (err, result) => {
 
                     if (err) return done(err)
-                    //  req.flash('message', 'Sai mật khẩu!')
-                    if (!result) return done(null, false)
+                     
+                    if (!result) return done(null, false, req.flash('message', 'Sai mật khẩu!'))
                     //  req.flash('message', 'Đăng nhập thành công!')
                     return done(null, data)
                 })
             })
             .catch(err => {
                 console.error(err.message)
-                // req.flash('message', 'Tài khoản này không tồn tại!')
-                return done(null, false)
+                return done(null, false, req.flash('message', 'Tài khoản này không tồn tại!'))
             })
     }
     ))

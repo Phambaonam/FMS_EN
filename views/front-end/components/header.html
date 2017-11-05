@@ -132,12 +132,13 @@
 
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active fade in" id="login">
-                        <form method="post" action="/login">
+                        <form>
                             <div class="input-field">
-                                <input type="email" name="email" id="email" placeholder="Email" />
+                                <p id="login_err" style="color:#fa0500">{{ login_err }}</p>
+                                <input type="email" name="email" id="email" placeholder="Email"  required/>
                             </div>
                             <div class="input-field">
-                                <input type="password" name="password" id="password" placeholder="Mật khẩu" />
+                                <input type="password" name="password" id="password" placeholder="Mật khẩu" required/>
                             </div>
                             <div class="input-field check-field">
                                 <input type="checkbox" id="remember" name="remember" />
@@ -146,7 +147,7 @@
                                 <br/>
                             </div>
                             <div class="input-field">
-                                <input id="login-btn" type="submit"  value="Đăng nhập" />
+                                <input id="login-btn" type="button"  value="Đăng nhập" />
                             </div>
                             <button data-toggle="modal" data-target="#reset-password" data-dismiss="modal" class="btn btn-default">
                                 <i class="fa fa-question-circle-o"></i> Quên mật khẩu?

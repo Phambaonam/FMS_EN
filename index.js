@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const morgan = require('morgan')
 const fs = module.exports =  require('fs')
+const flash = require('connect-flash') 
 const passport = require('passport')
 const Strategy = require('passport-local').Strategy
 
@@ -50,7 +51,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
     cookie: { 
-        maxAge: 60 * 60 * 1000,
+        maxAge: 30 *24 * 60 * 60 * 1000, // cookie sẽ hết hạn trong 30 ngày
         secure: false 
     }
 }))
@@ -94,9 +95,10 @@ app.use(morgan('dev'))
 app.use(passport.initialize())
 app.use(passport.session())
 
+
 passportLocal(passport, Strategy, db)
 authentication(passport, db)
-
+app.use(flash())
 app.use(router)
 /***
  * All routers

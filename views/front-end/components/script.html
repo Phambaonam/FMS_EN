@@ -39,5 +39,30 @@
                 console.log(res.data)
             })
     }
+    var login = document.getElementById('login-btn')
+    login.onclick = function () {
+        var email = document.getElementById('email').value
+        var password = document.getElementById('password').value
+        var login_err = document.getElementById('login_err')
+        axios({
+            method: 'post',
+            url: '/login',
+            data: {
+                email: email,
+                password: password
+            }
+        })
+            .then(function (res) {
+                if(res.data  === 'Sai mật khẩu!' || res.data === 'Tài khoản này không tồn tại!') {
+                    login_err.innerText = res.data
+                    console.log(res.data)
+                } else {
+                    function timedRefresh(timeoutPeriod) {
+                        setTimeout("location.reload(true);", timeoutPeriod);
+                    }
+                    window.onload = timedRefresh(500); 
+                }
+            })
+    }
 </script>
 {% endblock %}

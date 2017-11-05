@@ -17,6 +17,7 @@ module.exports.homePage = function (db, router, frontendPath) {
             })
         } else {
             res.render(frontendPath + 'Home/home', { title: 'Trang Chủ' })
+            // res.json(123)
         }
     })
 }

@@ -104,7 +104,8 @@
     display: table-cell;
     width: 100%;
     vertical-align: top;
-    padding-top: 95px;
+    padding-left: 24px;
+    padding-top: 45px;
 }
 
 .customer-review .product-col-2 .infomation .rating {
@@ -871,7 +872,3 @@
     font-size: 18px;
 }
 
-.avatar-img img {
-    width: 40%;
-    margin-left: 55px;
-}

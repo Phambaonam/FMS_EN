@@ -66,7 +66,12 @@ module.exports.userInfo = function (db, router, frontendPath) {
 
             if (err) return next(err)
             // Redirect if it fails
-            if (!user) return res.redirect(url)
+            if (!user) {
+                // if(!res.locals.login_err) {
+                //     res.locals.login_err = req.session.flash.message.pop()
+                // }
+                return res.json(req.session.flash.message.pop())
+            }
 
             req.logIn(user, (err) => {
                 if (err) return next(err)

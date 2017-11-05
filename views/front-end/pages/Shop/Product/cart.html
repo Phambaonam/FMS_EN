@@ -109,17 +109,17 @@
                  <!-- End script -->
     <script src="/public/js/axios.min.js"></script>             
     <script>
-        // var qty = document.getElementById('qty').value
+        var cart = document.getElementById('cart-count')
         var removeProducts = document.querySelectorAll('.product-remove button')
         removeProducts.forEach(function (item) {
             item.onclick = function () {
                 axios.post('delete/product', {
                     product_id: item.id
                 })
-                function timedRefresh(timeoutPeriod) {
-                    setTimeout("location.reload(true);", timeoutPeriod);
-                }
-                window.onload = timedRefresh(500);
+                    .then(function (res) {
+                        console.log(res.data)
+                        cart.innerText = parseInt(res.data)
+                    })
             }
         })
 
@@ -129,11 +129,9 @@
                 var product_idDe = item.nextSibling.className
                 if (item.nextSibling.value > 1) {
                     axios.get('/decrease/qty/' + product_idDe)
-                    
-                    function timedRefresh(timeoutPeriod) {
-	                 setTimeout("location.reload(true);",timeoutPeriod);
-                    }
-                    window.onload = timedRefresh(500);
+                    .then(function (res) {
+                        (typeof res.data === 'number') ? (cart.innerText = res.data) : (cart.innerText = res.data.user['sumProduct'])
+                    })
                 }
             }
         })
@@ -143,11 +141,9 @@
             item.onclick = function () {
                 var product_idIn = item.previousSibling.className
                 axios.get('/increase/qty/' + product_idIn)
-                function timedRefresh(timeoutPeriod) {
-	                 setTimeout("location.reload(true);",timeoutPeriod);
-                }
-
-                window.onload = timedRefresh(1000);  
+                .then(function (res) {
+                    (typeof res.data === 'number') ? (cart.innerText = res.data) : (cart.innerText = res.data.user['sumProduct'])
+                    })
             }
         })
     </script>          

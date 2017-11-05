@@ -42,7 +42,7 @@
                                     <a href="/gio-hang">Đơn hàng của tôi</a>
                                 </li>
                                 <li>
-                                    <a href="/danh-sach-yeu-thich">Danh sách Yêu thích</a>
+                                    <a href="/yeu-thich">Danh sách Yêu thích</a>
                                 </li>
                                 <li>
                                     <a href="/logout">Đăng xuất</a>
@@ -59,11 +59,13 @@
                             Giỏ Hàng {% include '../pages/Shop/header-cart.html' %}
                         </a>
 
-                        <a href="wishlist.html" class="header-cart item">
-                            <i class="fa fa-heart-o"></i>
-                            Yêu Thích
-                            <span class='cart-count'>0</span>
-                        </a>
+                        {% if login_status !== false %}
+                            <a href="/yeu-thich" class="header-cart item">
+                                <i class="fa fa-heart-o"></i>
+                                Yêu Thích
+                                <span class='cart-count'>0</span>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
 

@@ -143,7 +143,7 @@
                 axios.get('/increase/qty/' + product_idIn)
                 .then(function (res) {
                     (typeof res.data === 'number') ? (cart.innerText = res.data) : (cart.innerText = res.data.user['sumProduct'])
-                    })
+                })
             }
         })
     </script>          

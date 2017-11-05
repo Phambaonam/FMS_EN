@@ -103,15 +103,25 @@
                 </div>
                 <div class="cart-button">
                     <button type="submit" class="add-to-cart link-to">Thêm vào giỏ hàng</button>
-                    <a href="#">
+                    {% if login_status === false %}
+                    <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
                         <i class="fa fa-heart-o"></i>
                     </a>
+                    {% else %}
+                    <a href="/yeu-thich">
+                        <i class="fa fa-heart-o"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </form>
             <div class="product-category">
                 Danh mục:
-                <a href="shop.html">{{ data.name_category }}</a>,
-                <a href="shop.html">{{ data.name_category_product }}</a>
+                {% if data.group_by_category %}
+                    <a href="/san-pham-group/{{  data.category_alias }}">{{ data.name_category | title }}</a>
+                {% else %}
+                    <a href="/san-pham/{{ data.category_product_alias }}">{{ data.name_category_category }}</a>
+                {% endif %}
+                <!-- <a href="shop.html">{{ data.name_category_product }}</a> -->
             </div>
         </div>
     </div>
@@ -428,6 +438,12 @@
     {% include '../../../components/script.html' %}
     <!-- End script -->
     <script type="text/javascript">
+        // var add_to_cart = document.getElementById('add_to_cart')
+        // add_to_cart.onclick = function () {
+        //     alert(123)
+        // }
+    </script>
+    <script type="text/javascript">
 
         // $(window).bind('scroll', function () {
         //     if ($(window).scrollTop() > 460) {
@@ -489,7 +505,7 @@
             })
         });
     </script>
-    <script>
+    <script type="text/javascript">
         $('.review_action').click(function () {
             $(this).each(function () {
                 $('.quick-reply').css('display', 'block')

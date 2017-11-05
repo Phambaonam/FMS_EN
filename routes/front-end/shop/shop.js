@@ -270,7 +270,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 category_product_alias: info.param
             })
 
-            const products = 'SELECT pr.product_name,pr.product_alias, pr.category_product_id, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE pr.category_product_id = ${category_product_id};'
+            const products = 'SELECT pr.product_name,pr.product_alias, pr.category_product_id, ap.id AS product_id, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE pr.category_product_id = ${category_product_id};'
             const getDataAllProducts = yield t.any(products, {
                 category_product_id: get_id_category_product.category_product_id
             })
@@ -416,7 +416,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 category_alias: info.param
             })
 
-            const products = 'SELECT cp.category_id, pr.product_name, pr.product_alias, ap.images, ap.option_status, ap.attributes, pp.product_price, pp.original_price, pp.sale_off_price FROM category AS ca JOIN category_product AS cp ON ca.id = cp.category_id JOIN product AS pr ON cp.id = pr.category_product_id JOIN attribute_product AS ap ON pr.id = ap.product_id JOIN product_price AS pp ON ap.id = pp.attribute_product_id WHERE ca.id = ${category_id};'
+            const products = 'SELECT cp.category_id, pr.product_name, pr.product_alias, ap.id AS product_id, ap.images, ap.option_status, ap.attributes, pp.product_price, pp.original_price, pp.sale_off_price FROM category AS ca JOIN category_product AS cp ON ca.id = cp.category_id JOIN product AS pr ON cp.id = pr.category_product_id JOIN attribute_product AS ap ON pr.id = ap.product_id JOIN product_price AS pp ON ap.id = pp.attribute_product_id WHERE ca.id = ${category_id};'
             const getDataAllProducts = yield t.any(products, {
                 category_id: getIdCategory.category_id
             })
@@ -595,7 +595,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
     router.get('/gio-hang', (req, res) => {
         const sessID = req.session.id
         let user_id = (req.user) ? req.user.id : 0
-        console.log('session gio hang', req.session)
         db.task('gio hang', function* (t) {
             const cartDetail = []
             const cart1 = 'SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = ${session_user_id} AND user_id = ${user_id} ORDER BY id ASC;'
@@ -768,11 +767,12 @@ module.exports.shopPage = function (db, router, frontendPath) {
     // chi tiet san pham
 
     router.get('/san-pham/chi-tiet-san-pham/:product', (req, res) => {
+        console.log('namduyen', req.session)
         const product_id = parseInt(req.params.product.split('-').pop())
         const product_alias = req.params.product.slice(0, -2)
         db.task('chi tiet san pham', function* (t) {
             const product_detail = `
-                SELECT ap.id AS product_id, pr.product_name, ca.name_category, cp.name_category_product ,pr.product_alias, ap.option_status, pr.description, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price 
+                SELECT ap.id AS product_id, pr.product_name, ca.name_category, ca.category_alias, cp.name_category_product, cp.group_by_category, cp.category_product_alias ,pr.product_alias, ap.option_status, pr.description, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price 
                 FROM product AS pr
                 JOIN attribute_product AS ap ON ap.product_id = pr.id
                 JOIN product_price AS pp ON pp.attribute_product_id = ap.id
@@ -787,12 +787,23 @@ module.exports.shopPage = function (db, router, frontendPath) {
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
-                // let info = req.user || req.session.user
+                let info = req.user || req.session.user
                 res.render(frontendPath + 'Shop/Product/shop-detail', {
                     title: 'Chi tiết sản phẩm',
-                    data: data
+                    data: data,
+                    info: info
                 })
             })
 
+    })
+
+    router.get('/yeu-thich', (req, res) => {
+        console.log(req.body)
+        if (req.session.url !== req.url) req.session.url = req.url
+        let info = req.user || req.session.user
+        res.render(frontendPath + 'Shop/wishlist', {
+            title: 'Chi tiết sản phẩm',
+            info: info
+        })
     })
 }

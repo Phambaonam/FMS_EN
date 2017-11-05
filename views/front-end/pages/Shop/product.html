@@ -8,14 +8,22 @@
 
                         <img src="/public/images/products/{{ product.images["0"]}}" style="width:100%; max-height:100%;">
                         <div class="vertical-icon">
-                            <a href="#"><i class="fa fa-heart-o"></i></a>
+                             {% if login_status === false %}
+                            <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
+                                <i class="fa fa-heart-o"></i>
+                            </a>
+                            {% else %}
+                            <a href="#">
+                                <i class="fa fa-heart-o"></i>
+                            </a>
+                            {% endif %}
                             <a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart" ><i class="fa fa-shopping-cart"></i></a>
                             <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}"><i class="fa fa-search-plus"></i></a>
                         </div>
 
                     </div>
                     <div class="name description">
-                        <h3><a href="#">{{ product.product_name }}</a></h3>
+                        <h3><a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a></h3>
                         <p class="manufacturer" style="height:20px"><a href="#">{{ product.attributes.manufacturer }}</a></p>
                         <p>
                            <span class="price">

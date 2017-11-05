@@ -117,6 +117,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
         let email
         if (info.user) email = info.user.email
         if (passportInfo) email = passportInfo.email
+        if(!req.session.message) req.session.message = message
         console.log('message', message)
         if(email) {
             db.one(getInfoUser, {

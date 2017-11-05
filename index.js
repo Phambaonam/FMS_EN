@@ -58,6 +58,7 @@ app.use(session({
 
 app.use(function(req, res, next){
     res.locals.carts = (req.session.passport) ? req.session.passport.user.sumProduct : req.session.sumProduct
+    if(!req.session.passport) res.locals.login_status = false
     // console.log(`res.locals.carts ${res.locals.carts}`)
     next()
 })

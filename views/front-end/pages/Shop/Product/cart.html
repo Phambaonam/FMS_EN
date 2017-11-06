@@ -36,12 +36,12 @@
                     {% for product in products %}    
                         <tr class="cart-item">
                             <td class="product-thumbnail">
-                                <a href="shop-detail.html">
+                                <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">
                                     <img src="public/images/products/{{ product.images["0"] }}">
                                 </a>
                             </td>
                             <td class="product-name">
-                                <a href="shop-detail.html">{{ product.product_name }}</a>
+                                <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a>
                             </td>
                             <td class="product-price">{{product.product_price}}</td>
                             <td class="product-quantity">

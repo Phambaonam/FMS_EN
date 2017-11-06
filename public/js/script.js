@@ -228,9 +228,22 @@ $('td.product-price').each(function () {
     var num = Number(item).toLocaleString('vi');
     $(this).text(num);
     $(this).siblings('.product-subtotal').text(subTotal);
-    $('.cart-subtotal td').text(sum.toLocaleString('vi'));
-    $('.amount').text(total.toLocaleString('vi'));
 });
+var all = $('.cart-item')
+var sum = 0
+var count = 0
+for (var i = 0; i < all.length; i++) {
+    sum = parseInt(all[i].children['4'].innerText.replace(/[.]/g, ''))
+    count += sum
+}
+$('.cart-subtotal td').text(count.toLocaleString('vi'))
+$('.amount').text(count.toLocaleString('vi'));
+// console.log(count.toLocaleString('vi'))
+var products = $('.price')
+for (var i = 0; i < products.length; i++) {
+    products[i].children['0'].innerText = parseInt(products[i].children['0'].innerText).toLocaleString('vi')
+    products[i].children['1'].innerText = parseInt(products[i].children['1'].innerText).toLocaleString('vi')
+}
 
 function updateSubtotal (currentItem,currentQty) {
     var item = $(currentItem).parents('.product-quantity').siblings('.product-price').text().replace(/\./g, "");

@@ -1371,7 +1371,7 @@ i.fa-search-plus {
 }
 
 .name {
-    /*padding-top: 20px;*/
+    padding-top: 1px;
 }
 
 .price {
@@ -1382,14 +1382,22 @@ i.fa-search-plus {
     padding-right: 10px;
     color: #339966;
     font-size: 25px;
+    font-weight: 500;
+}
+
+.price strong::after {
+    content: '₫';
 }
 
 .name h3, .name p {
     margin: 0;
     text-align: center;
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
+    margin-top: 10px;
 }
-
+p.manufacturer a {
+    font-size: 18px;
+}
 .vertical-icon a {
     color: #999999;
 }
@@ -2160,6 +2168,10 @@ span.fontSize-rating:hover {
 
 .sale-off {
     font-size: 20px;
+}
+
+.sale-off::after {
+    content: '₫';
 }
 
 .sale-off-detail {

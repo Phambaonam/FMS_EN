@@ -237,6 +237,33 @@
     {% include '../../components/script.html' %}
     <!-- End script -->
 
+    <!--  -->
+    <script type="text/javascript">
+
+        console.log('aaaaaaaaa','{{ info.username }}')
+        if('{{ info.username }}') {
+            $('.add_to-cart').each(function () {
+                $(this).click(function () {
+                    $('.add-to-cart-success1').css('display', 'block')
+                })
+            })
+
+            $('.close1').click(function () {
+                $('.add-to-cart-success1').css('display', 'none')
+            })
+        } else {
+            $('.add_to-cart').each(function () {
+                $(this).click(function () {
+                    $('.add-to-cart-success').css('display', 'block')
+                })
+            })
+
+            $('.close').click(function () {
+                $('.add-to-cart-success').css('display', 'none')
+            })
+        }
+    </script>
+
     <!--  Sort product  -->
     <script type="text/javascript">
         (function () {

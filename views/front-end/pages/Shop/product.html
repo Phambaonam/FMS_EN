@@ -11,24 +11,30 @@
                              {% if login_status === false %}
                             <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
                                 <i class="fa fa-heart-o"></i>
+                            </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                <i class="fa fa-shopping-cart"></i>
                             </a>
                             {% else %}
-                            <a href="#">
+                            <a href="javascript:void(0)" class="add_to_wishlist">
                                 <i class="fa fa-heart-o"></i>
+                            </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                <i class="fa fa-shopping-cart"></i>
                             </a>
                             {% endif %}
-                            <a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart" ><i class="fa fa-shopping-cart"></i></a>
+                            
                             <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}"><i class="fa fa-search-plus"></i></a>
                         </div>
 
                     </div>
                     <div class="name description">
                         <h3><a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a></h3>
-                        <p class="manufacturer" style="height:20px"><a href="#">{{ product.attributes.manufacturer }}</a></p>
+                        <p class="manufacturer" style="height:20px">
+                            <a href="javascript:void(0)">{{ product.attributes.manufacturer }}</a>
+                        </p>
                         <p>
                            <span class="price">
-                                <strong> {{ product.product_price }}.000 Đ</strong>
-                                <del class="sale-off">{{ product.original_price }}.000 Đ</del>
+                                <strong> {{ product.product_price }}đ</strong>
+                                <del class="sale-off">{{ product.original_price }}đ</del>
                            </span>
                         </p>
 

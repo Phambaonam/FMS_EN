@@ -68,6 +68,11 @@ CREATE TABLE IF NOT EXISTS customer (
     verify_token_register VARCHAR(255),
     role CHAR(10)
 );
+CREATE TABLE IF NOT EXISTS wishlish (
+    id SERIAL PRIMARY KEY,
+    attribute_product_id INT REFERENCES attribute_product (attribute_product_id) ON DELETE CASCADE NOT NULL,
+    customer_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL
+);
 
 \COPY area(id,area_name,area_alias,time_create) FROM '/home/doremonsun/Desktop/DoAn/FMS_EN/database/area.csv' DELIMITER ',' CSV HEADER;
 

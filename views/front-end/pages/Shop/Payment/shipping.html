@@ -1,156 +1,141 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanh toán</title>
-    <link rel="stylesheet" type="text/css" href="plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/shipping.css">
-    <link href="https://fonts.googleapis.com/css?family=Arsenal" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Cantata+One" rel="stylesheet">
-</head>
+<!-- Head -->
+{% include '../../../components/head.html' %}
+<!-- End Head -->
+<link rel="stylesheet" type="text/css" href="/public/css/front-end/shipping.css">
 <body>
-<div class="shipping-header">
-    <div class="container">
-        <div class="row row-style-1">
-            <div class="col-lg-2 visible-lg-block">
-                <a href="home.html">
-                    <img src="img/logo-min.png" style="max-width:100px;margin-left: 110px;margin-top: 15px;" class="img-responsive"
-                                         alt="Image">
-                </a>
-            </div>
-            <div class="col-lg-8">
-                <div class="row bs-wizard">
+    <div class="shipping-header">
+        <div class="container">
+            <div class="row row-style-1">
+                <div class="col-lg-2 visible-lg-block">
+                    <a href="/">
+                        <img src="/public/img/logo-min.png" style="max-width:100px;margin-left: 110px;margin-top: 15px;" class="img-responsive" alt="Image">
+                    </a>
+                </div>
+                <div class="col-lg-8">
+                    <div class="row bs-wizard">
 
-                    <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step complete">
-                        <div class="text-center bs-wizard-stepnum">
-                            <span>Đăng Nhập</span>
+                        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step complete">
+                            <div class="text-center bs-wizard-stepnum">
+                                <span>Đăng Nhập</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="bs-wizard-dot">1</span>
                         </div>
-                        <div class="progress">
-                            <div class="progress-bar"></div>
+
+                        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step active">
+                            <div class="text-center bs-wizard-stepnum">
+                                <span class="hidden-xs">Địa Chỉ Giao Hàng</span>
+                                <span class="visible-xs-inline-block">Địa Chỉ</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="bs-wizard-dot">2</span>
                         </div>
-                        <span class="bs-wizard-dot">1</span>
+
+                        <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step disabled">
+                            <div class="text-center bs-wizard-stepnum">
+                                <span class="hidden-xs">Thanh Toán &amp; Đặt Mua</span>
+                                <span class="visible-xs-inline-block">Thanh Toán</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                            <span class="bs-wizard-dot">3</span>
+                        </div>
+
                     </div>
-
-                    <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step active">
-                        <div class="text-center bs-wizard-stepnum">
-                            <span class="hidden-xs">Địa Chỉ Giao Hàng</span>
-                            <span class="visible-xs-inline-block">Địa Chỉ</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar"></div>
-                        </div>
-                        <span class="bs-wizard-dot">2</span>
-                    </div>
-
-                    <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step disabled">
-                        <div class="text-center bs-wizard-stepnum">
-                            <span class="hidden-xs">Thanh Toán &amp; Đặt Mua</span>
-                            <span class="visible-xs-inline-block">Thanh Toán</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar"></div>
-                        </div>
-                        <span class="bs-wizard-dot">3</span>
-                    </div>
-
+                </div>
+                <div class="col-lg-2 visible-lg-block hotline">
+                    <img src="https://vcdn.tikicdn.com/assets/img/hotline.png" height="42" width="176" alt="">
                 </div>
             </div>
-            <div class="col-lg-2 visible-lg-block hotline">
-                <img src="https://vcdn.tikicdn.com/assets/img/hotline.png" height="42" width="176" alt="">
-            </div>
         </div>
     </div>
-</div>
-<div class="container ">
-    <div class="row">
-        <div style="height: 15px;"></div>
-        <h2>2. Địa chỉ giao hàng</h2>
-        <div class="form-body">
-            <div class="ship-form">
-                <form>
-                    <div class="form-group">
-                        <div class="label-input">
-                            <label for="full_name">Họ tên</label>
+    <div class="container ">
+        <div class="row">
+            <div style="height: 15px;"></div>
+            <h2>2. Địa chỉ giao hàng</h2>
+            <div class="form-body">
+                <div class="ship-form">
+                    <form>
+                        <div class="form-group">
+                            <div class="label-input">
+                                <label for="full_name">Họ tên</label>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" class="form-control" id="name" placeholder="Họ tên">
+                            </div>
                         </div>
-                        <div class="input-wrap">
-                            <input type="text" class="form-control" id="name" placeholder="Họ tên">
+                        <div class="form-group">
+                            <div class="label-input">
+                                <label for="telephone"> Điện thoại di động</label>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" class="form-control" id="phone" placeholder="Số điện thoại">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="label-input">
-                            <label for="telephone"> Điện thoại di động</label>
+                        <div class="form-group">
+                            <div class="label-input">
+                                <label for="province"> Tỉnh/Thành phố </label>
+                            </div>
+                            <div class="input-wrap">
+                                <select class="form-control">
+                                    <option disabled selected hidden>Tỉnh / Thành phố</option>
+                                    <option>Hà Nội</option>
+                                    <option>Hồ Chí Minh</option>
+                                    <option>Đà Nẵng</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="input-wrap">
-                            <input type="text" class="form-control" id="phone" placeholder="Số điện thoại">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="label-input">
-                            <label for="province"> Tỉnh/Thành phố </label>
-                        </div>
-                        <div class="input-wrap">
-                            <select class="form-control">
-                                <option disabled selected hidden>Tỉnh / Thành phố</option>
-                                <option>Hà Nội</option>
-                                <option>Hồ Chí Minh</option>
-                                <option>Đà Nẵng</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="label-input">
-                            <label for="district">Quận/Huyện</label>
+                        <div class="form-group">
+                            <div class="label-input">
+                                <label for="district">Quận/Huyện</label>
+                            </div>
+                            <div class="input-wrap">
+                                <select class="form-control">
+                                    <option disabled selected hidden>Quận / Huyện</option>
+                                    <option>Ba Đình</option>
+                                    <option>Đống Đa</option>
+                                    <option>Hai Bà Trưng</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="input-wrap">
-                            <select class="form-control">
-                                <option disabled selected hidden>Quận / Huyện</option>
-                                <option>Ba Đình</option>
-                                <option>Đống Đa</option>
-                                <option>Hai Bà Trưng</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="label-input">
-                            <label for="street"> Phường/Xã </label>
+                        <div class="form-group">
+                            <div class="label-input">
+                                <label for="street"> Phường/Xã </label>
+                            </div>
+                            <div class="input-wrap">
+                                <select class="form-control">
+                                    <option disabled selected hidden>Phường / Xã</option>
+                                    <option>Cát Linh</option>
+                                    <option>Kim Liên</option>
+                                    <option>Ô Chợ Dừa</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="input-wrap">
-                            <select class="form-control">
-                                <option disabled selected hidden>Phường / Xã</option>
-                                <option>Cát Linh</option>
-                                <option>Kim Liên</option>
-                                <option>Ô Chợ Dừa</option>
-                            </select>
+                        <div class="form-group">
+                            <div class="label-input">
+                                <label for="address"> Địa chỉ </label>
+                            </div>
+                            <div class="input-wrap">
+                                <input type="text" class="form-control" id="address" placeholder="Địa chỉ">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="label-input">
-                            <label for="address"> Địa chỉ </label>
-                        </div>
-                        <div class="input-wrap">
-                            <input type="text" class="form-control" id="address" placeholder="Địa chỉ">
-                        </div>
-                    </div>
-                    <a href="payment.html" class="btn btn-default btn-goto">Gửi đến địa chỉ này</a>
-                </form>
+                        <a href="/thanh-toan" class="btn btn-default btn-goto">Gửi đến địa chỉ này</a>
+                    </form>
+                </div>
             </div>
+
         </div>
-
     </div>
-</div>
-<div style="height: 100px;"></div>
-<script type="text/javascript" src="js/jquery-3.1.1.js"></script>
-<script src="owlcarousel/owl.carousel.min.js"></script>
-<script type="text/javascript" src="plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
-<script>
-
-</script>
-</body>
-</html>
+    <div style="height: 100px;"></div>
+    <!-- script -->
+    {% include '../../../components/script.html' %}
+    <!-- End script -->

@@ -118,7 +118,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
             // Get all products
             const products = `
-            SELECT pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.id AS product_id , ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr
+            SELECT pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.id AS product_id , 
+            ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr
             JOIN attribute_product AS ap ON ap.product_id = pr.id
             JOIN product_price AS pp ON pp.attribute_product_id = ap.id;`
             const getDataAllProducts = yield t.any(products)
@@ -519,9 +520,26 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
     })
 
+    router.post('/san-pham/tac-gia', (req, res) => {
+        const author = req.body.author
+        const products = "SELECT ap.id AS product_id , pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE (attributes->'manufacturer') ? ${author}"
+        db.any(products, {
+            author: author
+        })
+            .then(data => {
+                if (!data.product) data.product = data
+                let result = {}
+                result.products = data
+                res.render(frontendPath + 'Shop/product', {
+                    data: result
+                })
+            })
+    })
+
     router.post('/add_to_cart', (req, res) => {
-        const quantity = req.body.quantity
-        const product_id = req.body.product_id
+        const quantity = parseInt(req.body.quantity)
+        console.log('aaaaaaaaaaaaaaaa', quantity)
+        const product_id = parseInt(req.body.product_id)
         const sessID = req.session.id
         // if exists req.user, user_id = req.user.id or user_id =  null
         let user_id = (req.user) ? req.user.id : 0
@@ -551,10 +569,10 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
                 case '1':
                     {
-                        const quantity1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
-                        const quantity2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id =${user_id};'
-                        const quantity = (!req.user) ? quantity1 : quantity2
-                        let getQuality = yield t.any(quantity, {
+                        const qty1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
+                        const qty2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id =${user_id};'
+                        const qty = (!req.user) ? qty1 : qty2
+                        let getQuality = yield t.any(qty, {
                             product_id: product_id,
                             sessID: sessID,
                             user_id: user_id
@@ -563,11 +581,12 @@ module.exports.shopPage = function (db, router, frontendPath) {
                         const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id =${user_id};'
                         const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
                         yield t.any(updateQuantity, {
-                            quantity: parseInt(getQuality[0].quantity) + 1,
+                            quantity: parseInt(getQuality[0].quantity) + quantity,
                             product_id: product_id,
                             sessID: sessID,
                             user_id: user_id
                         })
+                        console.log('bbbbbbbbbbbbbbbbb', parseInt(getQuality[0].quantity) + quantity)
                     }
                     break
             }
@@ -580,11 +599,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 user_id: user_id
             })
             // update total cart in session
-            req.user ? (req.session.passport.user.sumProduct = parseInt(getSum.sum)) : (req.session.sumProduct = parseInt(getSum.sum))
+            req.session.passport ? (req.session.passport.user.sumProduct = parseInt(getSum.sum)) : (req.session.sumProduct = parseInt(getSum.sum))
             return getSum.sum
         })
             .then(data => {
-
+                /**
+                 * Khi sử dụng axios : để gán 1 thuộc tính nào vào trong cookie ta phải trả lại cho client 1 dữ liệu nào đó.
+                 * Khi đó ta mới gán thuộc tính vào session thành công
+                 */
                 res.send(data)
             })
             .catch(err => {
@@ -607,11 +629,11 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
             for (let item in getCarts) {
                 const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
-                const getProduct = yield t.any(product, {
+                const getProduct = yield t.one(product, {
                     attribute_product_id: getCarts[item].attribute_product_id
                 })
-                getProduct[0].quantity = getCarts[item].quantity
-                cartDetail.push(getProduct[0])
+                getProduct.quantity = getCarts[item].quantity
+                cartDetail.push(getProduct)
             }
 
 
@@ -767,7 +789,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
     // chi tiet san pham
 
     router.get('/san-pham/chi-tiet-san-pham/:product', (req, res) => {
-        console.log('namduyen', req.session)
         const product_id = parseInt(req.params.product.split('-').pop())
         const product_alias = req.params.product.slice(0, -2)
         db.task('chi tiet san pham', function* (t) {
@@ -783,27 +804,141 @@ module.exports.shopPage = function (db, router, frontendPath) {
             const getDataProductDetail = yield t.one(product_detail, {
                 product_id: product_id
             })
-            return getDataProductDetail
+
+            const count = 'SELECT COUNT(ap.id) AS sum_products FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id WHERE pr.product_alias = ${product_alias}'
+            const count_product = yield t.one(count, {
+                product_alias: product_alias
+            })
+            const images = 'SELECT ap.id AS product_id, ap.images, pr.product_alias FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id WHERE pr.product_alias = ${product_alias}'
+            const getImages = yield t.any(images, {
+                product_alias: product_alias
+            })
+            return [getDataProductDetail, count_product, getImages]
         })
             .then(data => {
+                // res.json(data)
                 if (req.session.url !== req.url) req.session.url = req.url
                 let info = req.user || req.session.user
                 res.render(frontendPath + 'Shop/Product/shop-detail', {
                     title: 'Chi tiết sản phẩm',
-                    data: data,
+                    data: data[0],
+                    status: parseInt(data[1].sum_products),
+                    images: data[2],
                     info: info
                 })
             })
 
     })
 
-    router.get('/yeu-thich', (req, res) => {
-        console.log(req.body)
-        if (req.session.url !== req.url) req.session.url = req.url
-        let info = req.user || req.session.user
-        res.render(frontendPath + 'Shop/wishlist', {
-            title: 'Chi tiết sản phẩm',
-            info: info
+    router.post('/add_to_wishlish', (req, res) => {
+        const product_id = req.body.product_id
+        const customer_id = req.user.id
+        db.task('add to wishlish', function* (t) {
+            const status = 'SELECT count(1) FROM wishlish WHERE attribute_product_id = ${product_id} AND customer_id = ${customer_id};'
+            const wishlishExist = yield t.one(status, {
+                product_id: product_id,
+                customer_id: customer_id
+            })
+            switch (wishlishExist.count) {
+                case '0':
+                    {
+                        const insertWishlish = 'INSERT INTO wishlish(attribute_product_id, customer_id) VALUES (${product_id}, ${customer_id});'
+                        yield t.any(insertWishlish, {
+                            product_id: product_id,
+                            customer_id: customer_id
+                        })
+                        req.flash('wishlish', 'Đã thêm sản phẩm vào danh sách yêu thích.')
+                    }
+                    break
+                case '1':
+                    req.flash('wishlish', ' Bạn đã thêm sản phẩm vào danh sách yêu thích.')
+                    break
+            }
+            const countWishlish = 'SELECT COUNT(attribute_product_id) FROM wishlish WHERE customer_id = ${customer_id}'
+            const getCountWishlish = yield t.one(countWishlish, {
+                customer_id: customer_id
+            })
+            /**
+            * Khi sử dụng axios : để gán 1 thuộc tính nào vào trong cookie ta phải trả lại cho client 1 dữ liệu nào đó.
+            * Khi đó ta mới gán thuộc tính vào session thành công
+            */
+            // update total wishlish in session
+            req.session.passport ? req.session.passport.user.sumWishlish = parseInt(getCountWishlish.count) : req.session.passport.user.sumWishlish = 0
+            return getCountWishlish.count
         })
+            .then(data => {
+                res.json(data)
+            })
+    })
+
+    router.post('/delete/wishlish', (req, res) => {
+        const product_id = parseFloat(req.body.product_id)
+        const customer_id = parseFloat(req.user.id)
+        db.task('remove wishlish product', function* (t) {
+            const wishlish = 'DELETE FROM wishlish WHERE attribute_product_id = ${product_id} AND customer_id = ${customer_id} ;'
+            yield t.any(wishlish, {
+                product_id: product_id,
+                customer_id: customer_id
+            })
+            const countWishlish = 'SELECT COUNT(attribute_product_id) FROM wishlish WHERE customer_id = ${customer_id}'
+            const getCountWishlish = yield t.one(countWishlish, {
+                customer_id: customer_id
+            })
+
+            req.session.passport ? req.session.passport.user.sumWishlish = parseInt(getCountWishlish.count) : req.session.passport.user.sumWishlish = 0
+            return getCountWishlish.count
+        })
+            .then(data => {
+                res.json(data)
+            })
+    })
+
+    router.get('/yeu-thich', (req, res) => {
+        const customer_id = req.session.passport.user.id
+        let getWishlishProducts = []
+        db.task('wishlish detail', function* (t) {
+            const wishlish = 'SELECT attribute_product_id FROM wishlish WHERE  customer_id = ${customer_id} ORDER BY id ASC;'
+            const getWishlishes = yield t.any(wishlish, {
+                customer_id: customer_id
+            })
+
+            for (let item in getWishlishes) {
+                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images , ap.option_status FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
+                const getProduct = yield t.one(product, {
+                    attribute_product_id: getWishlishes[item].attribute_product_id
+                })
+                getProduct.quantity = getWishlishes[item].quantity
+                getWishlishProducts.push(getProduct)
+            }
+            return getWishlishProducts
+        })
+            .then(data => {
+                if (req.session.url !== req.url) req.session.url = req.url
+                let info = req.user 
+                res.render(frontendPath + 'Shop/wishlist', {
+                    title: 'Chi tiết sản phẩm',
+                    info: info,
+                    products: data
+                })
+            })
+
+    })
+
+    // payment
+
+    router.get('/shipping', (req, res) => {
+        res.render(frontendPath + 'Shop/Payment/shipping')
+    })
+
+    router.get('/thanh-toan', (req, res) => {
+        res.render(frontendPath + 'Shop/Payment/payment')
+    })
+
+    router.get('/order-success', (req, res) => {
+        res.render(frontendPath + 'Shop/Order/order-success')
+    })
+
+    router.get('/don-hang-cua-toi', (req, res) => {
+        res.render(frontendPath + 'Shop/Order/order')
     })
 }

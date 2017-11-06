@@ -1379,6 +1379,7 @@ i.fa-search-plus {
 }
 
 .price strong {
+    padding-right: 10px;
     color: #339966;
     font-size: 25px;
 }
@@ -2950,7 +2951,7 @@ td.product-price-wishlist::after {
     padding-left: 5px;
 }
 
-td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after, td.product-action::after {
+td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after {
     content: '₫';
 }
 
@@ -4117,72 +4118,7 @@ h3.comment-reply-title {
     color: #BD081C;
 }
 
-.single-product form.cart {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    /*justify-content: space-between;*/
-}
 
-.single-product form.cart > span {
-    margin-right: 5px;
-    font-size: 15px;
-}
-
-.single-product form.cart .quantity {
-    margin-right: 30px;
-}
-
-.single-product form.cart button.add-to-cart {
-    margin: 15px 30px 15px 10px;
-}
-
-.single-product form.cart .cart-button > a {
-    height: 40px;
-    width: 20px;
-    line-height: 40px;
-    /*background-color: rgba(69,69,69,0.1);*/
-    background: #e7e7e7;
-    /*border-radius: 50%;*/
-    text-align: center;
-    display: inline-block;
-    position: relative;
-}
-
-.single-product form.cart .cart-button > a::before {
-    width: 0;
-    height: 40px;
-    border-style: solid;
-    border-width: 10px 10px 10px 0;
-    border-color: transparent #e7e7e7 transparent transparent;
-    position: absolute;
-    left: -10px;
-    top: 0;
-    content: '';
-    transition: all 0.4s ease;
-}
-
-.single-product form.cart .cart-button > a::after {
-    width: 0;
-    height: 40px;
-    border-style: solid;
-    border-width: 10px 0 10px 10px;
-    border-color: transparent transparent transparent #e7e7e7;
-    position: absolute;
-    right: -10px;
-    top: 0;
-    content: '';
-    transition: all 0.4s ease;
-}
-
-.single-product form.cart .cart-button > a .fa {
-    height: 40px;
-    line-height: 40px;
-}
-
-.single-product form.cart .cart-button > a:hover .fa {
-    transform: scale(1.2);
-}
 
 .single-product .product-category {
     margin-top: 20px;

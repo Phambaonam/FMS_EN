@@ -43,7 +43,7 @@
                 </ul>
             </nav>
             <div class="tab-content">
-                <h3>Danh sách yêu thích (2)</h3>
+                <h3>Danh sách yêu thích ({{ wishlish }})</h3>
                 <div class="cart-container wishlist-container">
                     <table class="cart">
                         <thead>
@@ -63,57 +63,37 @@
                             </tr>
                         </thead>
                         <tbody>
+                           {% for product in products %}
                             <tr class="cart-item">
                                 <td class="product-thumbnail">
-                                    <a href="shop-detail.html">
-                                        <img src="img/riflesso_1.jpg">
+                                    <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">
+                                        <img src="/public/images/products/{{ product.images["0"]}}">
                                     </a>
                                 </td>
                                 <td class="product-name">
-                                    <a href="shop-detail.html">Tủ Riflesso</a>
+                                    <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a>
                                 </td>
-                                <td class="product-price">4.400.000</td>
+                                <td class="product-price">{{ product.product_price }}</td>
                                 <td class="product-status">
+                                    {% if product.option_status.status_product === 'on' %}
                                     <span class="in-stock">Còn hàng</span>
-                                </td>
-                                <td class="product-action">
-                                    <button class="link-to">
-                                        <span class="hidden-xs hidden-sm">Thêm vào giỏ hàng </span>
-                                        <i class="fa fa-shopping-cart"></i>
-                                    </button>
-                                </td>
-                                <td class="product-remove">
-                                    <button>
-                                        <i class="fa fa-trash-o"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="cart-item">
-                                <td class="product-thumbnail">
-                                    <a href="shop-detail.html">
-                                        <img src="img/rotonda_1.jpg" alt="">
-                                    </a>
-                                </td>
-                                <td class="product-name">
-                                    <a href="shop-detail.html">Bàn La Rotonda </a>
-                                </td>
-                                <td class="product-price">3.200.000</td>
-                                <td class="product-status">
+                                    {% else%}
                                     <span class="out-stock">Hết hàng</span>
+                                    {% endif %}
                                 </td>
-                                <td class="product-action">
+                                <td class="product-action {{ product.product_id }}">
                                     <button class="link-to">
                                         <span class="hidden-xs hidden-sm">Thêm vào giỏ hàng </span>
                                         <i class="fa fa-shopping-cart"></i>
                                     </button>
                                 </td>
-                                <td class="product-remove">
+                                <td class="product-remove {{ product.product_id }}">
                                     <button>
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </td>
                             </tr>
-
+                           {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -127,3 +107,47 @@
     <!-- script -->
     {% include '../../components/script.html' %}
     <!-- End script -->
+
+    <!-- add to cart -->
+    <script type="text/javascript">
+        var add_to_cart = document.querySelectorAll('.product-action')
+        add_to_cart.forEach(function(item) {
+            item.onclick = function () {
+                var product_id = item.className.charAt(item.className.length - 1)
+                var total = document.getElementById('cart-count')
+                axios({
+                    method: 'post',
+                    url: '/add_to_cart',
+                    data: {
+                        product_id: product_id,
+                        quantity: 1
+                    }
+                })
+                    .then(function (res) {
+                        total.innerText = res.data
+                    })
+            }
+        })
+    </script>
+    <!-- remove product -->
+
+    <script type="text/javascript">
+        var remove_product = document.querySelectorAll('.product-remove')
+        remove_product.forEach(function (item) {
+            item.onclick = function () {
+                var product_id = item.className.charAt(item.className.length - 1)
+                var totalWish = document.getElementById('add_to-wishlist')
+                axios({
+                    method: 'post',
+                    url: '/delete/wishlish',
+                    data: {
+                        product_id: product_id
+                    }
+                })
+                    .then(function (res) {
+                        console.log(res.data)
+                        totalWish.innerText = res.data
+                    })
+            }
+        })
+    </script>

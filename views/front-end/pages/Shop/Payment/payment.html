@@ -1,25 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Thanh toán</title>
-	<link rel="stylesheet" type="text/css" href="plugins/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="plugins/font-awesome/css/font-awesome.min.css">
-	<link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" type="text/css" href="css/payment.css">
-	<link href="https://fonts.googleapis.com/css?family=Arsenal" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Cantata+One" rel="stylesheet">
-</head>
+<!-- Head -->
+{% include '../../../components/head.html' %}
+<!-- End Head -->
+<link rel="stylesheet" type="text/css" href="/public/css/front-end/payment.css">
 <body>
 
 <div class="shipping-header">
 	<div class="container">
 		<div class="row row-style-1">
 			<div class="col-lg-2 visible-lg-block">
-				<a href="home.html">
-                    <img src="img/logo-min.png" style="max-width:100px;margin-left: 110px;margin-top: 15px;" class="img-responsive"
+				<a href="/">
+                    <img src="/public/img/logo-min.png" style="max-width:100px;margin-left: 110px;margin-top: 15px;" class="img-responsive"
                          alt="Image">
                 </a>
 			</div>
@@ -89,7 +81,7 @@
 						<tbody>
 							<tr>
 								<td class="cart-p-thumbnail">
-									<img src="img/riflesso_1.jpg" class="img-responsive">
+									<img src="/public/front-end/img/riflesso_1.jpg" class="img-responsive">
 									<div class="cart-p-qty">2</div>
 								</td>
 								<td class="cart-p-name">
@@ -129,7 +121,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<a href="order-success.html" class="btn btn-default btn-goto">Đặt hàng</a>
+					<a href="/order-success" class="btn btn-default btn-goto">Đặt hàng</a>
 				</div>
 			</div>
 		</div>

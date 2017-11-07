@@ -8,8 +8,8 @@ const shortid = require('shortid')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const morgan = require('morgan')
-const fs = module.exports =  require('fs')
-const flash = require('connect-flash') 
+const fs = module.exports = require('fs')
+const flash = require('connect-flash')
 const passport = require('passport')
 const Strategy = require('passport-local').Strategy
 
@@ -30,14 +30,14 @@ const product = multer.diskStorage({
         cb(null, 'public/images/products/')
     },
     filename: function (req, file, cb) {
-        if(file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+        if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
             cb(null, shortid.generate() + '_' + file.originalname)
         } else {
             console.log(file.mimetype)
         }
     }
 })
-  
+console.log('server')
 const uploadProduct = multer({ storage: product })
 
 /***
@@ -50,25 +50,24 @@ app.use(session({
     secret: 'FMS',
     resave: true,
     saveUninitialized: true,
-    cookie: { 
-        maxAge: 30 *24 * 60 * 60 * 1000, // cookie sẽ hết hạn trong 30 ngày
-        secure: false 
+    cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // cookie sẽ hết hạn trong 30 ngày
+        secure: false
     }
 }))
 
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
     res.locals.carts = (req.session.passport) ? req.session.passport.user.sumProduct : req.session.sumProduct
     !req.session.passport ? res.locals.login_status = false : res.locals.wishlish = req.session.passport.user.sumWishlish
-    if (req.session.passport){
+    if (req.session.passport) {
         const listWishlish = 'SELECT attribute_product_id FROM wishlish WHERE customer_id = ${customer_id};'
         db.any(listWishlish, {
             customer_id: parseInt(req.session.passport.user.id)
         })
             .then(data => {
                 data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
-                console.log('aqw', res.locals.listWishlish)
             })
-    } 
+    }
     // console.log(`res.locals.carts ${res.locals.carts}`)
     // console.log('aaaaaaaaaaaaaa', req.session)
     next()
@@ -96,13 +95,13 @@ nunjucks.configure('views', {
  * (Sử dụng method này nếu muốn sử dụng các extension template khác nhau)
  * With nunjucks, we use nunjucks.render(trong nunjucks thì sử dụng hàm nụnjucks.render)
  */
-app.engine('html',nunjucks.render)
+app.engine('html', nunjucks.render)
 /***
  * https://expressjs.com/en/4x/api.html#app.set
  * The default engine extension to use when omitted.
  * (engine extension mà bạn sử dụng cho toàn bộ ứng dụng, có thể không cần viết đuôi file)
  */
-app.set('view engine','html')
+app.set('view engine', 'html')
 app.use(morgan('dev'))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -120,5 +119,5 @@ routerFrontEnd(db, router, frontendPath)
 routerBackEnd(db, router, backendPath, uploadProduct)
 
 app.listen(port, function () {
-    console.log(`server running on port ${ port }!`)
+    console.log(`server running on port ${port}!`)
 })

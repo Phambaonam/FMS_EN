@@ -50,7 +50,7 @@
                     <div class="name description">
                         <h3><a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a></h3>
                         <p class="manufacturer" style="height:20px">
-                            <a href="javascript:void(0)">{{ product.attributes.manufacturer }}</a>
+                            <a href="/san-pham/tac-gia/{{ product.attributes.manufacturer | replace(' ', '-') }}">{{ product.attributes.manufacturer }}</a>
                         </p>
                         <p>
                            <span class="price">

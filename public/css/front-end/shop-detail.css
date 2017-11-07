@@ -14,7 +14,7 @@
     padding: 19px 10px;
 }
 
-.form-control {
+/* .form-control {
     font-size: 18px;
     box-shadow: none;
     width: 100%;
@@ -23,7 +23,7 @@
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
+} */
 
 .question-answer-form .form .btn {
     font-weight: 100;

@@ -3,11 +3,11 @@
  */
 module.exports.shopPage = function (db, router, frontendPath) {
 
-    router.get('/san-pham', (req, res) => {
-        db.task('getAllproduct', function* (t) {
+    let menu = () => {
+        return db.task('get menu', function* (t) {
             /**
-             * All side bar left 
-             */
+            * All side bar left 
+            */
             let menuArea = []
             let menuCategory = []
 
@@ -116,6 +116,12 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
             }
 
+            return [menuArea, menuCategory]
+        })
+    }
+
+    router.get('/san-pham', (req, res) => {
+        db.task('getAllproduct', function* (t) {
             // Get all products
             const products = `
             SELECT pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.id AS product_id , 
@@ -123,13 +129,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
             JOIN attribute_product AS ap ON ap.product_id = pr.id
             JOIN product_price AS pp ON pp.attribute_product_id = ap.id;`
             const getDataAllProducts = yield t.any(products)
-
-            return {
-                menuArea: menuArea,
-                menuCategory: menuCategory,
-                products: getDataAllProducts,
-                url: req.url
-            }
+            return menu().then(data => {
+                return {
+                    menuArea: data[0],
+                    menuCategory: data[1],
+                    products: getDataAllProducts,
+                    url: req.url
+                }
+            })
 
         })
             .then(data => {
@@ -153,119 +160,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
     router.get('/san-pham/:param', (req, res) => {
         const info = req.params
         db.task('get product', function* (t) {
-            /**
-             * All side bar left 
-             */
-            let menuArea = []
-            let menuCategory = []
-
-            /**
-             *  menu left category product depended on area
-             */
-            const areas = 'SELECT * FROM area AS ar;'
-            const areasData = yield t.any(areas)
-            /**
-             *  Quản lý menu theo 2 cách:
-             *  Nếu tất cả category child thuộc 1 category xuất hiện ở nhiều khu vực thì sub menu sẽ hiển thị theo tên của category cha (tránh category child lặp lại nhiều lần).
-             *  Nếu 1 vài category child có ở khu vực này mà không có ở khu vực khác thì sub menu sẽ hiển thị theo tên của category child.
-             * Cách thực hiện:
-             *      - Nếu hiển thị theo category cha thì xét diều kiện gộp(group by category id) cho category child là true, còn theo category child thì là false.
-             *      - Tìm category tương ứng từng khu vực. 
-             */
-            for (let area in areasData) {
-                let temp = 0
-                let count = 0
-                const getStatus = 'SELECT cp.group_by_category, cp.category_id, ca.name_category FROM category AS ca JOIN category_product AS cp ON ca.id = cp.category_id ORDER BY cp.category_id ASC;'
-                const status = yield t.any(getStatus)
-                let category_product = []
-                for (let check in status) {
-                    /**
-                     * Kiểm tra nếu category child được gộp vào 1 nhóm thì submenu là category cha.
-                     * Do nhiều category child thuộc 1 category cha nên tạo ra biến:
-                     *      temp: dùng để check khi nào sẽ chuyển 1 category child khác.
-                     *      count: dùng để kiểm tra nếu category child là phần tử cuối cùng của 1 category cha thì sẽ lấy category cha.
-                     */
-                    if (status[check].group_by_category && status[check].category_id != temp) {
-                        temp = status[check].category_id
-                        const countCategoryId = 'SELECT COUNT(cp.category_id)  FROM category AS ca JOIN category_product AS cp ON ca.id = cp.category_id  WHERE cp.category_id = ${category_id};'
-                        const dem = yield t.any(countCategoryId, {
-                            category_id: temp
-                        })
-                        count = parseInt(dem[0].count)
-                        count--
-                    }
-                    // Kiểm tra category child trước đó và tiếp theo có cùng category cha hay không, nếu cùng category cha thì giảm count cho tới khi count = 0
-                    else if (status[check].group_by_category && temp === status[check].category_id)
-                        count--
-
-                    /**
-                     *   Kiểm tra xem category child có thuộc khu vực đó không và chỉ lấy category child nằm trong khu vực đó.
-                     *   Dùng console.log(typeof categoryProductData[0])  để lấy đúng dữ liệu.
-                     */
-                    if (status[check].group_by_category && count === 0) {
-                        const name_category = 'SELECT ca.id AS category_id, ca.name_category AS name_category_product, ca.category_alias AS category_product_alias FROM category AS ca JOIN  category_product AS cp ON ca.id = cp.category_id WHERE ${area} = ANY (areas) AND cp.category_id = ${category_id} LIMIT 1;'
-                        const categoryProductData = yield t.any(name_category, {
-                            area: areasData[area].area_name,
-                            category_id: temp
-                        })
-                        // Nếu category child không nằm trong khu vực thì data trả về sẽ là underfined
-                        // console.log(typeof categoryProductData[0])
-                        if (typeof categoryProductData[0] === 'object') {
-                            category_product.push(categoryProductData[0])
-                        }
-                    }
-
-                    /**
-                     *  Kiểm tra nếu category child không được gộp vào 1 nhóm thì submenu là category child.
-                     *  Dùng console.log(typeof categoryProductData[0]) để lấy đúng dữ liệu.
-                     */
-                    else if (!status[check].group_by_category && status[check].category_id != temp) {
-                        temp = status[check].category_id
-                        const name_category = 'SELECT cp.id AS category_product_id, cp.name_category_product, cp.category_product_alias, cp.group_by_category FROM category_product AS cp JOIN category AS ca ON ca.id = cp.category_id WHERE ${area}= ANY (areas) AND cp.category_id = ${category_id};'
-                        const categoryProductData = yield t.any(name_category, {
-                            area: areasData[area].area_name,
-                            category_id: temp
-                        })
-                        // Nếu category child không nằm trong khu vực thì data trả về sẽ là underfined  
-                        // console.log(typeof categoryProductData[0])                     
-                        if (typeof categoryProductData[0] === 'object')
-                            category_product.push(categoryProductData[0])
-                    }
-
-                }
-                // trả về submeu và area sau khi kiểm tra
-                menuArea.push({
-                    area_name: areasData[area].area_name,
-                    area_alias: areasData[area].area_alias,
-                    category_product: category_product
-                })
-            }
-
-            /**
-             *  menu left category product depended on category
-             *  Lấy tất cả các category child 
-             */
-            const categories = 'SELECT ca.name_category, ca.category_alias FROM category AS ca;'
-            const categoriesData = yield t.any(categories)
-            for (let category in categoriesData) {
-                const categoryId = 'SELECT ca.id FROM category AS ca WHERE name_category = ${name_category};'
-                const categoryIdData = yield t.any(categoryId, {
-                    name_category: categoriesData[category].name_category
-                })
-                const category_product = 'SELECT cp.id AS category_product_id, cp.name_category_product, cp.category_product_alias FROM category_product AS cp WHERE category_id = ${category_id};'
-                const categoryProductData = yield t.any(category_product, {
-                    category_id: categoryIdData[0].id
-                })
-                menuCategory.push({
-                    name_category: categoriesData[category].name_category,
-                    category_alias: categoriesData[category].category_alias,
-                    category_product: categoryProductData
-                })
-
-            }
-
-            ////////////////////////////////////////////////
-
             const id_category_product = 'SELECT id AS category_product_id FROM category_product WHERE category_product_alias = ${category_product_alias};'
             const get_id_category_product = yield t.one(id_category_product, {
                 category_product_alias: info.param
@@ -276,18 +170,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 category_product_id: get_id_category_product.category_product_id
             })
 
-            return {
-                menuArea: menuArea,
-                menuCategory: menuCategory,
-                products: getDataAllProducts,
-                url: req.url.slice(1).split('/'),
-                category_product_id: get_id_category_product.category_product_id
-            }
-
+            return menu().then(data => {
+                return {
+                    menuArea: data[0],
+                    menuCategory: data[1],
+                    products: getDataAllProducts,
+                    url: req.url.slice(1).split('/'),
+                    category_product_id: get_id_category_product.category_product_id
+                }
+            })
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
-
                 let info = req.user || req.session.user
                 res.render(frontendPath + 'Shop/shop', {
                     info: info,
@@ -300,118 +194,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
     router.get('/san-pham-group/:param', (req, res) => {
         const info = req.params
         db.task('get product', function* (t) {
-            /**
-             * All side bar left 
-             */
-            let menuArea = []
-            let menuCategory = []
-
-            /**
-             *  menu left category product depended on area
-             */
-            const areas = 'SELECT * FROM area AS ar;'
-            const areasData = yield t.any(areas)
-            /**
-             *  Quản lý menu theo 2 cách:
-             *  Nếu tất cả category child thuộc 1 category xuất hiện ở nhiều khu vực thì sub menu sẽ hiển thị theo tên của category cha (tránh category child lặp lại nhiều lần).
-             *  Nếu 1 vài category child có ở khu vực này mà không có ở khu vực khác thì sub menu sẽ hiển thị theo tên của category child.
-             * Cách thực hiện:
-             *      - Nếu hiển thị theo category cha thì xét diều kiện gộp(group by category id) cho category child là true, còn theo category child thì là false.
-             *      - Tìm category tương ứng từng khu vực. 
-             */
-            for (let area in areasData) {
-                let temp = 0
-                let count = 0
-                const getStatus = 'SELECT cp.group_by_category, cp.category_id, ca.name_category FROM category AS ca JOIN category_product AS cp ON ca.id = cp.category_id ORDER BY cp.category_id ASC;'
-                const status = yield t.any(getStatus)
-                let category_product = []
-                for (let check in status) {
-                    /**
-                     * Kiểm tra nếu category child được gộp vào 1 nhóm thì submenu là category cha.
-                     * Do nhiều category child thuộc 1 category cha nên tạo ra biến:
-                     *      temp: dùng để check khi nào sẽ chuyển 1 category child khác.
-                     *      count: dùng để kiểm tra nếu category child là phần tử cuối cùng của 1 category cha thì sẽ lấy category cha.
-                     */
-                    if (status[check].group_by_category && status[check].category_id != temp) {
-                        temp = status[check].category_id
-                        const countCategoryId = 'SELECT COUNT(cp.category_id)  FROM category AS ca JOIN category_product AS cp ON ca.id = cp.category_id  WHERE cp.category_id = ${category_id};'
-                        const dem = yield t.any(countCategoryId, {
-                            category_id: temp
-                        })
-                        count = parseInt(dem[0].count)
-                        count--
-                    }
-                    // Kiểm tra category child trước đó và tiếp theo có cùng category cha hay không, nếu cùng category cha thì giảm count cho tới khi count = 0
-                    else if (status[check].group_by_category && temp === status[check].category_id)
-                        count--
-
-                    /**
-                     *   Kiểm tra xem category child có thuộc khu vực đó không và chỉ lấy category child nằm trong khu vực đó.
-                     *   Dùng console.log(typeof categoryProductData[0])  để lấy đúng dữ liệu.
-                     */
-                    if (status[check].group_by_category && count === 0) {
-                        const name_category = 'SELECT ca.id AS category_id, ca.name_category AS name_category_product, ca.category_alias AS category_product_alias FROM category AS ca JOIN  category_product AS cp ON ca.id = cp.category_id WHERE ${area} = ANY (areas) AND cp.category_id = ${category_id} LIMIT 1;'
-                        const categoryProductData = yield t.any(name_category, {
-                            area: areasData[area].area_name,
-                            category_id: temp
-                        })
-                        // Nếu category child không nằm trong khu vực thì data trả về sẽ là underfined
-                        // console.log(typeof categoryProductData[0])
-                        if (typeof categoryProductData[0] === 'object') {
-                            category_product.push(categoryProductData[0])
-                        }
-                    }
-
-                    /**
-                     *  Kiểm tra nếu category child không được gộp vào 1 nhóm thì submenu là category child.
-                     *  Dùng console.log(typeof categoryProductData[0]) để lấy đúng dữ liệu.
-                     */
-                    else if (!status[check].group_by_category && status[check].category_id != temp) {
-                        temp = status[check].category_id
-                        const name_category = 'SELECT cp.id AS category_product_id, cp.name_category_product, cp.category_product_alias, cp.group_by_category FROM category_product AS cp JOIN category AS ca ON ca.id = cp.category_id WHERE ${area}= ANY (areas) AND cp.category_id = ${category_id};'
-                        const categoryProductData = yield t.any(name_category, {
-                            area: areasData[area].area_name,
-                            category_id: temp
-                        })
-                        // Nếu category child không nằm trong khu vực thì data trả về sẽ là underfined  
-                        // console.log(typeof categoryProductData[0])                     
-                        if (typeof categoryProductData[0] === 'object')
-                            category_product.push(categoryProductData[0])
-                    }
-
-                }
-                // trả về submeu và area sau khi kiểm tra
-                menuArea.push({
-                    area_name: areasData[area].area_name,
-                    area_alias: areasData[area].area_alias,
-                    category_product: category_product
-                })
-            }
-
-            /**
-             *  menu left category product depended on category
-             *  Lấy tất cả các category child 
-             */
-            const categories = 'SELECT ca.name_category, ca.category_alias FROM category AS ca;'
-            const categoriesData = yield t.any(categories)
-            for (let category in categoriesData) {
-                const categoryId = 'SELECT ca.id FROM category AS ca WHERE name_category = ${name_category};'
-                const categoryIdData = yield t.any(categoryId, {
-                    name_category: categoriesData[category].name_category
-                })
-                const category_product = 'SELECT cp.id AS category_product_id, cp.name_category_product, cp.category_product_alias FROM category_product AS cp WHERE category_id = ${category_id};'
-                const categoryProductData = yield t.any(category_product, {
-                    category_id: categoryIdData[0].id
-                })
-                menuCategory.push({
-                    name_category: categoriesData[category].name_category,
-                    category_alias: categoriesData[category].category_alias,
-                    category_product: categoryProductData
-                })
-
-            }
-
-            ////////////////////////////////////////////////
             const id_category = 'SELECT id AS category_id FROM category WHERE category_alias = ${category_alias};'
             const getIdCategory = yield t.one(id_category, {
                 category_alias: info.param
@@ -421,19 +203,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
             const getDataAllProducts = yield t.any(products, {
                 category_id: getIdCategory.category_id
             })
-
-            return {
-                menuArea: menuArea,
-                menuCategory: menuCategory,
-                products: getDataAllProducts,
-                url: req.url.slice(1).split('/'),
-                category_id: getIdCategory.category_id
-            }
-
+            return menu().then(data => {
+                return {
+                    menuArea: data[0],
+                    menuCategory: data[1],
+                    products: getDataAllProducts,
+                    url: req.url.slice(1).split('/'),
+                    category_id: getIdCategory.category_id
+                }
+            })
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
-
                 let info = req.user || req.session.user
                 res.render(frontendPath + 'Shop/shop', {
                     info: info,
@@ -447,6 +228,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
         const info = req.body
         let condition = info.data
         switch (condition) {
+            case 'sort0':
+                condition = 'ORDER BY pp.attribute_product_id ASC;'
+                break
             case 'sort1':
                 condition = "(option_status->'new_product') is not null;"
                 break
@@ -457,6 +241,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
             case 'sort3':
                 condition = 'ORDER BY product_price DESC;'
+                break
+            case 'sort6':
+                condition = 'ORDER BY pp.attribute_product_id ASC;'
                 break
         }
 
@@ -513,6 +300,20 @@ module.exports.shopPage = function (db, router, frontendPath) {
                             products: getDataAllProducts
                         }
                     }
+                
+                case 'tac-gia':
+                    {
+                        const products1 = "SELECT pr.product_name,pr.product_alias, pr.category_product_id, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE attributes->'manufacturer' ? ${author}" + condition
+                        const products3 = "SELECT pr.product_name,pr.product_alias, pr.category_product_id, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE attributes->'manufacturer' ? ${author} AND " + condition
+                        products = (condition !== "(option_status->'new_product') is not null;") ? products1 : products3
+                        const getDataAllProducts = yield t.any(products, {
+                            author: info.author
+                        })
+
+                        return {
+                            products: getDataAllProducts
+                        }
+                    }    
             }
         })
             .then(data => {
@@ -520,18 +321,31 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
     })
 
-    router.post('/san-pham/tac-gia', (req, res) => {
-        const author = req.body.author
-        const products = "SELECT ap.id AS product_id , pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE (attributes->'manufacturer') ? ${author}"
-        db.any(products, {
-            author: author
+    router.get('/san-pham/tac-gia/:author', (req, res) => {
+        const author = req.params.author.replace(/-/g, ' ')
+        db.task('get product of author', function* (t) {
+            const products = "SELECT ap.id AS product_id , pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE (attributes->'manufacturer') ? ${author};"
+            const getProducts = yield t.any(products, {
+                author: author
+            })
+            return menu().then(data => {
+                return {
+                    menuArea: data[0],
+                    menuCategory: data[1],
+                    products: getProducts,
+                    url: req.url.slice(1).split('/')[1],
+                    author: author
+                }
+            })
         })
             .then(data => {
-                if (!data.product) data.product = data
-                let result = {}
-                result.products = data
-                res.render(frontendPath + 'Shop/product', {
-                    data: result
+                // res.json(data)
+                if (req.session.url !== req.url) req.session.url = req.url
+                let info = req.user || req.session.user
+                res.render(frontendPath + 'Shop/shop', {
+                    info: info,
+                    data: data,
+                    title: 'Sản phẩm'
                 })
             })
     })
@@ -914,7 +728,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
-                let info = req.user 
+                let info = req.user
                 res.render(frontendPath + 'Shop/wishlist', {
                     title: 'Chi tiết sản phẩm',
                     info: info,

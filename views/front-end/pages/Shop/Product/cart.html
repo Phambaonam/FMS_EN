@@ -117,8 +117,7 @@
                     product_id: item.id
                 })
                     .then(function (res) {
-                        console.log(res.data)
-                        cart.innerText = parseInt(res.data)
+                        (res.data === null) ? cart.innerText = 0 : cart.innerText = parseInt(res.data)
                     })
             }
         })

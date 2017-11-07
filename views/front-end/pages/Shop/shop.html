@@ -16,15 +16,19 @@
             <ol class="breadcrumb">
                 {% if data.category_id != null %}
                 <li id="all" class="{{ data.url[0] }}_{{ data.category_id }}">
-                    <a href="home.html">Trang chủ</a>
+                    <a href="/">Trang chủ</a>
                 </li>
                 {% elif data.category_product_id != null %}
                 <li id="all" class="{{ data.url[0] }}_{{ data.category_product_id }}">
-                    <a href="home.html">Trang chủ</a>
+                    <a href="/">Trang chủ</a>
+                </li>
+                 {% elif data.author%}
+                <li id="all" class="{{ data.url }}_{{ data.author }}">
+                    <a href="/">Trang chủ</a>
                 </li>
                 {% else %}
                 <li id="all" class="{{ data.url[0] }}">
-                    <a href="home.html">Trang chủ</a>
+                    <a href="/">Trang chủ</a>
                 </li>
                 {% endif %}
                 <li class="active">Sản phẩm</li>
@@ -133,12 +137,13 @@
 
                 <form>
                     <select id="data" class="form-control pull-right">
-                        <option disabled selected hidden>Sắp xếp</option>
+                        <option value="sort0" disabled selected hidden>Sắp xếp</option>
                         <option value="sort1">Thứ tự theo sản phẩm mới</option>
                         <option value="sort2">Thứ tự theo giá: thấp đến cao</option>
                         <option value="sort3">Thứ tự theo giá: cao đến thấp</option>
                         <option value="sort4">Thứ tự theo lượng review</option>
                         <option value="sort5">Sản phẩm giảm giá</option>
+                        <option value="sort6">Mặc định</option>
                     </select>
                 </form>
             </nav>
@@ -234,7 +239,15 @@
     <!-- script -->
     {% include '../../components/script.html' %}
     <!-- End script -->
-
+<script>
+    function convert () {
+        var products = $('.price')
+        for (var i = 0; i < products.length; i++) {
+            products[i].children['0'].innerText = parseInt(products[i].children['0'].innerText).toLocaleString('vi')
+            products[i].children['1'].innerText = parseInt(products[i].children['1'].innerText).toLocaleString('vi')
+        }    
+    }
+</script>
     <!-- display or hide notification when customer add to cart -->
     <script type="text/javascript">
         if('{{ info.username }}') {
@@ -272,16 +285,18 @@
             var output = document.getElementById('output');
             document.getElementById('data').onclick = function () {
                 var data = document.getElementById('data').value
-                var id = document.querySelector('#all').className
+                var id = document.getElementById('all').className
                 axios.post('/sort/products', {
                     data: data,
                     path: id.split('_')[0],
-                    category_product: id.split('_')[1]
+                    category_product: id.split('_')[1],
+                    author: id.split('_')[1]
                 })
                     .then(function (res) {
                         // console.log(res.data)
                         //   output.className = 'container';
                         output.innerHTML = res.data;
+                        convert()
                     })
                     .catch(function (err) {
                         console.log(err.message)
@@ -305,6 +320,7 @@
                     .then(function (res) {
                         // console.log(res.data)
                         author.innerHTML = res.data
+                        convert()
                     })
             }
         })

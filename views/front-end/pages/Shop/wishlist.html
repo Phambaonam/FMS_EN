@@ -104,11 +104,13 @@
     {% include '../../components/footer.html' %}
     <!-- End Footer -->
     <div class="modal fade" id="removeWishlish" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
                     <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
-                    <div class="bootbox-body">Bạn có thực sự muốn xoá ?</div>
+                    <div class="bootbox-body">
+                        <p style="font-size: 20px;">Bạn có thực sự muốn xoá ?</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

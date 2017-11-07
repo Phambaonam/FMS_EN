@@ -596,14 +596,19 @@
     opacity: .6;
     color: #3D3D3D;
 }
-
+.single-product .summary .single-price del::after {
+    content: '₫';
+}
 .single-product .summary .single-price ins {
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 500;
     color: #3D3D3D;
     padding-right: 10px;
 }
 
+.single-product .summary .single-price ins::after {
+    content: '₫';
+}
 .single-product .description {
     border-top: solid 1px #e7e7e7;
     border-bottom: solid 1px #e7e7e7;
@@ -638,6 +643,9 @@
         margin: 15px 30px 15px 10px;
 }
 
+.cart-button i.fa-heart-o {
+    font-size: 20px;
+}
 .single-product div.cart .cart-button > a {
     height: 40px;
     width: 20px;

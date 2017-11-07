@@ -59,6 +59,16 @@ app.use(session({
 app.use(function(req, res, next){
     res.locals.carts = (req.session.passport) ? req.session.passport.user.sumProduct : req.session.sumProduct
     !req.session.passport ? res.locals.login_status = false : res.locals.wishlish = req.session.passport.user.sumWishlish
+    if (req.session.passport){
+        const listWishlish = 'SELECT attribute_product_id FROM wishlish WHERE customer_id = ${customer_id};'
+        db.any(listWishlish, {
+            customer_id: parseInt(req.session.passport.user.id)
+        })
+            .then(data => {
+                data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
+                console.log('aqw', res.locals.listWishlish)
+            })
+    } 
     // console.log(`res.locals.carts ${res.locals.carts}`)
     // console.log('aaaaaaaaaaaaaa', req.session)
     next()

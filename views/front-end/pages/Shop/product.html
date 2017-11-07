@@ -8,18 +8,39 @@
 
                         <img src="/public/images/products/{{ product.images["0"]}}" style="width:100%; max-height:100%;">
                         <div class="vertical-icon">
-                             {% if login_status === false %}
-                            <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-heart-o"></i>
-                            </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
-                                <i class="fa fa-shopping-cart"></i>
-                            </a>
+                            {% if login_status === false %}
+                                <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
+                                    <i class="fa fa-heart-o"></i>
+                                </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </a>
                             {% else %}
-                            <a href="javascript:void(0)" class="add_to_wishlist">
-                                <i class="fa fa-heart-o"></i>
-                            </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
-                                <i class="fa fa-shopping-cart"></i>
-                            </a>
+                                {% if listWishlish !== 0 %}
+                                    {% set count = 1 %} 
+                                    {% for wishlish in listWishlish %} 
+                                        {% if wishlish.attribute_product_id === product.product_id %}
+                                            <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish">
+                                                <i class="wishlished fa fa-heart-o"></i>
+                                            </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a>
+                                        {% elif count === listWishlish.length %}
+                                            <a href="javascript:void(0)" class="add_to_wishlist">
+                                                <i class="fa fa-heart-o"></i>
+                                            </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a>
+                                        {% else %} 
+                                            {% set count = count + 1 %} 
+                                        {% endif %} 
+                                    {% endfor %}
+                                {% else %}
+                                    <a href="javascript:void(0)" class="add_to_wishlist">
+                                        <i class="fa fa-heart-o"></i>
+                                    </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                {% endif %}
                             {% endif %}
                             
                             <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}"><i class="fa fa-search-plus"></i></a>

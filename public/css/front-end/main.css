@@ -1349,8 +1349,11 @@ body {
 }
 
 i.fa-heart-o {
-    font-size: 20px;
     transition: all 0.5s ease;
+}
+
+i.wishlished.fa.fa-heart-o {
+    color: red;
 }
 
 i.fa-shopping-cart {
@@ -4096,16 +4099,6 @@ h3.comment-reply-title {
     margin: 0;
 }
 
-.single-product .summary .single-price del {
-    opacity: .6;
-    color: #3D3D3D;
-}
-
-.single-product .summary .single-price ins {
-    text-decoration: none;
-    font-weight: 700;
-    color: #3D3D3D;
-}
 
 .single-product .description {
     border-top: solid 1px #e7e7e7;

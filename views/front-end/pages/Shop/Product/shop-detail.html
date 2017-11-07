@@ -118,8 +118,12 @@
                     <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal" style="width: 27px;">
                         <i class="fa fa-heart-o"></i>
                     </a>
-                    {% else %}
-                    <a href="javascript:void(0)" id="add_to_wishlist"style="width: 27px;">
+                    {% elif listWishlish %} {% for wishlish in listWishlish %} {% if wishlish.attribute_product_id === data.product_id %}
+                    <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish" style="width: 27px;">
+                        <i class="wishlished fa fa-heart-o"></i>
+                    </a>
+                    {% endif %} {% endfor %} {% else %}
+                    <a href="javascript:void(0)" id="add_to_wishlist" style="width: 27px;">
                         <i class="fa fa-heart-o"></i>
                     </a>
                     {% endif %}
@@ -433,7 +437,32 @@
     <!-- script -->
     {% include '../../../components/script.html' %}
     <!-- End script -->
+    <!-- display or hide notification when customer add to cart -->
+    <script type="text/javascript">
+        if ('{{ info.username }}') {
+            $('#add-to-cart').click(function () {
+                $('.add-to-cart-success1').css('display', 'block')
+                setTimeout(function () {
+                    $('.add-to-cart-success1').css('display', 'none')
+                }, 5000);
+            })
 
+            $('.close1').click(function () {
+                $('.add-to-cart-success1').css('display', 'none')
+            })
+        } else {
+            $('#add-to-cart').click(function () {
+                $('.add-to-cart-success').css('display', 'block')
+                setTimeout(function () {
+                    $('.add-to-cart-success').css('display', 'none')
+                }, 5000);
+            })
+
+            $('.close').click(function () {
+                $('.add-to-cart-success').css('display', 'none')
+            })
+        }
+    </script>
     <script type="text/javascript">
 
         // $(window).bind('scroll', function () {
@@ -535,20 +564,26 @@
     </script>
     <!-- add to wishlish -->
     <script type="text/javascript">
-            var product_id = document.getElementById('qty').className
-            var wishlish = document.getElementById('add_to_wishlist')
-            wishlish.onclick = function () {
-                var totalWish = document.getElementById('add_to-wishlist')
-                axios({
-                    method: 'post',
-                    url: '/add_to_wishlish',
-                    data: {
-                        product_id: product_id
-                    }
+        var product_id = document.getElementById('qty').className
+        var wishlish = document.getElementById('add_to_wishlist')
+        wishlish.onclick = function () {
+            var totalWish = document.getElementById('add_to-wishlist')
+            axios({
+                method: 'post',
+                url: '/add_to_wishlish',
+                data: {
+                    product_id: product_id
+                }
+            })
+                .then(function (res) {
+                    totalWish.innerText = res.data
                 })
-                    .then(function (res) {
-                        totalWish.innerText = res.data
-                    })
+        }
+    </script>
+    <script>
+            var sum = $('.single-price')[0].children
+            for (var i = 0; i < sum.length; i++) {
+                sum[i].innerText = parseInt(sum[i].innerText).toLocaleString('vi')
             }
     </script>
 </body>

@@ -1,28 +1,49 @@
 {% block footer %}
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <p style="font-size: 23px;">Bạn cần login để sử dụng chức năng này.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                </div>
+<!-- Modal user must login -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p style="font-size: 20px;">Bạn cần login để sử dụng chức năng này.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
-    
-<a href="#"><i class="fa fa-angle-up back-top"></i></a>
+</div>
+<!-- customer added wishlist  -->
+<div class="modal fade" id="existsWishlish" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                <div class="bootbox-body">
+                    <p style="font-size: 20px;">Sản phẩm đã có trong danh sách yêu thích</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="ok" type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="#">
+    <i class="fa fa-angle-up back-top"></i>
+</a>
 <footer>
     <div class="container">
         <div class="row footer-top">
             <div class="col-xs-6 col-md-3 footer-item">
                 <h4>Thông tin liên hệ</h4>
                 <ul>
-                    <li><i class="fa fa-map-marker"></i>Đ/c: 40 Giảng Võ, Đống Đa, Hà Nội</li>
-                    <li><i class="fa fa-mobile"></i>Hotline: 0986090925</li>
-                    <li><i class="fa fa-envelope-o"></i>Email: hieu.do212@gmail.com</li>
+                    <li>
+                        <i class="fa fa-map-marker"></i>Đ/c: 40 Giảng Võ, Đống Đa, Hà Nội</li>
+                    <li>
+                        <i class="fa fa-mobile"></i>Hotline: 0986090925</li>
+                    <li>
+                        <i class="fa fa-envelope-o"></i>Email: hieu.do212@gmail.com</li>
                 </ul>
             </div>
             <div class="col-xs-6 col-md-3 footer-item">
@@ -36,31 +57,54 @@
             <div class="col-xs-6 col-md-3 footer-item">
                 <h4>Hỗ trợ khách hàng</h4>
                 <ul>
-                    <li><a href="contact.html">Liên hệ & Góp ý</a></li>
-                    <li><a href="#">Hướng dẫn mua hàng online</a></li>
-                    <li><a href="#">Câu hỏi thường gặp</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
+                    <li>
+                        <a href="contact.html">Liên hệ & Góp ý</a>
+                    </li>
+                    <li>
+                        <a href="#">Hướng dẫn mua hàng online</a>
+                    </li>
+                    <li>
+                        <a href="#">Câu hỏi thường gặp</a>
+                    </li>
+                    <li>
+                        <a href="#">Chính sách bảo mật</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-xs-6 col-md-3 footer-item">
                 <h4>Chính sách mua hàng</h4>
                 <ul>
-                    <li><a href="#">Chính sách bảo hành, đổi trả</a></li>
-                    <li><a href="#">Chính sách hội viên</a></li>
-                    <li><a href="#">Giao hàng và lắp đặt</a></li>
+                    <li>
+                        <a href="#">Chính sách bảo hành, đổi trả</a>
+                    </li>
+                    <li>
+                        <a href="#">Chính sách hội viên</a>
+                    </li>
+                    <li>
+                        <a href="#">Giao hàng và lắp đặt</a>
+                    </li>
                 </ul>
             </div>
         </div>
         <div class="row footer-bot">
-            <a href="#" title="Kết nối qua Facebook"><i class="fa fa-facebook-official"></i></a>
-            <a href="#" title="Kết nối qua Google+"><i class="fa fa-google-plus-official"></i></a>
-            <a href="#" title="Kết nối qua Pinterest"><i class="fa fa-pinterest"></i></a>
-            <a href="#" title="Kết nối qua Instagram"><i class="fa fa-instagram"></i></a>
+            <a href="#" title="Kết nối qua Facebook">
+                <i class="fa fa-facebook-official"></i>
+            </a>
+            <a href="#" title="Kết nối qua Google+">
+                <i class="fa fa-google-plus-official"></i>
+            </a>
+            <a href="#" title="Kết nối qua Pinterest">
+                <i class="fa fa-pinterest"></i>
+            </a>
+            <a href="#" title="Kết nối qua Instagram">
+                <i class="fa fa-instagram"></i>
+            </a>
         </div>
     </div>
     <div class="container-fluid copyright">
         <div class="row">
-            <p>Copyright 2017 <i class="fa fa-copyright"></i> Designed by Hieudo</p>
+            <p>Copyright 2017
+                <i class="fa fa-copyright"></i> Designed by Hieudo</p>
         </div>
     </div>
 </footer>

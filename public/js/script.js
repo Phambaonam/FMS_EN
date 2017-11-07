@@ -142,6 +142,13 @@ $(document).ready(function(){
         });
     });
 
+    // add wishlish
+    $('.add_to_wishlist').each(function () {
+        $(this).on('click', function () {
+            $(this).children('i.fa.fa-heart-o').css('color','red');
+        });
+});
+
     $('.apply-coupon').click(function(){
         discountRate = $(this).prev('input').val();
         $('.discount-rate').text(discountRate + '%');

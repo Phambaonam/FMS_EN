@@ -657,7 +657,7 @@
     border-width: 10px 10px 10px 0;
     border-color: transparent #e7e7e7 transparent transparent;
     position: absolute;
-    left: -10px;
+    left: -9px;
     top: 0;
     content: '';
     transition: all 0.4s ease;

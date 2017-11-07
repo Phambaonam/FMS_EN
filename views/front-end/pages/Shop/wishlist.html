@@ -43,7 +43,7 @@
                 </ul>
             </nav>
             <div class="tab-content">
-                <h3>Danh sách yêu thích ({{ wishlish }})</h3>
+                <h3>Danh sách yêu thích (<span id="count-wishlish">{{ wishlish }}</span>)</h3>
                 <div class="cart-container wishlist-container">
                     <table class="cart">
                         <thead>
@@ -87,8 +87,8 @@
                                         <i class="fa fa-shopping-cart"></i>
                                     </button>
                                 </td>
-                                <td class="product-remove {{ product.product_id }}">
-                                    <button>
+                                <td class="wishlish-remove {{ product.product_id }}">
+                                    <button data-toggle="modal" data-target="#removeWishlish">
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </td>
@@ -103,7 +103,20 @@
     <!-- Footer -->
     {% include '../../components/footer.html' %}
     <!-- End Footer -->
-
+    <div class="modal fade" id="removeWishlish" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                    <div class="bootbox-body">Bạn có thực sự muốn xoá ?</div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button data-bb-handler="confirm" type="button" class="btn btn btn-primary" id="remove-wishlish" data-dismiss="modal">Đồng ý</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- script -->
     {% include '../../components/script.html' %}
     <!-- End script -->
@@ -129,25 +142,30 @@
             }
         })
     </script>
-    <!-- remove product -->
 
+    <!-- remove wishlish -->
     <script type="text/javascript">
-        var remove_product = document.querySelectorAll('.product-remove')
-        remove_product.forEach(function (item) {
+        var wishlish_product = document.querySelectorAll('.wishlish-remove')
+        var remove_wishlish = document.getElementById('remove-wishlish')
+        wishlish_product.forEach(function (item) {
+            var product_id = item.className.charAt(item.className.length - 1)
+            var totalWish = document.getElementById('add_to-wishlist')
+            var countWishlish = document.getElementById('count-wishlish')
             item.onclick = function () {
-                var product_id = item.className.charAt(item.className.length - 1)
-                var totalWish = document.getElementById('add_to-wishlist')
-                axios({
-                    method: 'post',
-                    url: '/delete/wishlish',
-                    data: {
-                        product_id: product_id
-                    }
-                })
-                    .then(function (res) {
-                        console.log(res.data)
-                        totalWish.innerText = res.data
+                remove_wishlish.onclick = function () {
+                    $(item).parents('.cart-item').remove()
+                    axios({
+                        method: 'post',
+                        url: '/delete/wishlish',
+                        data: {
+                            product_id: product_id
+                        }
                     })
+                        .then(function (res) {
+                            totalWish.innerText = res.data
+                            countWishlish.innerText = res.data
+                        })
+                }
             }
         })
     </script>

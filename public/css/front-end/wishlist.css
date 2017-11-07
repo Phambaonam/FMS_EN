@@ -66,6 +66,15 @@ td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .
     width: 4%;
     text-align: center;
 }
+.cart-container table.cart .wishlish-remove {
+    width: 4%;
+    text-align: center;
+}
+.wishlish-remove button {
+    background: none;
+    border: 0;
+    outline: none;
+}
 @media (min-width: 992px) {
     .wishlist-container .product-action button.link-to .fa {
         transform: translateX(-100px);

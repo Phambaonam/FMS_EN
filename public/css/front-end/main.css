@@ -1349,6 +1349,7 @@ body {
 }
 
 i.fa-heart-o {
+    font-size: 20px;
     transition: all 0.5s ease;
 }
 

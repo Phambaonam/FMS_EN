@@ -142,6 +142,7 @@ $(document).ready(function(){
         });
     });
 
+
     // add wishlish
     $('.add_to_wishlist').each(function () {
         $(this).on('click', function () {

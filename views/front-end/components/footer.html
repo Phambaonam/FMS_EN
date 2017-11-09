@@ -1,4 +1,16 @@
 {% block footer %}
+<script>
+    var count = 0
+    function displayPassword() {
+        if (count === 0) {
+            $('#password_reg').prop('type', 'text')
+            count++
+        } else if (count === 1) {
+            $('#password_reg').prop('type', 'password')
+            count--
+        }
+    }
+</script>
 <!-- Modal user must login -->
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">

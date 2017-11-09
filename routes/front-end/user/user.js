@@ -27,11 +27,12 @@ module.exports.userInfo = function (db, router, frontendPath) {
         const token = crypto.randomBytes(16).toString('hex')
         const email = info.email
         const username = info.username
+        const phone = info.phone
         const subject = 'Xác thực tài khoản!'
         const text = `Xin chào ${username}. Đây là email xác thực đăng kí tài khoản của bạn. Bạn hãy nhấp vào link để hoàn thành quá trình đăng ký: http://${req.headers.host}/confirmation/${token}`
 
         const saltRounds = 10
-        const insertUser = 'INSERT INTO customer(username,email,password,phone,image,date_of_birth,general,time_register,address_receiver,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},null,null,null,null,null,null,${token_register},null,null);'
+        const insertUser = 'INSERT INTO customer(username,email,password,phone,image,date_of_birth,general,time_register,address_receiver,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},${phone},null,null,null,null,null,${token_register},null,null);'
         const getEmail = 'SELECT id, username, email, phone, general FROM customer WHERE email = ${email}'
         bcrypt.hash(info.password, saltRounds, (err, hash) => {
             db.task('user resgister accout', function* (t) {
@@ -39,6 +40,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
                     username: info.username,
                     email: info.email,
                     password: hash,
+                    phone: phone,
                     token_register: token
                 })
                 return yield t.one(getEmail, {

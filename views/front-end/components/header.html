@@ -281,13 +281,13 @@
                             <div class="input-field">
                                 <input onclick="checkPass()" type="text" name="username" id="name" placeholder="Họ tên" required` />
                             </div>
-                            <!-- <div class="input-field check-field">
-                                <input type="checkbox" id="remember" name="remember"/><label for="remember">Hiển thị mật
+                            <div class="input-field check-field">
+                                <input type="checkbox" id="remember" name="remember" onclick="displayPassword()"/><label for="remember">Hiển thị mật
                                 khẩu</label><br/>
-                            </div> -->
-                            <!-- <div class="input-field">
-                                <input type="text" name="Phone" id="phone" placeholder="Số điện thoại"/>
-                            </div> -->
+                            </div>
+                            <div class="input-field">
+                                <input type="text" name="phone" id="phone" placeholder="Số điện thoại"/>
+                            </div>
                             <div class="input-field">
                                 <input id="signup-btn" type="submit" value="Đăng ký" />
                             </div>
@@ -298,6 +298,7 @@
         </div>
     </div>
 </header>
+
 <!-- <script src="/public/js/axios.min.js"></script> -->
 
 {% endblock %}

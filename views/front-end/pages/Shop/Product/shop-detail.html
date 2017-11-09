@@ -14,10 +14,10 @@
             <p>Mỗi món đồ là một câu chuyện nhỏ. MIN cùng bạn viết nên câu chuyện ngôi nhà mình.</p>
             <ol class="breadcrumb">
                 <li>
-                    <a href="home.html">Trang chủ</a>
+                    <a href="/">Trang chủ</a>
                 </li>
                 <li>
-                    <a href="shop.html">Sản phẩm</a>
+                    <a href="/san-pham">Sản phẩm</a>
                 </li>
                 <li class="active">Chi tiết Sản phẩm</li>
             </ol>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="cart-button">
                     <button type="submit" id="add-to-cart" class="add-to-cart link-to">Thêm vào giỏ hàng</button>
-                    {% if login_status === false %}
+                    {% if login_status !== true %}
                     <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal" style="width: 27px;">
                         <i class="fa fa-heart-o"></i>
                     </a>

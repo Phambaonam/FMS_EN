@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS customer (
 );
 CREATE TABLE IF NOT EXISTS wishlish (
     id SERIAL PRIMARY KEY,
-    attribute_product_id INT REFERENCES attribute_product (attribute_product_id) ON DELETE CASCADE NOT NULL,
+    attribute_product_id INT REFERENCES attribute_product (id) ON DELETE CASCADE NOT NULL,
     customer_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL
 );
 

@@ -109,6 +109,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
     })
 
     router.get('/tai-khoan-cua-toi', (req, res) => {
+        console.log(req.session)
         const info = req.session
         const passportInfo = req.user
         const message = (info.verify_token_register) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí.!'

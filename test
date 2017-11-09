@@ -1,0 +1,18 @@
+var all = $('.cart-item')
+var sum = 0
+for (var i = 0; i < all.length; i++) {
+    sum = parseInt(all[i].children['4'].innerText.replace(/[.]/g,''))
+    sum += sum
+}
+console.log(sum)
+
+var products = $('.price')
+for (var i = 0; i< products.length; i++) {
+    parseInt(products[i].children['0'].innerText).toLocaleString('vi')
+    parseInt(products[i].children['1'].innerText).toLocaleString('vi')
+}
+JQuery get all elements by class name
+https://stackoverflow.com/questions/16630211/jquery-get-all-elements-by-class-name
+
+Uncaught ReferenceError: Invalid left-hand side in assignment javascript
+https://www.google.com.vn/search?q=Uncaught+ReferenceError%3A+Invalid+left-hand+side+in+assignment+javascript&oq=Uncaught+ReferenceError%3A+Invalid+left-hand+side+in+assignment+javascript&aqs=chrome..69i57.3362j0j4&sourceid=chrome&ie=UTF-8

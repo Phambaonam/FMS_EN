@@ -115,8 +115,19 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 })
 
             }
+            
+            let removeDuplicates =  (myArr, prop) => {
+                return myArr.filter((obj, pos, arr) => {
+                    return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos
+                })
+            }
+            const author = "SELECT attributes -> 'manufacturer'AS author FROM attribute_product"
+            const getAuthors = yield t.any(author)
 
-            return [menuArea, menuCategory]
+            const material = "SELECT attributes -> 'material' AS material FROM attribute_product"
+            const getMaterial = yield t.any(material)
+            // console.log([...new Set(getAuthors)])
+            return [menuArea, menuCategory, removeDuplicates(getAuthors, 'author'), removeDuplicates(getMaterial, 'material')] // [...new Set(getAuthors)]
         })
     }
 
@@ -133,6 +144,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 return {
                     menuArea: data[0],
                     menuCategory: data[1],
+                    authors: data[2],
+                    materials: data[3],
                     products: getDataAllProducts,
                     url: req.url
                 }
@@ -175,6 +188,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
                     menuArea: data[0],
                     menuCategory: data[1],
                     products: getDataAllProducts,
+                    authors: data[2],
+                    materials: data[3],
                     url: req.url.slice(1).split('/'),
                     category_product_id: get_id_category_product.category_product_id
                 }
@@ -207,6 +222,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 return {
                     menuArea: data[0],
                     menuCategory: data[1],
+                    authors: data[2],
+                    materials: data[3],
                     products: getDataAllProducts,
                     url: req.url.slice(1).split('/'),
                     category_id: getIdCategory.category_id
@@ -226,6 +243,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
     router.post('/sort/products', (req, res) => {
         const info = req.body
+        console.log(info)
         let condition = info.data
         switch (condition) {
             case 'sort0':
@@ -234,17 +252,30 @@ module.exports.shopPage = function (db, router, frontendPath) {
             case 'sort1':
                 condition = "(option_status->'new_product') is not null;"
                 break
-
             case 'sort2':
                 condition = 'ORDER BY product_price ASC;'
                 break
-
             case 'sort3':
                 condition = 'ORDER BY product_price DESC;'
                 break
             case 'sort6':
                 condition = 'ORDER BY pp.attribute_product_id ASC;'
                 break
+            case 'price1':
+                condition = ' AND pp.product_price < 1000000;'
+                break
+            case 'price2':
+                condition = 'AND pp.product_price > 1000000 AND pp.product_price < 3000000;'
+                break
+            case 'price3':
+                condition = 'AND pp.product_price > 3000000 AND pp.product_price < 5000000;'
+                break
+            case 'price4':
+                condition = 'AND pp.product_price > 5000000 AND pp.product_price < 10000000;'
+                break
+            case 'price5':
+                condition = 'AND pp.product_price > 10000000;'
+                break                    
         }
 
         db.task('sort product', function* (t) {
@@ -276,7 +307,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
                         const getDataAllProducts = yield t.any(products, {
                             category_product_id: parseInt(info.category_product)
                         })
-
                         return {
                             products: getDataAllProducts
                         }
@@ -313,6 +343,20 @@ module.exports.shopPage = function (db, router, frontendPath) {
                         return {
                             products: getDataAllProducts
                         }
+                    }
+                    
+                case 'chat-lieu':
+                    {
+                        const products1 = "SELECT pr.product_name,pr.product_alias, pr.category_product_id, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE attributes->'material' ? ${material}" + condition
+                        const products3 = "SELECT pr.product_name,pr.product_alias, pr.category_product_id, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE attributes->'material' ? ${material} AND " + condition
+                        products = (condition !== "(option_status->'new_product') is not null;") ? products1 : products3
+                        const getDataAllProducts = yield t.any(products, {
+                            material: info.material
+                        })
+
+                        return {
+                            products: getDataAllProducts
+                        }
                     }    
             }
         })
@@ -332,9 +376,42 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 return {
                     menuArea: data[0],
                     menuCategory: data[1],
+                    authors: data[2],
+                    materials: data[3],
                     products: getProducts,
                     url: req.url.slice(1).split('/')[1],
                     author: author
+                }
+            })
+        })
+            .then(data => {
+                // res.json(data)
+                if (req.session.url !== req.url) req.session.url = req.url
+                let info = req.user || req.session.user
+                res.render(frontendPath + 'Shop/shop', {
+                    info: info,
+                    data: data,
+                    title: 'Sản phẩm'
+                })
+            })
+    })
+
+    router.get('/san-pham/chat-lieu/:material', (req, res) => {
+        const material = req.params.material.replace(/-/g, ' ')
+        db.task('get product of author', function* (t) {
+            const products = "SELECT ap.id AS product_id , pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE (attributes->'material') ? ${material};"
+            const getProducts = yield t.any(products, {
+                material: material
+            })
+            return menu().then(data => {
+                return {
+                    menuArea: data[0],
+                    menuCategory: data[1],
+                    authors: data[2],
+                    materials: data[3],
+                    products: getProducts,
+                    url: req.url.slice(1).split('/')[1],
+                    material: material
                 }
             })
         })
@@ -496,7 +573,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 user_id: user_id
             })
             // update total cart in session
-            req.user ? (req.session.passport.user.sumProduct = parseInt(req.session.passport.user.sumProduct) - 1) : (req.session.sumProduct = parseInt(req.session.sumProduct) - 1)
+            req.session.passport ? (req.session.passport.user.sumProduct = parseInt(req.session.passport.user.sumProduct) - 1) : (req.session.sumProduct = parseInt(req.session.sumProduct) - 1)
         })
             .then(() => {
                 console.log('đã giảm số lượng sản phẩm thành công!')
@@ -645,8 +722,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.post('/add_to_wishlish', (req, res) => {
-        const product_id = req.body.product_id
-        const customer_id = req.user.id
+        const product_id = parseInt(req.body.product_id)
+        const customer_id = parseInt(req.session.passport.user.id)
         db.task('add to wishlish', function* (t) {
             const status = 'SELECT count(1) FROM wishlish WHERE attribute_product_id = ${product_id} AND customer_id = ${customer_id};'
             const wishlishExist = yield t.one(status, {
@@ -677,7 +754,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             * Khi đó ta mới gán thuộc tính vào session thành công
             */
             // update total wishlish in session
-            req.session.passport ? req.session.passport.user.sumWishlish = parseInt(getCountWishlish.count) : req.session.passport.user.sumWishlish = 0
+            if (req.session.passport) req.session.passport.user.sumWishlish = parseInt(getCountWishlish.count)
             return getCountWishlish.count
         })
             .then(data => {
@@ -699,7 +776,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 customer_id: customer_id
             })
 
-            req.session.passport ? req.session.passport.user.sumWishlish = parseInt(getCountWishlish.count) : req.session.passport.user.sumWishlish = 0
+            if(req.session.passport) req.session.passport.user.sumWishlish = parseInt(getCountWishlish.count)
             return getCountWishlish.count
         })
             .then(data => {

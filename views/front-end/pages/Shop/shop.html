@@ -22,8 +22,12 @@
                 <li id="all" class="{{ data.url[0] }}_{{ data.category_product_id }}">
                     <a href="/">Trang chủ</a>
                 </li>
-                 {% elif data.author%}
+                {% elif data.author%}
                 <li id="all" class="{{ data.url }}_{{ data.author }}">
+                    <a href="/">Trang chủ</a>
+                </li>
+                {% elif data.material%}
+                <li id="all" class="{{ data.url }}_{{ data.material }}">
                     <a href="/">Trang chủ</a>
                 </li>
                 {% else %}
@@ -52,32 +56,18 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="brand1" value="brand1">IKEA</label>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="brand2" value="brand2">Hooker</label>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="brand3" value="brand3">Ashley</label>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="brand4" value="brand4">Stanford</label>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="brand5" value="brand5">Stickley</label>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
+                                    {% for authors in data.authors %}
+                                        {% if authors.author.length <= 20 %}
+                                            <li role="separator" class="divider"></li>
+                                            <li class="checkbox sort">
+                                                <label>
+                                                    <a href="/san-pham/tac-gia/{{ authors.author | replace(' ', '-') }}">
+                                                        <input type="checkbox" name="{{ authors.author }}" value="{{ authors.author }}">{{  authors.author | title }}
+                                                    </a>
+                                                </label>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </form>
                         </li>
@@ -87,26 +77,35 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="price1" value="price1">Dưới 1 triệu
+                                    <li class="checkbox sort">
+                                        <label>
+                                            <input type="checkbox" name="price1" value="price1">Dưới 1 triệu
+                                        </label>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="price2" value="price2">Từ 1 triệu đến 3 triệu
+                                    <li class="checkbox sort">
+                                        <label>
+                                            <input type="checkbox" name="price2" value="price2">Từ 1 triệu đến 3 triệu
+                                        </label>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="price3" value="price3">Từ 3 triệu đến 5 triệu
+                                    <li class="checkbox sort">
+                                        <label>
+                                            <input type="checkbox" name="price3" value="price3">Từ 3 triệu đến 5 triệu
+                                        </label>                                    
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="price4" value="price4">Từ 5 triệu đến 10 triệu
+                                    <li class="checkbox sort">
+                                        <label>
+                                            <input type="checkbox" name="price4" value="price4">Từ 5 triệu đến 10 triệu
+                                        </label>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="price5" value="price5">Trên 10 triệu
+                                    <li class="checkbox sort">
+                                        <label>
+                                            <input type="checkbox" name="price5" value="price5">Trên 10 triệu
+                                        </label>
                                     </li>
-                                    <li role="separator" class="divider"></li>
                                 </ul>
                             </form>
                         </li>
@@ -117,18 +116,18 @@
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="color1" value="color1">Gỗ</li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="color2" value="color2">Kính</li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="color3" value="color3">Plastic</li>
-                                    <li role="separator" class="divider"></li>
-                                    <li class="checkbox">
-                                        <input type="checkbox" name="color4" value="color4">Kim loại</li>
-                                    <li role="separator" class="divider"></li>
+                                     {% for materials in data.materials %}
+                                        {% if materials.material.length <= 20 %}
+                                            <li role="separator" class="divider"></li>
+                                            <li class="checkbox sort">
+                                                <label>
+                                                    <a href="/san-pham/chat-lieu/{{ materials.material  | replace(' ', '-')}}">
+                                                        <input type="checkbox" name="{{ materials.material }}" value="{{ materials.material }}">{{ materials.material | title }}
+                                                    </a>    
+                                                </label>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </form>
                         </li>
@@ -247,6 +246,7 @@
             products[i].children['1'].innerText = parseInt(products[i].children['1'].innerText).toLocaleString('vi')
         }    
     }
+    convert()
 </script>
     <!-- display or hide notification when customer add to cart -->
     <script type="text/javascript">
@@ -281,8 +281,8 @@
 
     <!--  Sort product  -->
     <script type="text/javascript">
+      var output = document.getElementById('output');
         (function () {
-            var output = document.getElementById('output');
             document.getElementById('data').onclick = function () {
                 var data = document.getElementById('data').value
                 var id = document.getElementById('all').className
@@ -290,11 +290,10 @@
                     data: data,
                     path: id.split('_')[0],
                     category_product: id.split('_')[1],
-                    author: id.split('_')[1]
+                    author: id.split('_')[1],
+                    material: id.split('_')[1]
                 })
                     .then(function (res) {
-                        // console.log(res.data)
-                        //   output.className = 'container';
                         output.innerHTML = res.data;
                         convert()
                     })
@@ -302,7 +301,34 @@
                         console.log(err.message)
                     })
             }
-        })();
+        })()
+
+       var sortPrice = document.querySelectorAll('.sort input')
+       sortPrice.forEach(function (item) {
+           item.onclick = function () {
+               console.log(item.value)
+               var id = document.getElementById('all').className
+               axios({
+                   method: 'post',
+                   url: '/sort/products',
+                   data: {
+                        data: item.value,
+                        path: id.split('_')[0],
+                        category_product: id.split('_')[1],
+                        author: id.split('_')[1],
+                        material: id.split('_')[1]
+                   }
+               })
+               .then(function (res) {
+                   console.log(res.data)
+                       output.innerHTML = res.data;
+                       convert()
+                   })
+                   .catch(function (err) {
+                       console.log(err.message)
+                   })
+           }
+       })
     </script>
     <!-- get product of author -->
     <script type="text/javascript">

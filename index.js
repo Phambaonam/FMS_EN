@@ -57,17 +57,41 @@ app.use(session({
 }))
 
 app.use(function (req, res, next) {
+    /**
+     * - Khi user đăng nhập thì sẽ gán giỏ hàng vào `req.session.passport` ở file `passport-local.js` và
+     * update lại số lượng sản phẩm trong  giỏ hàng thông qua các router: `/decrease/qty`, `/increase/qty`, `/delete/product`, `/empty-cart`.
+     * - Đối với user chưa đăng nhập thì sẽ gán giỏ hàng vào req.session ở bên router `/add_to_cart`
+     */
     res.locals.carts = (req.session.passport) ? req.session.passport.user.sumProduct : req.session.sumProduct
-    !req.session.passport ? res.locals.login_status = false : res.locals.wishlish = req.session.passport.user.sumWishlish
+    /**
+     * Có 2 đối tượng:
+     * - User đăng kí: 
+     * - User đăng nhập:
+     * + khi mới đăng nhập vào hệ thống thì danh sách sách các sản phẩm yêu thích sẽ dc lấy ra từ db và đc truyền vào `req.session.passport` ở file `passport-local.js`.
+     * + Mỗi lần user thêm, xóa sản phẩm ở trong danh sách yêu thích thì sẽ update số lượng danh sách yêu thích ở trong router `/add_to_wishlish`, `/delete/wishlish`.
+     */
+    let customer_id
     if (req.session.passport) {
-        const listWishlish = 'SELECT attribute_product_id FROM wishlish WHERE customer_id = ${customer_id};'
-        db.any(listWishlish, {
-            customer_id: parseInt(req.session.passport.user.id)
-        })
-            .then(data => {
-                data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
-            })
+        res.locals.login_status = true
+        res.locals.wishlish = req.session.passport.user.sumWishlish
+        customer_id = parseInt(req.session.passport.user.id)
     }
+    if (req.session.user) {
+        res.locals.login_status = true
+        res.locals.wishlish = 0
+        customer_id = parseInt(req.session.user.id)
+    }
+
+    const listWishlish = 'SELECT attribute_product_id FROM wishlish WHERE customer_id = ${customer_id};'
+    db.any(listWishlish, {
+        customer_id: customer_id
+    })
+        .then(data => {
+            data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
+        })
+    // console.log('res.locals.login_status', res.locals.login_status)
+    // console.log('res.locals.wishlish', res.locals.wishlish)
+    // console.log('res.locals.carts', res.locals.carts)
     // console.log(`res.locals.carts ${res.locals.carts}`)
     // console.log('aaaaaaaaaaaaaa', req.session)
     next()
@@ -118,6 +142,6 @@ app.use(router)
 routerFrontEnd(db, router, frontendPath)
 routerBackEnd(db, router, backendPath, uploadProduct)
 
-app.listen(port, function () {
+app.listen(process.env.PORT || port, function () {
     console.log(`server running on port ${port}!`)
 })

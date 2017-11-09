@@ -22,7 +22,8 @@ module.exports = function (passport, Strategy, db) {
                 customer_id: getUser.id
             })
 
-            // Khi người dùng đăng nhập thành công thì sẽ gán những thông tin cần thiết như giỏ hàng và trong req.passport
+            // Khi người dùng đăng nhập thành công thì sẽ gán những thông tin cần thiết như tổng số sản phẩm có trong giỏ hàng 
+            // và tổng sô sản phẩm yêu thích vào trong req.passport
             if (!getUser.sumProduct) getUser.sumProduct = getCart.sum
             if (!getUser.sumWishlish) getUser.sumWishlish = getWishlish.count
             // end 

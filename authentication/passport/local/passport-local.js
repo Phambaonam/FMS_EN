@@ -30,7 +30,7 @@ module.exports = function (passport, Strategy, db) {
             return getUser
         })
             .then(data => {
-                console.log('data', data)
+                // console.log('data', data)
                 bcrypt.compare(password, data.password, (err, result) => {
 
                     if (err) return done(err)

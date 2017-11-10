@@ -458,14 +458,20 @@ header.fixed .navbar {
     font-weight: 700;
 }
 .message {
-  text-align: center;
+    text-align: center;
     height: 50px;
     background:#ff7800f7;
 }
-.message h3 {
+.message h3, .updateInfo h3 {
     color: #fff;
     padding-top: 10px;
 }
+.updateInfo {
+    text-align: center;
+    height: 40px;
+    background:#23cf2a;
+}
+
 .user-profile {
     /*color: #fff;*/
     /*border: 1px solid red;*/

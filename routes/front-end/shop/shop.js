@@ -183,17 +183,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 category_product_id: get_id_category_product.category_product_id
             })
 
-            return menu().then(data => {
-                return {
-                    menuArea: data[0],
-                    menuCategory: data[1],
-                    products: getDataAllProducts,
-                    authors: data[2],
-                    materials: data[3],
-                    url: req.url.slice(1).split('/'),
-                    category_product_id: get_id_category_product.category_product_id
-                }
-            })
+            return menu()
+                .then(data => {
+                    return {
+                        menuArea: data[0],
+                        menuCategory: data[1],
+                        products: getDataAllProducts,
+                        authors: data[2],
+                        materials: data[3],
+                        url: req.url.slice(1).split('/'),
+                        category_product_id: get_id_category_product.category_product_id
+                    }
+                })
         })
             .then(data => {
                 if (req.session.url !== req.url) req.session.url = req.url
@@ -243,7 +244,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
     router.post('/sort/products', (req, res) => {
         const info = req.body
-        console.log(info)
         let condition = info.data
         switch (condition) {
             case 'sort0':
@@ -372,17 +372,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
             const getProducts = yield t.any(products, {
                 author: author
             })
-            return menu().then(data => {
-                return {
-                    menuArea: data[0],
-                    menuCategory: data[1],
-                    authors: data[2],
-                    materials: data[3],
-                    products: getProducts,
-                    url: req.url.slice(1).split('/')[1],
-                    author: author
-                }
-            })
+            return menu()
+                .then(data => {
+                    return {
+                        menuArea: data[0],
+                        menuCategory: data[1],
+                        authors: data[2],
+                        materials: data[3],
+                        products: getProducts,
+                        url: req.url.slice(1).split('/')[1],
+                        author: author
+                    }
+                })
         })
             .then(data => {
                 // res.json(data)
@@ -403,17 +404,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
             const getProducts = yield t.any(products, {
                 material: material
             })
-            return menu().then(data => {
-                return {
-                    menuArea: data[0],
-                    menuCategory: data[1],
-                    authors: data[2],
-                    materials: data[3],
-                    products: getProducts,
-                    url: req.url.slice(1).split('/')[1],
-                    material: material
-                }
-            })
+            return menu()
+                .then(data => {
+                    return {
+                        menuArea: data[0],
+                        menuCategory: data[1],
+                        authors: data[2],
+                        materials: data[3],
+                        products: getProducts,
+                        url: req.url.slice(1).split('/')[1],
+                        material: material
+                    }
+                })
         })
             .then(data => {
                 // res.json(data)
@@ -428,12 +430,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.post('/add_to_cart', (req, res) => {
+        console.log(req.session)
         const quantity = parseInt(req.body.quantity)
-        console.log('aaaaaaaaaaaaaaaa', quantity)
         const product_id = parseInt(req.body.product_id)
         const sessID = req.session.id
-        // if exists req.user, user_id = req.user.id or user_id =  null
-        let user_id = (req.user) ? req.user.id : 0
+        /**
+         * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+         * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+         * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+         */
+        let user_id
+        if (req.session.user) user_id = parseInt(req.session.user.id)
+        if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
 
         db.task('add product to cart', function* (t) {
             const status1 = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
@@ -477,7 +485,6 @@ module.exports.shopPage = function (db, router, frontendPath) {
                             sessID: sessID,
                             user_id: user_id
                         })
-                        console.log('bbbbbbbbbbbbbbbbb', parseInt(getQuality[0].quantity) + quantity)
                     }
                     break
             }
@@ -507,7 +514,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
     router.get('/gio-hang', (req, res) => {
         const sessID = req.session.id
-        let user_id = (req.user) ? req.user.id : 0
+        /**
+        * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+        * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+        * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+        */
+        let user_id
+        if (req.session.user) user_id = parseInt(req.session.user.id)
+        if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         db.task('gio hang', function* (t) {
             const cartDetail = []
             const cart1 = 'SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = ${session_user_id} AND user_id = ${user_id} ORDER BY id ASC;'
@@ -551,7 +565,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/decrease/qty/:product_id', (req, res) => {
-        let user_id = (req.user) ? req.user.id : 0
+        /**
+        * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+        * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+        * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+        */
+        let user_id
+        if (req.session.user) user_id = parseInt(req.session.user.id)
+        if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         const product_id = req.params.product_id
         const sessID = req.session.id
         db.task('decrease quantity product', function* (t) {
@@ -586,7 +607,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/increase/qty/:product_id', (req, res) => {
-        let user_id = (req.user) ? req.user.id : 0
+        /**
+        * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+        * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+        * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+        */
+        let user_id
+        if (req.session.user) user_id = parseInt(req.session.user.id)
+        if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         const product_id = req.params.product_id
         const sessID = req.session.id
         db.task('increase quantity product', function* (t) {
@@ -622,10 +650,16 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.post('/delete/product', (req, res) => {
-
         const sessID = req.session.id
         const product_id = parseFloat(req.body.product_id)
-        let user_id = (req.user) ? req.user.id : 0
+        /**
+        * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+        * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+        * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+        */
+        let user_id
+        if (req.session.user) user_id = parseInt(req.session.user.id)
+        if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         db.task('delete product', function* (t) {
             const product1 = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID} ;'
             const product2 = 'DELETE FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id = ${user_id};'
@@ -657,7 +691,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/empty-cart', (req, res) => {
-        let user_id = (req.user) ? req.user.id : 0
+        /**
+        * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+        * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+        * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+        */
+        let user_id
+        if (req.session.user) user_id = parseInt(req.session.user.id)
+        if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         const sessID = req.session.id
         const emptyCart1 = 'DELETE FROM cart WHERE session_user_id = ${session_user_id};'
         const emptyCart2 = 'DELETE FROM cart WHERE user_id = ${user_id};'
@@ -723,7 +764,12 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
     router.post('/add_to_wishlish', (req, res) => {
         const product_id = parseInt(req.body.product_id)
-        const customer_id = parseInt(req.session.passport.user.id)
+        console.log('aaaaaaaaaaaaaaaaaa', req.session.user)
+        /**
+         * Nếu user mới đăng kí thì customer_id sẽ được lấy ra từ `req.session`.
+         * Nếu user đăng nhập thì customer_id sẽ được lấy ra từ `req.session.passport`.
+         */
+        let customer_id = (req.session.user) ? parseInt(req.session.user.id) : parseInt(req.session.passport.user.id)
         db.task('add to wishlish', function* (t) {
             const status = 'SELECT count(1) FROM wishlish WHERE attribute_product_id = ${product_id} AND customer_id = ${customer_id};'
             const wishlishExist = yield t.one(status, {
@@ -763,8 +809,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.post('/delete/wishlish', (req, res) => {
-        const product_id = parseFloat(req.body.product_id)
-        const customer_id = parseFloat(req.user.id)
+        const product_id = parseInt(req.body.product_id)
+        const customer_id = parseInt(req.session.passport.user.id)
         db.task('remove wishlish product', function* (t) {
             const wishlish = 'DELETE FROM wishlish WHERE attribute_product_id = ${product_id} AND customer_id = ${customer_id} ;'
             yield t.any(wishlish, {
@@ -785,7 +831,11 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/yeu-thich', (req, res) => {
-        const customer_id = req.session.passport.user.id
+        /**
+         * Nếu user mới đăng kí thì customer_id sẽ được lấy ra từ `req.session`.
+         * Nếu user đăng nhập thì customer_id sẽ được lấy ra từ `req.session.passport`.
+         */
+        let customer_id = (req.session.user) ? parseInt(req.session.user.id) : parseInt(req.session.passport.user.id)
         let getWishlishProducts = []
         db.task('wishlish detail', function* (t) {
             const wishlish = 'SELECT attribute_product_id FROM wishlish WHERE  customer_id = ${customer_id} ORDER BY id ASC;'
@@ -815,6 +865,23 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
     })
 
+    router.get('/so-dia-chi', (req, res) => {
+        if (req.session.url !== req.url) req.session.url = req.url
+        let info = req.user
+        res.render(frontendPath + 'Shop/address', {
+            title: 'Sổ địa chỉ',
+            info: info
+        })
+    })
+
+    router.get('/them-dia-chi', (req, res) => {
+        if (req.session.url !== req.url) req.session.url = req.url
+        let info = req.user
+        res.render(frontendPath + 'Shop/add-address', {
+            title: 'Sổ địa chỉ',
+            info: info
+        })
+    })
     // payment
 
     router.get('/shipping', (req, res) => {

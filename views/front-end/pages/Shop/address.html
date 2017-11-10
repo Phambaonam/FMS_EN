@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<!-- Head -->
+{% include '../../components/head.html' %}
+<!-- End Head -->
+<style>
+.add-address {
+    border: 1px dashed #d8d8d8;
+    border-radius: 4px;
+    display: block;
+    padding: 20px;
+    background: #fff;
+    color: #007ff0;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 15px;
+    position: relative;
+}
+.add-address i.add {
+    display: inline-block;
+    content: '';
+    width: 28px;
+    height: 28px;
+    background: url(https://vcdn.tikicdn.com/desktop/img/account/ic-add.svg) no-repeat;
+    position: absolute;
+    left: 350px;
+    top: 15px;
+}
+.dashboard-address {
+    margin-bottom: 20px;
+}
+.dashboard-address:before {
+    display: table;
+    content: "";
+    clear: both;
+}
+.dashboard-address .item {
+    position: relative;
+    margin-bottom: 0;
+    margin-top: 10px;
+    box-shadow: none;
+    border-radius: 4px;
+    border: none;
+}
+.dashboard-address .panel-body {
+    padding: 17px;
+}
+.panel-body:before {
+    content: " ";
+    display: table;
+}
+ .dashboard-address .item .name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #242424;
+    text-transform: uppercase;
+}
+.dashboard-address .item.is-default .default {
+    display: inline-block;
+    font-size: 12px;
+    color: #26bc4e;
+    text-transform: none;
+    font-weight: 400;
+    position: relative;
+    padding-left: 25px;
+}
+.dashboard-address .item.is-default .default:before {
+    width: 15px;
+    height: 15px;
+    background: url(https://vcdn.tikicdn.com/desktop/img/account/checked-ok.png);
+    content: '';
+    display: block;
+    position: absolute;
+    background-size: contain;
+    left: 6px;
+    top: -1px;
+}
+.dashboard-address .item .address {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: #242424;
+    font-weight: 400;
+}
+.dashboard-address .item .phone {
+    font-size: 15px;
+    margin-bottom: 0;
+}
+
+.dashboard-address .item .address span, .dashboard-address .item .phone span {
+    color: #4a4a4a;
+    font-weight: 300;
+}
+
+.tiki-account .wrap .dashboard-address .item .action {
+    margin-bottom: 0;
+    font-size: 0;
+}
+.btn-custom1 {
+    border: none;
+    right: 45px;
+    top: 10px;
+    color: #007ff0;
+    font-size: 16px;
+    background: 0 0;
+}
+.btn-custom1:hover {
+    background: #fff;
+}
+.dashboard-address .btn-custom1 {
+    position: absolute;
+}
+
+.btn-custom1:first-child, .btn-custom1:first-child+button {
+    margin-right: 7px;
+}
+.btn-custom1.btn-delete-address {
+    right: 10px;
+    color: #d42e1d;
+}
+
+</style>
+
+<body>
+    <!-- Header -->
+    {% include '../../components/header.html' %}
+    <!-- End Header -->
+    <div style="height:80px; text-align:center"></div>
+    <div class="container account-main">
+        <div class="row">
+            <nav class="side-nav">
+                <div class="user-top-wrap">
+                    <div class="user-top">
+                        <img src="/public/img/feedback_1.jpg">
+                        <span>{{ data.username }}</span>
+                    </div>
+                </div>
+                <ul class="nav nav-stacked">
+                    <li>
+                        <a href="/tai-khoan-cua-toi">Tài khoản của tôi</a>
+                    </li>
+                    <li>
+                        <a href="/don-hang-cua-toi">Quản lý đơn hàng</a>
+                    </li>
+                    <li class="active">
+                        <a href="/so-dia-chi">Sổ địa chỉ</a>
+                    </li>
+                    <li>
+                        <a href="/yeu-thich">Sản phẩm yêu thích</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="tab-content">
+                <div class="default-address col-xs-12">
+                    <h3>Sổ địa chỉ</h3>
+                    <a class="add-address" href="/them-dia-chi">
+                        <i class="add"></i>
+                        <span>Thêm địa chỉ mới</span>
+                    </a>
+                    <div class="dashboard-address">
+                    
+                        <div class="panel panel-default item is-default">
+                            <div class="panel-body">
+                                <p class="name">Phạm Bảo Nam
+                                    <span class="default">Địa chỉ mặc định</span>
+                                </p>
+                                <p class="address">
+                                    <span>Địa chỉ:</span> Số 46 Ngách 145/77 ,Ngõ 145, Cổ Nhuế 2, Phường Cổ Nhuế 2, Quận Bắc Từ Liêm, Hà Nội, Việt
+                                    Nam</p>
+                                <p class="phone">
+                                    <span>Điện thoại:</span> 01638609594</p>
+                                <p class="action">
+                                    <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/customer/address/edit?id=1752954">Chỉnh sửa</a>
+                                </p>
+                    
+                    
+                            </div>
+                        </div>
+                        <div class="panel panel-default item">
+                            <div class="panel-body">
+                                <p class="name">Phạm Bảo Nam </p>
+                                <p class="address">
+                                    <span>Địa chỉ:</span> Số 14, ngõ 4, Nguyễn Đình Chiểu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội, Việt Nam</p>
+                                <p class="phone">
+                                    <span>Điện thoại:</span> 01638609594</p>
+                                <p class="action">
+                                    <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/customer/address/edit?id=2012476">Chỉnh sửa</a>
+                                    <a data-id="2012476" class="btn btn-default btn-custom1 btn-delete-address">Xóa</a>
+                                </p>
+                    
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    {% include '../../components/footer.html' %}
+    <!-- End Footer -->
+    <!-- script -->
+    {% include '../../components/script.html' %}
+</body>
+
+</html>

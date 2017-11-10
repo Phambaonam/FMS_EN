@@ -44,7 +44,7 @@ input.info {
     outline: none;
     height: 3rem;
     width: 100%;
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin: 0 0 15px 0;
     padding: 0;
 
@@ -61,9 +61,9 @@ input.info:focus {
     {% include '../../components/header.html' %}
     <!-- End Header -->
     <div style="height:80px; text-align:center"></div>
-     {% if message !== true %}
+     {% if messageVerify !== true %}
     <div class="message">
-        <h3>{{ message }}</h3>
+        <h3>{{ messageVerify }}</h3>
     </div>
     {% endif %}
     <div class="container account-main">
@@ -83,16 +83,24 @@ input.info:focus {
                         <a href="/don-hang-cua-toi">Quản lý đơn hàng</a>
                     </li>
                     <li>
-                        <a href="/yeu-thich">Danh sách yêu thích</a>
+                        <a href="/so-dia-chi">Sổ địa chỉ</a>
+                    </li>
+                    <li>
+                        <a href="/yeu-thich">Sản phẩm yêu thích</a>
                     </li>
                 </ul>
             </nav>
             <div class="tab-content">
                 <div id="account-info">
+                    {% if messageUpdateInfo !== false %}
+                        <div class="updateInfo">
+                            <h3>{{ messageUpdateInfo }}</h3>
+                        </div>
+                    {% endif %}
                     <h3>Thông tin cá nhân</h3>
                     <form method="post" action="/updateInfo">
                         <ul>
-                            <form action="#" method="get">
+                            <form>
                                 <li>
                                     <label>Email</label>
                                     <div class="input-field">
@@ -114,13 +122,13 @@ input.info:focus {
                                 <li>
                                     <label>Họ tên</label>
                                     <div class="input-field">
-                                        <input type="text" name="Name" id="name" value="{{ info.username }}" />
+                                        <input type="text" name="name" id="name" value="{{ info.username }}" />
                                     </div>
                                 </li>
                                 <li>
                                     <label>Điện thoại</label>
                                     <div class="input-field">
-                                        <input type="text" name="Phone" id="phone" value="{{ info.phone }}" />
+                                        <input type="text" name="phone" id="phone" value="{{ info.phone }}" />
                                     </div>
                                 </li>
                                 <li>
@@ -128,24 +136,43 @@ input.info:focus {
                                     <div class="input-field">
                                         <select name="date" id="date">
                                             <option>Ngày</option>
+                                            {% if info.date_of_birth.split('-')[0] %}
+                                                <option value="{{ info.date_of_birth.split('-')[0] }}" selected="selected">{{ info.date_of_birth.split('-')[0] }}</option>
+                                            {% endif %}
                                         </select>
                                         <select name="month" id="month">
                                             <option>Tháng</option>
+                                            {% if info.date_of_birth.split('-')[1] %}
+                                            <option value="{{ info.date_of_birth.split('-')[1] }}" selected="selected">{{ info.date_of_birth.split('-')[1] }}</option>
+                                            {% endif %}
 
                                         </select>
 
                                         <select name="year" id="year">
                                             <option>Năm</option>
+                                            {% if info.date_of_birth.split('-')[2] %}
+                                            <option value="{{ info.date_of_birth.split('-')[2] }}" selected="selected">{{ info.date_of_birth.split('-')[2] }}</option>
+                                            {% endif %}
                                         </select>
                                     </div>
                                 </li>
                                 <li>
                                     <label for="gender">Giới tính:</label>
                                     <div>
-                                        <input type="radio" class="gender radio-update" name="Gender" id="male" value="Nam" />
-                                        <label class="gender" for="male">Nam</label>
-                                        <input type="radio" class="gender radio-update" name="Gender" id="female" value="Nữ" />
-                                        <label class="gender" for="female">Nữ</label>
+                                        {% if info.general | trim === 'Nam' %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" checked />
+                                        {% else %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" />
+                                        {% endif %}
+                                            <label class="gender" for="male">Nam</label>
+
+                                        {% if info.general | trim === 'Nữ' %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" checked />
+                                        {% else %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" />
+                                        {% endif %}
+                                            <label class="gender" for="female">Nữ</label>
+                                        
                                     </div>
                                 </li>
                                 <li>
@@ -164,18 +191,20 @@ input.info:focus {
     <div class="modal fade" id="editEmail" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <div style="border-bottom: none;" class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title" style=" font-size: 1.7em; line-height: 1.2">Thay đổi email: </h3>
-                </div>
-                <div class="modal-body">
-                    <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;" >Email</label>
-                    <input type="text" class="form-control info" name="new_email">
-                </div>
-                <div  style="border-top: none;" class="modal-footer row">
-                    <button type="button" id="checkEmail" class="btn btn-default edit">Thay đổi</button>
-                    <button type="button" class="btn btn-default cancel" data-dismiss="modal">Hủy</button>
-                </div>
+                <form  method="post" action="/edit-info">
+                    <div style="border-bottom: none;" class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title" style=" font-size: 1.7em; line-height: 1.2">Thay đổi email: </h3>
+                    </div>
+                    <div class="modal-body">
+                        <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;">Email</label>
+                        <input type="email" class="form-control info" name="new_email">
+                    </div>
+                    <div style="border-top: none;" class="modal-footer row">
+                        <button type="submit" id="checkEmail" class="btn btn-default edit">Thay đổi</button>
+                        <button type="button" class="btn btn-default cancel" data-dismiss="modal">Hủy</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -183,22 +212,23 @@ input.info:focus {
     <div class="modal fade" id="editPassword" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <div style="border-bottom: none;" class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title" style=" font-size: 1.7em; line-height: 1.2">Thay đổi mật khẩu: </h3>
-                </div>
-                <div class="modal-body">
-                    <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;">Mật khẩu cũ</label>
-                    <input type="password" class="form-control info" name="new_email">
-                    <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;">Mật khẩu mới</label>
-                    <input type="password" class="form-control info" name="new_email">
-                    <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;">Xác nhận mật khẩu</label>
-                    <input type="password" class="form-control info" name="new_email">
-                </div>
-                <div style="border-top: none;" class="modal-footer row">
-                    <button type="button" id="checkEmail" class="btn btn-default edit">Thay đổi</button>
-                    <button type="button" class="btn btn-default cancel" data-dismiss="modal">Hủy</button>
-                </div>
+               <form>
+                    <div style="border-bottom: none;" class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title" style=" font-size: 1.7em; line-height: 1.2">Thay đổi mật khẩu: </h3>
+                        <h4 class="modal-title" id="err_message" style=" font-size: 1em; line-height: 1.2 ;color: red;"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;">Mật khẩu mới</label>
+                        <input id="new_password" type="password" class="form-control info" name="new_password">
+                        <label style=" margin-left: 0px; font-size: 16px;color: #4CAF50; border-bottom: none;">Xác nhận mật khẩu</label>
+                        <input id="confirm_password" type="password" class="form-control info" name="confirm_password">
+                    </div>
+                    <div style="border-top: none;" class="modal-footer row">
+                        <button type="button" id="checkPassword" class="btn btn-default edit">Thay đổi</button>
+                        <button type="button" class="btn btn-default cancel" data-dismiss="modal">Hủy</button>
+                    </div>
+               </form>
             </div>
         </div>
     </div>
@@ -209,24 +239,71 @@ input.info:focus {
     <!-- End Footer -->
     <!-- script -->
     {% include '../../components/script.html' %}
+    <script>
+        // var new_password = $('#new_password').val()
+        // var confirm_password = $('#confirm_password').val()
+        // var checkPassword = document.getElementById('checkPassword')
+        // var err_message =$('#err_message')
+        // if(new_password !== confirm_password) {
+        //     err_message.val('Mật khẩu không trùng khớp!')
+        // } else if (new_password.length < 6) {
+        //     err_message.val('Mật khẩu phải có độ dài hơn 6 kí tự!')
+        // }
+    </script>
+    <script type="text/javascript">
+        
+        checkPassword.onclick = function () {
+            var new_password = document.getElementById('new_password').value
+            var confirm_password = document.getElementById('confirm_password').value
+            var checkPassword = document.getElementById('checkPassword')
+            var err_message = document.getElementById('err_message')
+            if(new_password !== confirm_password) {
+                err_message.innerText = 'Mật khẩu không trùng khớp!'
+            } else if(new_password.length < 6 || confirm_password.length < 6) {
+                err_message.innerText = 'Mật khẩu phải có độ dài hơn 6 kí tự!'
+            } else{
+                axios({
+                    method: 'post',
+                    url : '/edit-info',
+                    data : {
+                        password: new_password
+                    }
+                })
+                    .then(function (res) {
+                        function timedRefresh(timeoutPeriod) {
+                            setTimeout("location.reload(true);", timeoutPeriod);
+                        }
+                        window.onload = timedRefresh(500); 
+                    })
+            }
+        }
+    </script>
     <script type="text/javascript">
         for (var i = 1; i <= 31; i++) {
-            var node = document.createElement("OPTION")
+            var day = document.createElement("OPTION")
             var textnode = document.createTextNode(i)
-            node.appendChild(textnode);
-            document.getElementById("date").appendChild(node)
+            if (i !== parseInt('{{ info.date_of_birth.split('-')[0] }}')) {
+                day.appendChild(textnode);
+                document.getElementById("date").appendChild(day)
+            }
+           
         }
         for (var i = 1; i <= 12; i++) {
-            var node = document.createElement("OPTION")
+            var month = document.createElement("OPTION")
             var textnode = document.createTextNode(i)
-            node.appendChild(textnode);
-            document.getElementById("month").appendChild(node)
+            if (i !== parseInt('{{ info.date_of_birth.split('-')[1] }}')) {
+                month.appendChild(textnode);
+                document.getElementById("month").appendChild(month)
+            }
         }
+           
         for (var i = 1970; i <= 2010; i++) {
-            var node = document.createElement("OPTION")
+            var year = document.createElement("OPTION")
             var textnode = document.createTextNode(i)
-            node.appendChild(textnode);
-            document.getElementById("year").appendChild(node)
+            if (i !== parseInt('{{ info.date_of_birth.split('-')[2] }}')) {
+                year.appendChild(textnode);
+                document.getElementById("year").appendChild(year)
+            }
         }
     </script>
 </body>

@@ -1,5 +1,6 @@
 module.exports.userInfo = function (db, router, frontendPath) {
     const bcrypt = require('bcrypt')
+    const saltRounds = 10
     const crypto = require('crypto')
     const nodeMail = require('../../reuse/sendMail')
     const passport = require('passport')
@@ -31,7 +32,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
         const subject = 'Xác thực tài khoản!'
         const text = `Xin chào ${username}. Đây là email xác thực đăng kí tài khoản của bạn. Bạn hãy nhấp vào link để hoàn thành quá trình đăng ký: http://${req.headers.host}/confirmation/${token}`
 
-        const saltRounds = 10
+
         const insertUser = 'INSERT INTO customer(username,email,password,phone,image,date_of_birth,general,time_register,address_receiver,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},${phone},null,null,null,null,null,${token_register},null,null);'
         const getEmail = 'SELECT id, username, email, phone, general FROM customer WHERE email = ${email}'
         bcrypt.hash(info.password, saltRounds, (err, hash) => {
@@ -62,7 +63,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
     })
     router.post('/login', (req, res, next) => {
         // https://stackoverflow.com/questions/22858699/nodejs-and-passportjs-redirect-middleware-after-passport-authenticate-not-being
-        
+
         passport.authenticate('login', (err, user, info) => {
             const url = req.session.url
 
@@ -111,35 +112,120 @@ module.exports.userInfo = function (db, router, frontendPath) {
     })
 
     router.get('/tai-khoan-cua-toi', (req, res) => {
-        console.log(req.session)
-        const info = req.session
-        const passportInfo = req.user
-        const message = (info.verify_token_register) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí.!'
-        const getInfoUser = 'SELECT username, email, phone FROM customer WHERE email=${email}'
-        // const email = passportInfo.email || info.email 
-        let email
-        if (info.user) email = info.user.email
-        if (passportInfo) email = passportInfo.email
-        if(!req.session.message) req.session.message = message
-        console.log('message', message)
-        if(email) {
+
+        const messageVerify = (req.session.verify_token_register) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí.!'
+        const getInfoUser = 'SELECT username, email, phone, date_of_birth, general FROM customer WHERE email=${email}'
+
+        let email = (req.session.passport) ? req.session.passport.user : req.session.user
+        console.log('eamil', email)
+        if (!req.session.messageVerify) req.session.messageVerify = messageVerify
+        /**
+         * User phải đăng nhập hoặc đăng kí thì mới cho vào trang tài khoản của tôi.
+         * Nếu chưa thì sẽ cho về trang chủ.
+         * Khi user update info thì cho `req.session.updateStatus = message`, nếu chỉ vào trang tài khoản của tôi thì 
+         * để  `req.session.updateStatus = false`: user ko update info
+         */
+        if (email) {
             db.one(getInfoUser, {
-                email: email
+                email: email.email
             })
                 .then(data => {
-                    // console.log(data)
+                    // res.json(data)
+                    if (!req.session.updateStatus) req.session.updateStatus = false
+
                     res.render(frontendPath + 'Shop/user-account', {
                         info: data,
-                        message: message
+                        messageVerify: messageVerify,
+                        messageUpdateInfo: req.session.updateStatus
                     })
+                    req.session.updateStatus = false
                 })
         } else {
             res.redirect('/')
         }
     })
 
-    router.post('/updateInfo', (req, res) => {
+    router.post('/edit-info', (req, res) => {
+        const email = req.body.new_email
+        const password = req.body.password
+        let user_id = (req.session.user) ? parseInt(req.session.user.id) : parseInt(req.session.passport.user.id)
+        if (email) {
+            const updateEmail = 'UPDATE customer SET email = ${email} WHERE id = ${customer_id};'
+            db.none(updateEmail, {
+                email: email,
+                customer_id: user_id
+            })
+            /**
+             * Khi user lần đầu tiên update info thì chưa tồn tại `req.session.updateStatus`, sau khi upadte xong thì gán cho nó 1 message.
+             * Các lần tiếp theo thì ta đã gán trạng thái cho nó là `fasle` ở router `/edit-info`
+             */
+            if (!req.session.updateStatus || req.session.updateStatus === false) req.session.updateStatus = 'Cập nhật thông tin thành công!'
+            res.redirect('/tai-khoan-cua-toi')
+        }
 
+        if (password) {
+            const updatePassword = 'UPDATE customer SET password = ${password} WHERE id = ${customer_id};'
+            bcrypt.hash(password, saltRounds, (err, hash) => {
+                db.none(updatePassword, {
+                    password: hash,
+                    customer_id: user_id
+                })
+            })
+            if (!req.session.updateStatus || req.session.updateStatus === false) req.session.updateStatus = 'Cập nhật thông tin thành công!'
+            res.json(true)
+        }
+
+        
+    })
+
+    router.post('/updateInfo', (req, res) => {
+        const info = req.body
+        let user_id = (req.session.user) ? parseInt(req.session.user.id) : parseInt(req.session.passport.user.id)
+        db.task('update info user', function* (t) {
+            if (info.name) {
+                const username = 'UPDATE customer SET username = ${username} WHERE id = ${customer_id};'
+                yield t.any(username, {
+                    username: info.name,
+                    customer_id: user_id
+                })
+            }
+
+            if (info.phone) {
+                const phone = 'UPDATE customer SET phone = ${phone} WHERE id = ${customer_id};'
+                yield t.any(phone, {
+                    phone: info.phone,
+                    customer_id: user_id
+                })
+            }
+
+            if (info.date && info.month  && info.year) {
+                const date_of_birth = 'UPDATE customer SET date_of_birth = ${date_of_birth} WHERE id = ${customer_id};'
+                yield t.any(date_of_birth, {
+                    date_of_birth: `${info.date.trim()}-${info.month.trim()}-${info.year.trim()}`,
+                    customer_id: user_id
+                })
+            }
+            if (info.gender) {
+                const gender = 'UPDATE customer SET general = ${general} WHERE id = ${customer_id};'
+                yield t.any(gender, {
+                    general: info.gender.trim(),
+                    customer_id: user_id
+                })
+            }
+            return 1
+        })
+            .then(()=> {
+                /*
+                * Khi user lần đầu tiên update info thì chưa tồn tại `req.session.updateStatus`, sau khi upadte xong thì gán cho nó 1 message.
+                * Các lần tiếp theo thì ta đã gán trạng thái cho nó là `fasle` ở router `/edit-info`
+                */
+                if (!req.session.updateStatus || req.session.updateStatus === false) req.session.updateStatus = 'Cập nhật thông tin thành công!'
+                res.redirect('/tai-khoan-cua-toi')
+            })
+            .catch(err => {
+                console.log(err.message)
+            })
+        
     })
 
     router.get('/logout', (req, res) => {

@@ -30,7 +30,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
         const username = info.username
         const phone = info.phone
         const subject = 'Xác thực tài khoản!'
-        const text = `Xin chào ${username}. Đây là email xác thực đăng kí tài khoản của bạn. Bạn hãy nhấp vào link để hoàn thành quá trình đăng ký: http://${req.headers.host}/confirmation/${token}`
+        const text = `Xin chào ${username}. Đây là email xác thực đăng kí tài khoản của bạn. Bạn hãy click vào link để hoàn thành quá trình đăng ký: http://${req.headers.host}/confirmation/${token}`
 
 
         const insertUser = 'INSERT INTO customer(username,email,password,phone,image,date_of_birth,general,time_register,address_receiver,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},${phone},null,null,null,null,null,${token_register},null,null);'
@@ -50,7 +50,7 @@ module.exports.userInfo = function (db, router, frontendPath) {
             })
                 .then(data => {
                     console.log('insert data success!')
-                    // khi user đăng nhập thành công thì lưu thông tin của user vào trong session
+                    // khi user đăng ký thành công thì lưu thông tin của user vào trong session
                     if (!req.session.user) req.session.user = data
                     nodeMail(email, subject, text)
                     res.redirect('/tai-khoan-cua-toi')
@@ -61,6 +61,36 @@ module.exports.userInfo = function (db, router, frontendPath) {
         })
 
     })
+
+    router.get('/resend/veryfi-email/:username', (req, res) => {
+        const username = req.params.username
+        const token = crypto.randomBytes(16).toString('hex')
+        const subject = 'Xác thực tài khoản!'
+        const text = `Xin chào ${username}. Đây là email xác thực đăng kí tài khoản của bạn. Bạn hãy click vào link để hoàn thành quá trình đăng ký: http://${req.headers.host}/confirmation/${token}`
+        let email = (req.session.passport) ? req.session.passport.user : req.session.user
+        /**
+         * Khi user yêu cầu gửi lại email xác thực thì ta cần phải thay đổi token veryfi trong db.
+         * Kiểm ra lại token veryfi xem token đã dc lưu vào trong db hay chưa?
+         * Lưu thành công rồi mới gửi email xác thực. 
+         */
+        db.task('resend email veryfi account', function* (t) {
+            const updateTokenVeryfi = 'UPDATE customer SET token_register = ${token_register} WHERE email = ${email}'
+            yield t.any(updateTokenVeryfi, {
+                token_register: token,
+                email: email.email
+            })
+            const veryfiToken = 'SELECT token_register FROM customer WHERE email = ${email};'
+            return yield t.one(veryfiToken, {
+                email: email.email
+            })
+        })
+            .then(data => {
+                nodeMail(email.email, subject, text)
+                res.redirect('/tai-khoan-cua-toi')
+                console.log(`Token đã thay đổi là: ${data.token_register}`)
+            })
+    })
+
     router.post('/login', (req, res, next) => {
         // https://stackoverflow.com/questions/22858699/nodejs-and-passportjs-redirect-middleware-after-passport-authenticate-not-being
 
@@ -87,8 +117,11 @@ module.exports.userInfo = function (db, router, frontendPath) {
     router.get('/confirmation/:token_register', (req, res) => {
         const token_register = req.params.token_register
         const tokenRegistered = 'UPDATE customer SET verify_token_register = ${verify_token_register} WHERE token_register = ${token_register}'
-        const veryfiToken = 'SELECT verify_token_register, email FROM customer WHERE token_register = ${token_register}'
-
+        const veryfiToken = 'SELECT verify_token_register FROM customer WHERE token_register = ${token_register}'
+        /**
+         * Trong trường hợp này sau khi user xác thực tài khoản, ta lại lấy ra token_veryfi mục đích là để
+         * kiểm tra xem đã xác thực thành công hay chưa?
+         */
         db.task('user veryfi account', function* (t) {
             yield t.any(tokenRegistered, {
                 verify_token_register: token_register,
@@ -100,25 +133,22 @@ module.exports.userInfo = function (db, router, frontendPath) {
             })
         })
             .then(data => {
-                if (!req.session.verify_token_register) {
-                    req.session.email = data.email
-                    req.session.verify_token_register = data.verify_token_register
-                    res.redirect('/tai-khoan-cua-toi')
-                }
+                if (data) console.log('Xác thực thành công!')
+                res.redirect('/tai-khoan-cua-toi')
             })
             .catch(err => {
-                res.send('veryfi fail!')
+                res.send('Xác thực không thành công!')
             })
     })
 
     router.get('/tai-khoan-cua-toi', (req, res) => {
-
-        const messageVerify = (req.session.verify_token_register) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí.!'
         const getInfoUser = 'SELECT username, email, phone, date_of_birth, general FROM customer WHERE email=${email}'
-
+        /**
+         * email được lấy ra từ:
+         * user đăng nhập thông qua `req.session.passport.user`.
+         * user đăng kí thông qua `req.session.user`
+         */
         let email = (req.session.passport) ? req.session.passport.user : req.session.user
-        console.log('eamil', email)
-        if (!req.session.messageVerify) req.session.messageVerify = messageVerify
         /**
          * User phải đăng nhập hoặc đăng kí thì mới cho vào trang tài khoản của tôi.
          * Nếu chưa thì sẽ cho về trang chủ.
@@ -135,7 +165,6 @@ module.exports.userInfo = function (db, router, frontendPath) {
 
                     res.render(frontendPath + 'Shop/user-account', {
                         info: data,
-                        messageVerify: messageVerify,
                         messageUpdateInfo: req.session.updateStatus
                     })
                     req.session.updateStatus = false
@@ -198,10 +227,10 @@ module.exports.userInfo = function (db, router, frontendPath) {
                 })
             }
 
-            if (info.date && info.month  && info.year) {
+            if (info.birthday) {
                 const date_of_birth = 'UPDATE customer SET date_of_birth = ${date_of_birth} WHERE id = ${customer_id};'
                 yield t.any(date_of_birth, {
-                    date_of_birth: `${info.date.trim()}-${info.month.trim()}-${info.year.trim()}`,
+                    date_of_birth: info.birthday,
                     customer_id: user_id
                 })
             }

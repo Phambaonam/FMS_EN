@@ -430,18 +430,19 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.post('/add_to_cart', (req, res) => {
-        console.log(req.session)
+        // console.log(req.session)
         const quantity = parseInt(req.body.quantity)
         const product_id = parseInt(req.body.product_id)
         const sessID = req.session.id
         /**
-         * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
-         * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
-         * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
-         */
+        * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
+        * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
+        * Khi user đăng ký thì `user_id = parseInt(req.session.user.id)`
+        */
         let user_id
         if (req.session.user) user_id = parseInt(req.session.user.id)
         if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
+        if (!req.session.passport && !req.session.user) user_id = null
 
         db.task('add product to cart', function* (t) {
             const status1 = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
@@ -513,6 +514,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/gio-hang', (req, res) => {
+        console.log(req.session.id)
         const sessID = req.session.id
         /**
         * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
@@ -524,14 +526,14 @@ module.exports.shopPage = function (db, router, frontendPath) {
         if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         db.task('gio hang', function* (t) {
             const cartDetail = []
-            const cart1 = 'SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = ${session_user_id} AND user_id = ${user_id} ORDER BY id ASC;'
+            const cart1 = 'SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = ${session_user_id} ORDER BY id ASC;'
             const cart2 = 'SELECT attribute_product_id, quantity FROM cart WHERE  user_id = ${user_id} ORDER BY id ASC;'
             const cart = (!req.user) ? cart1 : cart2
             const getCarts = yield t.any(cart, {
                 session_user_id: sessID,
                 user_id: user_id
             })
-
+            // console.log(getCarts)
             for (let item in getCarts) {
                 const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
                 const getProduct = yield t.one(product, {
@@ -542,7 +544,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             }
 
 
-            const sum1 = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID} AND user_id = ${user_id};'
+            const sum1 = 'SELECT SUM(quantity) FROM cart  WHERE session_user_id = ${sessID};'
             const sum2 = 'SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};'
             const sum = (!req.user) ? sum1 : sum2
             const getSum = yield t.one(sum, {
@@ -897,6 +899,10 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/don-hang-cua-toi', (req, res) => {
-        res.render(frontendPath + 'Shop/Order/order')
+        let info = req.user
+        res.render(frontendPath + 'Shop/Order/order', {
+            title: 'Tài khoản của tôi',
+            info: info
+        })
     })
 }

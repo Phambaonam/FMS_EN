@@ -4,66 +4,75 @@
 {% include '../../components/head.html' %}
 <!-- End Head -->
 <style>
-#account-info .disabled-input {
-    background: none;
-    border: 0;
-    padding: 15px 10px;
-}
-#account-info .disabled-input + button {
-    margin: 10px 0;
-    border: 0;
-    padding: 5px 20px;
-    background: #336699;
-    color: #fff;
-    transition: all 0.4s ease;
-}
-button.edit, button.edit:hover {
-    float: left;
-    margin-left: 10%;
-    background: #1976D2;
-    color: #fff;
-    font-size: 18px;
-    width: 110px;
-}
-button.cancel, button.cancel:hover {
-float: right;
-    margin-right: 10%;
-    color: #fff;
-    background: #D32F2F;
-    font-size: 18px;
-    height: 38px;
-    text-align: center;
-    padding-top: 6px;
-    width: 25%;
-}
-input.info {
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #9e9e9e;
-    border-radius: 0;
-    outline: none;
-    height: 3rem;
-    width: 100%;
-    font-size: 1.2em;
-    margin: 0 0 15px 0;
-    padding: 0;
+    #account-info .disabled-input {
+        background: none;
+        border: 0;
+        padding: 15px 10px;
+    }
 
-    box-sizing: content-box;
-    transition: all .3s;
-}
-input.info:focus {
-    box-shadow: none;
-    border-bottom: 1.5px solid #26a69a;
-}
+    #account-info .disabled-input+button {
+        margin: 10px 0;
+        border: 0;
+        padding: 5px 20px;
+        background: #336699;
+        color: #fff;
+        transition: all 0.4s ease;
+    }
+
+    button.edit,
+    button.edit:hover {
+        float: left;
+        margin-left: 10%;
+        background: #1976D2;
+        color: #fff;
+        font-size: 18px;
+        width: 110px;
+    }
+
+    button.cancel,
+    button.cancel:hover {
+        float: right;
+        margin-right: 10%;
+        color: #fff;
+        background: #D32F2F;
+        font-size: 18px;
+        height: 38px;
+        text-align: center;
+        padding-top: 6px;
+        width: 25%;
+    }
+
+    input.info {
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #9e9e9e;
+        border-radius: 0;
+        outline: none;
+        height: 3rem;
+        width: 100%;
+        font-size: 1.2em;
+        margin: 0 0 15px 0;
+        padding: 0;
+
+        box-sizing: content-box;
+        transition: all .3s;
+    }
+
+    input.info:focus {
+        box-shadow: none;
+        border-bottom: 1.5px solid #26a69a;
+    }
 </style>
+
 <body>
     <!-- Header -->
     {% include '../../components/header.html' %}
     <!-- End Header -->
     <div style="height:80px; text-align:center"></div>
-     {% if messageVerify !== true %}
+    {% if messageVerify !== true %}
     <div class="message">
         <h3>{{ messageVerify }}</h3>
+        <h4><a href="/resend/veryfi-email/{{ info.username }}">Gửi lại email xác thực!</a></h4>
     </div>
     {% endif %}
     <div class="container account-main">
@@ -72,7 +81,7 @@ input.info:focus {
                 <div class="user-top-wrap">
                     <div class="user-top">
                         <img src="/public/img/feedback_1.jpg">
-                        <span>{{ data.username }}</span>
+                        <span>{{ info.username }}</span>
                     </div>
                 </div>
                 <ul class="nav nav-stacked">
@@ -93,9 +102,9 @@ input.info:focus {
             <div class="tab-content">
                 <div id="account-info">
                     {% if messageUpdateInfo !== false %}
-                        <div class="updateInfo">
-                            <h3>{{ messageUpdateInfo }}</h3>
-                        </div>
+                    <div class="updateInfo">
+                        <h3>{{ messageUpdateInfo }}</h3>
+                    </div>
                     {% endif %}
                     <h3>Thông tin cá nhân</h3>
                     <form method="post" action="/updateInfo">
@@ -105,8 +114,10 @@ input.info:focus {
                                     <label>Email</label>
                                     <div class="input-field">
                                         <input class="disabled-input" type="email" name="Email" value="{{ info.email }}" disabled>
-                                        <button type="button"  class="pull-right" data-toggle="modal" data-target="#editEmail"><i class="fa fa-edit"></i>
-                                        <span class="hidden-xs"> Chỉnh sửa</span></button>
+                                        <button type="button" class="pull-right" data-toggle="modal" data-target="#editEmail">
+                                            <i class="fa fa-edit"></i>
+                                            <span class="hidden-xs"> Chỉnh sửa</span>
+                                        </button>
                                     </div>
                                 </li>
                                 <li>
@@ -134,45 +145,23 @@ input.info:focus {
                                 <li>
                                     <label for="month">Ngày sinh:</label>
                                     <div class="input-field">
-                                        <select name="date" id="date">
-                                            <option>Ngày</option>
-                                            {% if info.date_of_birth.split('-')[0] %}
-                                                <option value="{{ info.date_of_birth.split('-')[0] }}" selected="selected">{{ info.date_of_birth.split('-')[0] }}</option>
-                                            {% endif %}
-                                        </select>
-                                        <select name="month" id="month">
-                                            <option>Tháng</option>
-                                            {% if info.date_of_birth.split('-')[1] %}
-                                            <option value="{{ info.date_of_birth.split('-')[1] }}" selected="selected">{{ info.date_of_birth.split('-')[1] }}</option>
-                                            {% endif %}
-
-                                        </select>
-
-                                        <select name="year" id="year">
-                                            <option>Năm</option>
-                                            {% if info.date_of_birth.split('-')[2] %}
-                                            <option value="{{ info.date_of_birth.split('-')[2] }}" selected="selected">{{ info.date_of_birth.split('-')[2] }}</option>
-                                            {% endif %}
-                                        </select>
+                                        <input type="text" name="birthday" id="birthday" value="{{ info.date_of_birth }}" />
+                                        <span style="margin-left: 90px;">Format: Ngày/Tháng/Năm</span>
                                     </div>
                                 </li>
                                 <li>
                                     <label for="gender">Giới tính:</label>
                                     <div>
-                                        {% if info.general | trim === 'Nam' %}
-                                            <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" checked />
-                                        {% else %}
-                                            <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" />
-                                        {% endif %}
-                                            <label class="gender" for="male">Nam</label>
+                                        {% if info.general == 'Nam' %}
+                                        <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" checked /> {% else %}
+                                        <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" /> {% endif %}
+                                        <label class="gender" for="male">Nam</label>
 
-                                        {% if info.general | trim === 'Nữ' %}
-                                            <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" checked />
-                                        {% else %}
-                                            <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" />
-                                        {% endif %}
-                                            <label class="gender" for="female">Nữ</label>
-                                        
+                                        {% if info.general == 'Nữ' %}
+                                        <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" checked /> {% else %}
+                                        <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" /> {% endif %}
+                                        <label class="gender" for="female">Nữ</label>
+
                                     </div>
                                 </li>
                                 <li>
@@ -191,7 +180,7 @@ input.info:focus {
     <div class="modal fade" id="editEmail" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <form  method="post" action="/edit-info">
+                <form method="post" action="/edit-info">
                     <div style="border-bottom: none;" class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h3 class="modal-title" style=" font-size: 1.7em; line-height: 1.2">Thay đổi email: </h3>
@@ -212,7 +201,7 @@ input.info:focus {
     <div class="modal fade" id="editPassword" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-               <form>
+                <form>
                     <div style="border-bottom: none;" class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h3 class="modal-title" style=" font-size: 1.7em; line-height: 1.2">Thay đổi mật khẩu: </h3>
@@ -228,7 +217,7 @@ input.info:focus {
                         <button type="button" id="checkPassword" class="btn btn-default edit">Thay đổi</button>
                         <button type="button" class="btn btn-default cancel" data-dismiss="modal">Hủy</button>
                     </div>
-               </form>
+                </form>
             </div>
         </div>
     </div>
@@ -251,21 +240,21 @@ input.info:focus {
         // }
     </script>
     <script type="text/javascript">
-        
+
         checkPassword.onclick = function () {
             var new_password = document.getElementById('new_password').value
             var confirm_password = document.getElementById('confirm_password').value
             var checkPassword = document.getElementById('checkPassword')
             var err_message = document.getElementById('err_message')
-            if(new_password !== confirm_password) {
+            if (new_password !== confirm_password) {
                 err_message.innerText = 'Mật khẩu không trùng khớp!'
-            } else if(new_password.length < 6 || confirm_password.length < 6) {
+            } else if (new_password.length < 6 || confirm_password.length < 6) {
                 err_message.innerText = 'Mật khẩu phải có độ dài hơn 6 kí tự!'
-            } else{
+            } else {
                 axios({
                     method: 'post',
-                    url : '/edit-info',
-                    data : {
+                    url: '/edit-info',
+                    data: {
                         password: new_password
                     }
                 })
@@ -273,36 +262,8 @@ input.info:focus {
                         function timedRefresh(timeoutPeriod) {
                             setTimeout("location.reload(true);", timeoutPeriod);
                         }
-                        window.onload = timedRefresh(500); 
+                        window.onload = timedRefresh(500);
                     })
-            }
-        }
-    </script>
-    <script type="text/javascript">
-        for (var i = 1; i <= 31; i++) {
-            var day = document.createElement("OPTION")
-            var textnode = document.createTextNode(i)
-            if (i !== parseInt('{{ info.date_of_birth.split('-')[0] }}')) {
-                day.appendChild(textnode);
-                document.getElementById("date").appendChild(day)
-            }
-           
-        }
-        for (var i = 1; i <= 12; i++) {
-            var month = document.createElement("OPTION")
-            var textnode = document.createTextNode(i)
-            if (i !== parseInt('{{ info.date_of_birth.split('-')[1] }}')) {
-                month.appendChild(textnode);
-                document.getElementById("month").appendChild(month)
-            }
-        }
-           
-        for (var i = 1970; i <= 2010; i++) {
-            var year = document.createElement("OPTION")
-            var textnode = document.createTextNode(i)
-            if (i !== parseInt('{{ info.date_of_birth.split('-')[2] }}')) {
-                year.appendChild(textnode);
-                document.getElementById("year").appendChild(year)
             }
         }
     </script>

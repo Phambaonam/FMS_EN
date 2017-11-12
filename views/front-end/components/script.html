@@ -41,26 +41,30 @@
     }
     var login = document.getElementById('login-btn')
     login.onclick = function () {
-        var email = document.getElementById('email').value
-        var password = document.getElementById('password').value
+        var email = document.getElementById('email')
+        var password = document.getElementById('password')
         var login_err = document.getElementById('login_err')
         axios({
             method: 'post',
             url: '/login',
             data: {
-                email: email,
-                password: password
+                email: email.value,
+                password: password.value
             }
         })
             .then(function (res) {
-                if(res.data  === 'Sai mật khẩu!' || res.data === 'Tài khoản này không tồn tại!') {
+                if(res.data  === 'Sai mật khẩu!') {
                     login_err.innerText = res.data
-                    console.log(res.data)
+                    password.value = ''
+                    console.log(password.value)
+                } else if (res.data === 'Tài khoản này không tồn tại!') {
+                    login_err.innerText = res.data
+                    email.value = ''
                 } else {
                     function timedRefresh(timeoutPeriod) {
                         setTimeout("location.reload(true);", timeoutPeriod);
                     }
-                    window.onload = timedRefresh(500); 
+                    window.onload = timedRefresh(1000); 
                 }
             })
     }

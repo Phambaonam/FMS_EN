@@ -92,10 +92,35 @@
                             </tbody>
                         </table>
                         <div class="checkout-proceed">
-                            <a href="/shipping" class="link-to checkout-button">Tiến hành đặt hàng <i class="fa fa-angle-right"></i></a>
+                            {% if messageVerify !== true %}
+                                <button class="link-to checkout-button" data-toggle="modal" data-target="#warming">
+                                    Tiến hành đặt hàng
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                            {% else %}
+                                <a href="/shipping" class="link-to checkout-button">
+                                    Tiến hành đặt hàng
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="warming" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                <div class="bootbox-body">
+                    <p style="font-size: 20px;">Bạn vui lòng xác thực tài khoản để có thể tiến hành đặt hàng!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="confirm" type="button" class="btn btn btn-primary" id="remove-wishlish" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>

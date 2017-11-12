@@ -89,6 +89,20 @@ app.use(function (req, res, next) {
         .then(data => {
             data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
         })
+    /**
+     * Viết ở đây mục đích là để khi user vào những trang mà tài khoản bắt buộc phải xác thực, thì
+     * ta chỉ phải viêt 1 lần trong midleware mà có thể dùng cho nhiều route
+     */    
+    const veryfiToken = 'SELECT verify_token_register FROM customer WHERE id = ${customer_id}'  
+    db.one(veryfiToken , {
+        customer_id: customer_id
+    })
+        .then(data => {
+            res.locals.messageVerify = (data.verify_token_register !== null) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí!'
+        })
+        .catch(err => {
+            console.log(`Kiểm tra xác thực tài khoàn ${err.message}`)
+        })  
     // console.log('res.locals.login_status', res.locals.login_status)
     // console.log('res.locals.wishlish', res.locals.wishlish)
     // console.log('res.locals.carts', res.locals.carts)

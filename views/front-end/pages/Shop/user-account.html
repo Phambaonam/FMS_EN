@@ -80,7 +80,7 @@
             <nav class="side-nav">
                 <div class="user-top-wrap">
                     <div class="user-top">
-                        <img src="/public/img/feedback_1.jpg">
+                        <img src="https://vcdn.tikicdn.com/desktop/img/icon1.png">
                         <span>{{ info.username }}</span>
                     </div>
                 </div>
@@ -152,14 +152,18 @@
                                 <li>
                                     <label for="gender">Giới tính:</label>
                                     <div>
-                                        {% if info.general == 'Nam' %}
-                                        <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" checked /> {% else %}
-                                        <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" /> {% endif %}
+                                        {% if info.general.trim() === 'Nam' %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" checked /> 
+                                        {% else %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" /> 
+                                        {% endif %}
                                         <label class="gender" for="male">Nam</label>
 
-                                        {% if info.general == 'Nữ' %}
-                                        <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" checked /> {% else %}
-                                        <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" /> {% endif %}
+                                        {% if info.general.trim() ==='Nữ' %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" checked /> 
+                                        {% else %}
+                                            <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" /> 
+                                        {% endif %}
                                         <label class="gender" for="female">Nữ</label>
 
                                     </div>

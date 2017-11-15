@@ -118,14 +118,18 @@
                     <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal" style="width: 27px;">
                         <i class="fa fa-heart-o"></i>
                     </a>
-                    {% elif listWishlish %} {% for wishlish in listWishlish %} {% if wishlish.attribute_product_id === data.product_id %}
-                    <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish" style="width: 27px;">
-                        <i class="wishlished fa fa-heart-o"></i>
-                    </a>
-                    {% endif %} {% endfor %} {% else %}
-                    <a href="javascript:void(0)" id="add_to_wishlist" style="width: 27px;">
-                        <i class="fa fa-heart-o"></i>
-                    </a>
+                    {% elif listWishlish %} 
+                        {% for wishlish in listWishlish %} 
+                            {% if wishlish.attribute_product_id === data.product_id %}
+                                <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish" style="width: 27px;">
+                                    <i class="wishlished fa fa-heart-o"></i>
+                                </a>
+                            {% endif %} 
+                        {% endfor %} 
+                    {% else %}
+                        <a href="javascript:void(0)" id="add_to_wishlist" style="width: 27px;">
+                            <i class="fa fa-heart-o"></i>
+                        </a>
                     {% endif %}
                 </div>
             </div>

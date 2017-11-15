@@ -101,7 +101,7 @@ app.use(function (req, res, next) {
             res.locals.messageVerify = (data.verify_token_register !== null) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí!'
         })
         .catch(err => {
-            console.log(`Kiểm tra xác thực tài khoàn ${err.message}`)
+            // console.log(`Kiểm tra xác thực tài khoàn ${err.message}`)
         })  
     // console.log('res.locals.login_status', res.locals.login_status)
     // console.log('res.locals.wishlish', res.locals.wishlish)

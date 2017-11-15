@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS attribute_product (
     id SERIAL PRIMARY KEY,
     images JSON NOT NULL,
     attributes JSONB NOT NULL,
-    option_status json NOT NULL,
+    option_status JSON NOT NULL,
     total INT NOT NULL,
     rest_of_product INT,
     product_id INT REFERENCES product(id) ON DELETE CASCADE NOT NULL
@@ -63,10 +63,14 @@ CREATE TABLE IF NOT EXISTS customer (
     date_of_birth CHAR(50),
     general CHAR(10),
     time_register CHAR(50),
-    address_receiver TEXT [],
     token_register VARCHAR(255),
     verify_token_register VARCHAR(255),
     role CHAR(10)
+);
+CREATE TABLE IF NOT EXISTS customer_of_address (
+    id SERIAL PRIMARY KEY,
+    address JSONB,
+    customer_id INT REFERENCES customer(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS wishlish (
     id SERIAL PRIMARY KEY,

@@ -118,7 +118,29 @@
     right: 10px;
     color: #d42e1d;
 }
+.alert {
+    padding: 7px;
+    margin: 15px 0 0;
+    font-size: 15px;
+}
+.alert-success {
+    color: #4caf50;
+    background-color: #fdfffb;
+    border-color: #4caf50;
+}
 
+.alert-success:before {
+    content: '';
+    background-image: url(https://vcdn.tikicdn.com/desktop/img/icon-svg/icon-tick.svg);
+    width: 16px;
+    height: 16px;
+}
+.alert:before {
+    display: inline-block;
+    background-size: cover;
+    vertical-align: top;
+    margin-right: 5px;
+}
 </style>
 
 <body>
@@ -132,7 +154,7 @@
                 <div class="user-top-wrap">
                     <div class="user-top">
                         <img src="/public/img/feedback_1.jpg">
-                        <span>{{ data.username }}</span>
+                        <span>{{ info.username }}</span>
                     </div>
                 </div>
                 <ul class="nav nav-stacked">
@@ -152,57 +174,92 @@
             </nav>
             <div class="tab-content">
                 <div class="default-address col-xs-12">
+                    {% if message %}
+                    <h1>123</h1>
+                        <div class="alert alert-success">{{ message.info }}</div>
+                    {% endif %}
                     <h3>Sổ địa chỉ</h3>
                     <a class="add-address" href="/them-dia-chi">
                         <i class="add"></i>
                         <span>Thêm địa chỉ mới</span>
                     </a>
                     <div class="dashboard-address">
-                    
-                        <div class="panel panel-default item is-default">
-                            <div class="panel-body">
-                                <p class="name">Phạm Bảo Nam
-                                    <span class="default">Địa chỉ mặc định</span>
-                                </p>
-                                <p class="address">
-                                    <span>Địa chỉ:</span> Số 46 Ngách 145/77 ,Ngõ 145, Cổ Nhuế 2, Phường Cổ Nhuế 2, Quận Bắc Từ Liêm, Hà Nội, Việt
-                                    Nam</p>
-                                <p class="phone">
-                                    <span>Điện thoại:</span> 01638609594</p>
-                                <p class="action">
-                                    <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/customer/address/edit?id=1752954">Chỉnh sửa</a>
-                                </p>
-                    
-                    
+                    {% for address in addresses %}
+                        {% if address.address.address_default.length > 1 %}
+                            <div class="panel panel-default item is-default">
+                                <div class="panel-body">
+                                    <p class="name">{{ address.address.full_name }}
+                                        <span class="default">Địa chỉ mặc định</span>
+                                    </p>
+                                    <p class="address">
+                                        <span>Địa chỉ:</span> Số 14, ngõ 4, Nguyễn Đình Chiểu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội, Việt Nam</p>
+                                    <p class="phone">
+                                        <span>Điện thoại:</span>{{ address.address.telephone }}</p>
+                                    <p class="action">
+                                        <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/chinh-sua-dia-chi/edit?id={{ address.id }}">Chỉnh sửa</a>
+                                    </p>
+                            
+                            
+                                </div>
                             </div>
-                        </div>
-                        <div class="panel panel-default item">
-                            <div class="panel-body">
-                                <p class="name">Phạm Bảo Nam </p>
-                                <p class="address">
-                                    <span>Địa chỉ:</span> Số 14, ngõ 4, Nguyễn Đình Chiểu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội, Việt Nam</p>
-                                <p class="phone">
-                                    <span>Điện thoại:</span> 01638609594</p>
-                                <p class="action">
-                                    <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/customer/address/edit?id=2012476">Chỉnh sửa</a>
-                                    <a data-id="2012476" class="btn btn-default btn-custom1 btn-delete-address">Xóa</a>
-                                </p>
-                    
-                    
+                        {% else %}
+                            <div class="panel panel-default item">
+                                <div class="panel-body">
+                                    <p class="name">{{ address.address.full_name }}
+                                    </p>
+                                    <p class="address">
+                                        <span>Địa chỉ:</span> Số 14, ngõ 4, Nguyễn Đình Chiểu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội, Việt Nam</p>
+                                    <p class="phone">
+                                        <span>Điện thoại:</span>{{ address.address.telephone }}</p>
+                                    <p class="action">
+                                        <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/chinh-sua-dia-chi/edit?id={{ address.id }}">Chỉnh sửa</a>
+                                        <a class="btn btn-default btn-custom1 btn-delete-address" id="{{ address.id }}" data-toggle="modal" data-target="#removeAddress">Xóa</a>
+                                    </p>
+                            
+                            
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
+                    {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <div class="modal fade" id="removeAddress" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                    <div class="bootbox-body">
+                        <p style="font-size: 20px;">Bạn có thực sự muốn xoá ?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a type="button" class="btn btn btn-primary" id="remove-address">Đồng ý</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Footer -->
     {% include '../../components/footer.html' %}
     <!-- End Footer -->
     <!-- script -->
     {% include '../../components/script.html' %}
+
+    <!-- remove address -->
+    <script type="text/javascript">
+        var delete_address = document.querySelectorAll('.btn-delete-address')
+        var remove_address = document.getElementById('remove-address')
+        delete_address.forEach(function (item) {
+            var product_id = item.className.charAt(item.className.length - 1)
+            item.onclick = function () {
+                remove_address.href = '/delete/address?id=' + item.id
+            }
+        })
+    </script>
 </body>
 
 </html>

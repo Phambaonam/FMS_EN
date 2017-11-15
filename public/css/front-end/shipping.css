@@ -103,8 +103,8 @@
     background: #F7F7F7;
 }
 .form-group {
-    margin-bottom: 15px;
-    height:36px;
+    /* margin-bottom: 15px;
+    height:36px; */
 }
 .form-group label {
     /*font-size: 12px;*/
@@ -117,14 +117,13 @@
 }
 .input-wrap {
     width:79%;
-    float:left;
+    /* float:left; */
 }
 .btn-goto, .btn-goto:hover  {
     background: #4CAF50;
     border-color: #4CAF50;
     color: #fff;
-    margin-bottom: 20px;
     padding: 9px 12px;
     width: 225px;
-    margin-left: 40%;
+    margin: 20px 20%;
 }

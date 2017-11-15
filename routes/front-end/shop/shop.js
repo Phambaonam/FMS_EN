@@ -875,7 +875,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
         if (req.session.passport) {
             let info = req.user
             const customer_id = parseInt(req.session.passport.user.id)
-            const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
+            const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} ORDER BY address -> 'address_default' ASC;"
             db.any(address, {
                 customer_id: customer_id
             })
@@ -1104,7 +1104,23 @@ module.exports.shopPage = function (db, router, frontendPath) {
     // payment
 
     router.get('/shipping', (req, res) => {
-        res.render(frontendPath + 'Shop/Payment/shipping')
+        if (req.session.passport) {
+            const customer_id = parseInt(req.session.passport.user.id)
+            const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} ORDER BY address -> 'address_default' ASC;"
+            db.any(address, {
+                customer_id: customer_id
+            })
+                .then(data => {
+                    // res.json(data)
+                    req.flash('info', 'OK')
+                    res.render(frontendPath + 'Shop/Payment/shipping', {
+                        title: 'Shipping',
+                        addresses: data
+                    })
+                })
+        } else {
+            res.redirect('/')
+        }
     })
 
     router.get('/thanh-toan', (req, res) => {

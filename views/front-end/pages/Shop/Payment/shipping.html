@@ -2,7 +2,208 @@
 <html>
 <!-- Head -->
 {% include '../../../components/head.html' %}
+<style>
+.row-address-list {
+    margin-right: 0;
+    margin-left: 0;
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+}
+.row-address-list .col-lg-6 {
+    padding: 10px 15px;
+}
+.address-item {
+    position: relative;
+    margin-bottom: 0;
+    box-shadow: none;
+    border-radius: 3px;
+}
+.address-item.is-default {
+    border: 1px dashed #090;
+}
+.panel {
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.panel.panel-default .panel-body {
+    padding: 10px 15px 0;
+}
+.panel-body:after, .panel-body:before {
+    content: " ";
+    display: table;
+}
 
+.address-item .name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+ .address-item .name+.address {
+    height: 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.address-form form {
+    max-width: 100%;
+    margin: 0 auto;
+
+}
+.address-form .form-group label {
+    /* font-size: 12px; */
+    text-align: left;
+}
+@media (min-width: 1200px) {
+
+    .address-item .name+.address {
+    height: 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
+
+    .row-address-list .col-lg-6 {
+    padding-left: 10px;
+    padding-right: 10px;
+    }
+
+    .address-form>.panel-body {
+    padding: 20px 15px;
+    }
+
+    .address-form form {
+    max-width: 550px;
+    }
+
+    .address-form form .col-lg-8 .form-control {
+    padding-right: 12px;
+    }
+
+    .address-form .form-group .form-control {
+    max-width: 320px;
+    }
+
+    .visible-lg-block {
+    display: block!important;
+    }
+
+    .btn-custom3 {
+    width: 50%;
+    }
+}
+
+@media (min-width: 768px) {
+    .address-item .name+.address {
+    height: 20px;
+    overflow: hidden;
+    }
+    .form-horizontal .control-label {
+    text-align: right;
+    margin-bottom: 0;
+    padding-top: 7px;
+}
+}
+.address-item .address {
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+.address-item .phone {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+.btn-custom1:first-child, .btn-custom1:first-child+button {
+    margin-right: 7px;
+}
+.btn-custom1.is-blue {
+    background: #00b6f0;
+    color: #fff;
+    border: #029fd1;
+}
+.btn-custom1.is-black {
+    background: #626455;
+    color: #fff;
+    border: #555649;
+}
+.btn-custom1 {
+    border: 1px solid #ccc;
+    /* font-size: 12px; */
+    padding-left: 14px;
+    padding-right: 14px;
+    height: 31px;
+    outline-color: #ccc;
+    border-radius: 2px;
+}
+.address-item.is-default .default {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    display: block;
+    font-size: 11px;
+    color: #090;
+}
+.other {
+    font-size: 15px;
+    margin-top: 10px;
+}
+.other a {
+    color: #007FF0;
+}
+.address-form {
+    max-width: 100%;
+    border: 1px solid #ddd;
+    display: none;
+    margin-top: 0;
+    background: #F8F8F8;
+}
+.panel.panel-default .panel-body {
+    padding: 10px 15px 0;
+}
+
+@media (min-width: 640px) {
+    .tiki-shipping .wrap .address-form>.panel-body {
+    padding: 25px;
+    }
+}
+
+ .address-form.is-edit .btn-custom2 {
+    display: inline-block!important;
+    width: 47%;
+    margin-right: 1%;
+    background: #F7F7F7;
+}
+.address-form.is-edit .btn-custom3 {
+    display: inline-block;
+    width: 50%;
+}
+.btn-custom3 {
+    width: 100%;
+    background: #00b6f0;
+    border-color: transparent;
+    outline-color: #ccc;
+    /* font-size: 13px; */
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 2px;
+    color: #fff;
+}
+.btn-custom3:hover {
+    background: #029fd1;
+    border-color: #029fd1;
+}
+
+/* .btn-custom2 {
+    width: 49%;
+    background: #f7f7f7;
+    border-color: #e1e1e1;
+    outline-color: #ccc;
+    font-size: 13px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 2px;
+    margin-right: 1%;
+} */
+</style>
 <!-- End Head -->
 <link rel="stylesheet" type="text/css" href="/public/css/front-end/shipping.css">
 
@@ -62,7 +263,84 @@
         <div class="row">
             <div style="height: 15px;"></div>
             <h2>2. Địa chỉ giao hàng</h2>
-            <div class="form-body">
+            <div class="container">
+                <h5 class="visible-md-block visible-lg-block">
+                    Chọn địa chỉ giao hàng có sẵn bên dưới:
+                </h5>
+            </div>
+            <div class="row-address-list">
+                {% for address in addresses %} 
+                    {% if address.address.address_default.length > 1 %}
+                        <!-- <div class="panel panel-default item is-default">
+                            <div class="panel-body">
+                                <p class="name">
+                                    <span class="default">Địa chỉ mặc định</span>
+                                </p>
+                                <p class="address">
+                                    <span>Địa chỉ:</span> Số 14, ngõ 4, Nguyễn Đình Chiểu, Phường Lê Đại Hành, Quận Hai Bà Trưng, Hà Nội, Việt Nam</p>
+                                <p class="phone">
+                                    <span>Điện thoại:</span></p>
+                                <p class="action">
+                                    <a class="btn btn-default btn-custom1 js-edit edit-customer-address " href="/chinh-sua-dia-chi/edit?id={{ address.id }}">Chỉnh sửa</a>
+                                </p>
+                        
+                        
+                            </div>
+                        </div> -->
+                        <div class="col-lg-6 col-md-6 col-sm-6 item" id="item-{{ address.id }}">
+                            <div class="panel panel-default address-item is-default">
+                                <div class="panel-body">
+                                    <p class="name">{{ address.address.full_name }}</p>
+                                    <p class="address" title="13, Phường Điện Biên, Quận Ba Đình, Hà Nội">
+                                        Địa chỉ: 13, Phường Điện Biên, Quận Ba Đình, Hà Nội </p>
+                                    <p class="address">
+                                        Việt Nam </p>
+                                    <p class="phone">Điện thoại: {{ address.address.telephone }}</p>
+                                    <p class="action">
+                                        <a href="/thanh-toan" type="button" class="btn btn-default btn-custom1 saving-address is-blue" data-id="2863239">
+                                            Giao đến địa chỉ này
+                                        </a>
+                                        <button type="button" class="btn btn-default btn-custom1 edit-address" data-id="2863239">Sửa</button>
+                                    </p>
+                                    <span class="default">Mặc định</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-lg-6 col-md-6 col-sm-6 item" id="item-2863249">
+                            <div class="panel panel-default address-item">
+                                <div class="panel-body">
+                                    <p class="name">{{ address.address.full_name }}</p>
+                                    <p class="address" title="Ki ốt  40C, chung cư HH4A, Khu đô thị Linh Đàm, Hoàng Liệt, Hoàng Mai, Hà Nội, Phường Hàng Bạc, Quận Hoàn Kiếm, Hà Nội">
+                                        Địa chỉ: Ki ốt 40C, chung cư HH4A, Khu đô thị Linh Đàm, Hoàng Liệt, Hoàng Mai, Hà Nội, Phường Hàng Bạc, Quận Hoàn Kiếm, Hà
+                                        Nội </p>
+                                    <p class="address">
+                                        Việt Nam </p>
+                                    <p class="phone">Điện thoại: {{ address.address.telephone }}</p>
+                                    <p class="action">
+                                        <a href="/thanh-toan" type="button" class="btn btn-default btn-custom1 saving-address is-black" data-id="2863249">
+                                            Giao đến địa chỉ này
+                                        </a>
+                                        <button type="button" class="btn btn-default btn-custom1 edit-address" data-id="2863249">Sửa</button>
+                                        <button type="button" class="btn btn-default btn-custom1 deleting" data-id="2863249">
+                                            <img src="https://vcdn.tikicdn.com/assets/img/trash.png" alt="">
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %} 
+                {% endfor %}
+            </div>
+            <div class="container">
+                <p class="other">
+                    Bạn muốn giao hàng đến địa chỉ khác?
+                    <a href="javascript:void(0)" id="addNewAddress">
+                        Thêm địa chỉ giao hàng mới
+                    </a>
+                </p>
+            </div>
+            <!-- <div class="form-body">
                 <div class="ship-form">
                     <form>
                         <div class="form-group">
@@ -133,6 +411,108 @@
                         <a href="/thanh-toan" class="btn btn-default btn-goto">Gửi đến địa chỉ này</a>
                     </form>
                 </div>
+            </div> -->
+        </div>
+        <div class="panel panel-default address-form is-edit" style="display: block;">
+            <div class="panel-heading hidden-lg">Cập nhật địa chỉ giao hàng mới</div>
+            <div class="panel-body">
+                <form class="form-horizontal bv-form" role="form" id="address-info" novalidate="novalidate">
+                    <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+                    <div class="form-group row">
+                        <label for="full_name" class="col-lg-4 control-label visible-lg-block">Họ tên </label>
+                        <div class="col-lg-8 input-wrap has-feedback">
+                            <input type="text" name="full_name" class="form-control address" id="full_name" value="Chuyền Bùi Thị" placeholder="Nhập họ tên"
+                                data-bv-field="full_name">
+                        </div>
+                    </div>
+        
+                    <div class="form-group row">
+                        <label for="telephone" class="col-lg-4 control-label visible-lg-block">Điện thoại di động</label>
+                        <div class="col-lg-8 input-wrap has-feedback">
+                            <input type="tel" name="telephone" class="form-control address" id="telephone" value="01674906223" placeholder="Nhập số điện thoại"
+                                data-bv-field="telephone">
+                        </div>
+                    </div>
+        
+                    <div class="form-group row">
+                        <label for="region_id" class="col-lg-4 control-label visible-lg-block">Tỉnh/Thành phố</label>
+                        <div class="col-lg-8 input-wrap has-feedback">
+                            <select name="region_id" class="form-control address" id="region_id" data-bv-field="region_id">
+                                <option value="">Chọn Tỉnh/Thành phố</option>
+                                <option value="294">Hồ Chí Minh</option>
+                                <option value="297" selected="">Hà Nội</option>
+                                <option value="291">Đà Nẵng</option>
+                                <option value="278">An Giang</option>
+                            </select>
+                            <i class="form-control-feedback bv-no-label" data-bv-icon-for="region_id" style="display: none;"></i>
+                            <!--                -->
+                            <small class="help-block" data-bv-validator="notEmpty" data-bv-for="region_id" data-bv-result="NOT_VALIDATED"
+                                style="display: none;">Vui lòng chọn Tỉnh/Thành phố</small>
+                        </div>
+                    </div>
+        
+                    <div class="form-group row">
+                        <label for="city_id" class="col-lg-4 control-label visible-lg-block">Quận/Huyện</label>
+                        <div class="col-lg-8 input-wrap has-feedback">
+                            <select name="city_id" class="form-control address" id="city_id" data-bv-field="city_id">
+                                <option value="">Chọn Quận/Huyện</option>
+                                <option value="1">Quận Ba Đình</option>
+                                <option value="10">Quận Hoàn Kiếm</option>
+                                <option value="11">Quận Hai Bà Trưng</option>
+                                <option value="12" selected="">Quận Đống Đa</option>
+                                <option value="13">Quận Cầu Giấy</option>
+        
+                            </select>
+                            <i class="form-control-feedback bv-no-label" data-bv-icon-for="city_id" style="display: none;"></i>
+                            <small class="help-block" data-bv-validator="notEmpty" data-bv-for="city_id" data-bv-result="NOT_VALIDATED" style="display: none;">Vui lòng chọn Quận/Huyện</small>
+                        </div>
+                    </div>
+        
+                    <div class="form-group row">
+                        <label for="ward_id" class="col-lg-4 control-label visible-lg-block">Phường/Xã</label>
+                        <div class="col-lg-8 input-wrap has-feedback">
+                            <select name="ward_id" class="form-control address" id="ward_id" data-bv-field="ward_id">
+                                <option value="">Chọn Phường/Xã</option>
+                                <option value="3598">Phường Cát Linh</option>
+                                <option value="3599">Phường Hàng Bột</option>
+                                <option value="3600">Phường Khâm Thiên</option>
+                                <option value="3601">Phường Khương Thượng</option>
+                                <option value="3602" selected="">Phường Kim Liên</option>
+                                <option value="3603">Phường Láng Hạ</option>
+                                <option value="3604">Phường Láng Thượng</option>
+                            </select>
+                            <i class="form-control-feedback bv-no-label" data-bv-icon-for="ward_id" style="display: none;"></i>
+                            <small class="help-block" data-bv-validator="notEmpty" data-bv-for="ward_id" data-bv-result="NOT_VALIDATED" style="display: none;">Vui lòng chọn Phường/Xã</small>
+                        </div>
+                    </div>
+        
+                    <div class="form-group row">
+                        <label for="street" class="col-lg-4 control-label visible-lg-block">Địa chỉ</label>
+                        <div class="col-lg-8 input-wrap has-feedback">
+                            <textarea name="street" class="form-control address" id="street" placeholder="Ví dụ: 52, đường Trần Hưng Đạo" data-bv-field="street">Ki ốt  40C, chung cư HH4A, Khu đô thị Linh Đàm, Hoàng Liệt, Hoàng Mai, Hà Nội</textarea>
+                            <i class="form-control-feedback bv-no-label" data-bv-icon-for="street" style="display: none;"></i>
+                            <span class="help-block"></span>
+                            <small class="help-block" data-bv-validator="notEmpty" data-bv-for="street" data-bv-result="NOT_VALIDATED" style="display: none;">Vui lòng nhập Địa chỉ</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-offset-4 col-md-offset-4 col-lg-8 col-md-8">
+                            {% if data.address.address_default === null%}
+                            <label for="default" class="icheck-wrap"></label>
+                            <input type="checkbox" name="address_default"> Sử dụng địa chỉ này làm mặc định. 
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-offset-4 col-lg-8">
+                            <input type="hidden" name="address_id" value="2863247">
+                            <button type="button" class="btn btn-default btn-custom2 visible-lg-inline-block js-hide">Hủy bỏ</button>
+                            <button id="btn-address" type="submit" class="btn btn-primary btn-custom3" value="update">Cập nhật</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -116,7 +116,7 @@
     margin-top:8px;
 }
 .input-wrap {
-    width:79%;
+    /* width:79%; */
     /* float:left; */
 }
 .btn-goto, .btn-goto:hover  {

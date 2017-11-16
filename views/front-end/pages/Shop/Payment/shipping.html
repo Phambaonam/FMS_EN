@@ -130,6 +130,7 @@
     /* font-size: 12px; */
     padding-left: 14px;
     padding-right: 14px;
+    padding-top: 5px;
     height: 31px;
     outline-color: #ccc;
     border-radius: 2px;
@@ -182,8 +183,8 @@
     border-color: transparent;
     outline-color: #ccc;
     /* font-size: 13px; */
-    padding-top: 8px;
-    padding-bottom: 8px;
+    /* padding-top: 8px; */
+    /* padding-bottom: 8px; */
     border-radius: 2px;
     color: #fff;
 }
@@ -290,17 +291,17 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 item" id="item-{{ address.id }}">
                             <div class="panel panel-default address-item is-default">
                                 <div class="panel-body">
-                                    <p class="name">{{ address.address.full_name }}</p>
+                                    <p class="name">{{ address.address.full_name | title }}</p>
                                     <p class="address" title="13, Phường Điện Biên, Quận Ba Đình, Hà Nội">
                                         Địa chỉ: 13, Phường Điện Biên, Quận Ba Đình, Hà Nội </p>
                                     <p class="address">
                                         Việt Nam </p>
                                     <p class="phone">Điện thoại: {{ address.address.telephone }}</p>
                                     <p class="action">
-                                        <a href="/thanh-toan" type="button" class="btn btn-default btn-custom1 saving-address is-blue" data-id="2863239">
+                                        <a href="/thanh-toan" type="button" class="btn btn-default btn-custom1 saving-address is-blue">
                                             Giao đến địa chỉ này
                                         </a>
-                                        <button type="button" class="btn btn-default btn-custom1 edit-address" data-id="2863239">Sửa</button>
+                                        <button type="button" class="btn btn-default btn-custom1 edit-address {{ address.id }}" id="{{ address.id }}">Sửa</button>
                                     </p>
                                     <span class="default">Mặc định</span>
                                 </div>
@@ -310,7 +311,7 @@
                         <div class="col-lg-6 col-md-6 col-sm-6 item" id="item-2863249">
                             <div class="panel panel-default address-item">
                                 <div class="panel-body">
-                                    <p class="name">{{ address.address.full_name }}</p>
+                                    <p class="name">{{ address.address.full_name | title }}</p>
                                     <p class="address" title="Ki ốt  40C, chung cư HH4A, Khu đô thị Linh Đàm, Hoàng Liệt, Hoàng Mai, Hà Nội, Phường Hàng Bạc, Quận Hoàn Kiếm, Hà Nội">
                                         Địa chỉ: Ki ốt 40C, chung cư HH4A, Khu đô thị Linh Đàm, Hoàng Liệt, Hoàng Mai, Hà Nội, Phường Hàng Bạc, Quận Hoàn Kiếm, Hà
                                         Nội </p>
@@ -321,9 +322,9 @@
                                         <a href="/thanh-toan" type="button" class="btn btn-default btn-custom1 saving-address is-black" data-id="2863249">
                                             Giao đến địa chỉ này
                                         </a>
-                                        <button type="button" class="btn btn-default btn-custom1 edit-address" data-id="2863249">Sửa</button>
-                                        <button type="button" class="btn btn-default btn-custom1 deleting" data-id="2863249">
-                                            <img src="https://vcdn.tikicdn.com/assets/img/trash.png" alt="">
+                                        <button type="button" class="btn btn-default btn-custom1 edit-address {{ address.id }}" id="{{ address.id }}">Sửa</button>
+                                        <button type="button" class="btn btn-default btn-custom1 deleting btn-delete-address" id="{{ address.id }}-remove" data-toggle="modal" data-target="#removeAddress">
+                                            <img style="margin-top: -4px;" src="https://vcdn.tikicdn.com/assets/img/trash.png" alt="">
                                         </button>
                                     </p>
                                 </div>
@@ -335,7 +336,7 @@
             <div class="container">
                 <p class="other">
                     Bạn muốn giao hàng đến địa chỉ khác?
-                    <a href="javascript:void(0)" id="addNewAddress">
+                    <a href="javascript:void(0)" id="addNewAddress" onclick="addNewAddress()">
                         Thêm địa chỉ giao hàng mới
                     </a>
                 </p>
@@ -413,15 +414,15 @@
                 </div>
             </div> -->
         </div>
-        <div class="panel panel-default address-form is-edit" style="display: block;">
+        <div class="panel panel-default address-form is-edit" id="is-edit" style="display: none;">
             <div class="panel-heading hidden-lg">Cập nhật địa chỉ giao hàng mới</div>
             <div class="panel-body">
-                <form class="form-horizontal bv-form" role="form" id="address-info" novalidate="novalidate">
+                <form class="form-horizontal bv-form" id="address-info" method="post">
                     <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
                     <div class="form-group row">
                         <label for="full_name" class="col-lg-4 control-label visible-lg-block">Họ tên </label>
                         <div class="col-lg-8 input-wrap has-feedback">
-                            <input type="text" name="full_name" class="form-control address" id="full_name" value="Chuyền Bùi Thị" placeholder="Nhập họ tên"
+                            <input type="text" name="full_name" class="form-control address" id="full_name" value="" placeholder="Nhập họ tên"
                                 data-bv-field="full_name">
                         </div>
                     </div>
@@ -429,7 +430,7 @@
                     <div class="form-group row">
                         <label for="telephone" class="col-lg-4 control-label visible-lg-block">Điện thoại di động</label>
                         <div class="col-lg-8 input-wrap has-feedback">
-                            <input type="tel" name="telephone" class="form-control address" id="telephone" value="01674906223" placeholder="Nhập số điện thoại"
+                            <input type="tel" name="telephone" class="form-control address" id="telephone" value="" placeholder="Nhập số điện thoại"
                                 data-bv-field="telephone">
                         </div>
                     </div>
@@ -440,7 +441,7 @@
                             <select name="region_id" class="form-control address" id="region_id" data-bv-field="region_id">
                                 <option value="">Chọn Tỉnh/Thành phố</option>
                                 <option value="294">Hồ Chí Minh</option>
-                                <option value="297" selected="">Hà Nội</option>
+                                <option value="297" >Hà Nội</option>
                                 <option value="291">Đà Nẵng</option>
                                 <option value="278">An Giang</option>
                             </select>
@@ -454,12 +455,12 @@
                     <div class="form-group row">
                         <label for="city_id" class="col-lg-4 control-label visible-lg-block">Quận/Huyện</label>
                         <div class="col-lg-8 input-wrap has-feedback">
-                            <select name="city_id" class="form-control address" id="city_id" data-bv-field="city_id">
+                            <select name="city_id" class="form-control address" id="city_id" value="123">
                                 <option value="">Chọn Quận/Huyện</option>
                                 <option value="1">Quận Ba Đình</option>
                                 <option value="10">Quận Hoàn Kiếm</option>
                                 <option value="11">Quận Hai Bà Trưng</option>
-                                <option value="12" selected="">Quận Đống Đa</option>
+                                <option value="12" >Quận Đống Đa</option>
                                 <option value="13">Quận Cầu Giấy</option>
         
                             </select>
@@ -477,7 +478,7 @@
                                 <option value="3599">Phường Hàng Bột</option>
                                 <option value="3600">Phường Khâm Thiên</option>
                                 <option value="3601">Phường Khương Thượng</option>
-                                <option value="3602" selected="">Phường Kim Liên</option>
+                                <option value="3602" >Phường Kim Liên</option>
                                 <option value="3603">Phường Láng Hạ</option>
                                 <option value="3604">Phường Láng Thượng</option>
                             </select>
@@ -489,26 +490,24 @@
                     <div class="form-group row">
                         <label for="street" class="col-lg-4 control-label visible-lg-block">Địa chỉ</label>
                         <div class="col-lg-8 input-wrap has-feedback">
-                            <textarea name="street" class="form-control address" id="street" placeholder="Ví dụ: 52, đường Trần Hưng Đạo" data-bv-field="street">Ki ốt  40C, chung cư HH4A, Khu đô thị Linh Đàm, Hoàng Liệt, Hoàng Mai, Hà Nội</textarea>
+                            <textarea name="street" class="form-control address" id="street" placeholder="Ví dụ: 52, đường Trần Hưng Đạo" data-bv-field="street"></textarea>
                             <i class="form-control-feedback bv-no-label" data-bv-icon-for="street" style="display: none;"></i>
                             <span class="help-block"></span>
                             <small class="help-block" data-bv-validator="notEmpty" data-bv-for="street" data-bv-result="NOT_VALIDATED" style="display: none;">Vui lòng nhập Địa chỉ</small>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row" id="address_default">
                         <div class="col-lg-offset-4 col-md-offset-4 col-lg-8 col-md-8">
-                            {% if data.address.address_default === null%}
                             <label for="default" class="icheck-wrap"></label>
                             <input type="checkbox" name="address_default"> Sử dụng địa chỉ này làm mặc định. 
-                            {% endif %}
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <div class="col-lg-offset-4 col-lg-8">
                             <input type="hidden" name="address_id" value="2863247">
-                            <button type="button" class="btn btn-default btn-custom2 visible-lg-inline-block js-hide">Hủy bỏ</button>
+                            <button type="button" class="btn btn-default btn-custom2 visible-lg-inline-block js-hide" onclick="cancel()">Hủy bỏ</button>
                             <button id="btn-address" type="submit" class="btn btn-primary btn-custom3" value="update">Cập nhật</button>
                         </div>
                     </div>
@@ -517,6 +516,97 @@
         </div>
     </div>
     <div style="height: 100px;"></div>
+        <div class="modal fade" id="removeAddress" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                        <div class="bootbox-body">
+                            <p style="font-size: 20px;">Bạn có thực sự muốn xoá ?</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-bb-handler="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a type="button" class="btn btn btn-primary" id="remove-address">Đồng ý</a>
+                    </div>
+                </div>
+            </div>
+    </div>
     <!-- script -->
     {% include '../../../components/script.html' %}
     <!-- End script -->
+
+    <!-- edit address -->
+    <script>
+        var editAddress = document.querySelectorAll('button.edit-address')
+        var is_edit = document.getElementById('is-edit')
+        var updateAddress = document.getElementById('address-info')
+        var address_default = document.getElementById('address_default')
+
+        var full_name = document.getElementById('full_name')
+        var telephone = document.getElementById('telephone')
+        var region = document.getElementById('region_id')
+        var city = document.getElementById('city_id')
+        var ward = document.getElementById('ward_id')
+        var street = document.getElementById('street')
+
+        editAddress.forEach(function (item) {
+            item.onclick = function () {
+                console.log(item.className)
+                is_edit.style.display = 'none'
+                setTimeout(() => {
+                    is_edit.style.display = 'block'
+                }, 500)
+                axios({
+                    method: 'post',
+                    url: '/chinh-sua-dia-chi/edit?id=' + item.id
+                })
+                    .then(function (res) {
+                        const data = res.data.address
+                        console.log(res.data)
+                        if (data.address_default === 'on') {
+                            address_default.style.display = 'none'
+                        } else {
+                            address_default.style.display = 'block'
+                        }
+                        updateAddress.action = '/customer/address/edit?id=' + res.data.id + '&url=shipping'
+                        if (data) {
+                            full_name.value = data.full_name
+                            telephone.value = data.telephone
+                            region.value = data.region_id
+                            city.value = data.city_id
+                            ward.value = data.ward_id
+                            street.value = data.street
+                        }
+                    })
+            }
+        })
+
+        function cancel () {
+            is_edit.style.display = 'none'
+        }
+        function addNewAddress() {
+            is_edit.style.display = 'none'
+            setTimeout(() => {
+                is_edit.style.display = 'block'
+                full_name.value = ''
+                telephone.value = ''
+                region.value = ''
+                city.value = ''
+                ward.value = ''
+                street.value = ''
+            }, 500)
+            updateAddress.action = '/them-dia-chi?url=shipping'
+        }
+    </script>
+    <!-- remove address -->
+    <script type="text/javascript">
+        var delete_address = document.querySelectorAll('.btn-delete-address')
+        var remove_address = document.getElementById('remove-address')
+        delete_address.forEach(function (item) {
+            var product_id = item.className.charAt(item.className.length - 1)
+            item.onclick = function () {
+                remove_address.href = '/delete/address?id=' + item.id.split('-')[0] + '&url=shipping'
+            }
+        })
+    </script>

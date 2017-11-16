@@ -254,9 +254,8 @@
         var delete_address = document.querySelectorAll('.btn-delete-address')
         var remove_address = document.getElementById('remove-address')
         delete_address.forEach(function (item) {
-            var product_id = item.className.charAt(item.className.length - 1)
             item.onclick = function () {
-                remove_address.href = '/delete/address?id=' + item.id
+                remove_address.href = '/delete/address?id=' + item.id + '&url=address'
             }
         })
     </script>

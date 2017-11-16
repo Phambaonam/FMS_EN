@@ -2,8 +2,11 @@
  * Created by namdoremon on 8/3/17.
  */
 module.exports.shopPage = function (db, router, frontendPath) {
-
-    let menu = () => {
+    /**
+     * Each route can have one or more handler functions, which are executed when the route is matched.
+     * Có những router phải xác nhận người dùng đã đăng nhập hay chưa mới tiếp tục dc sử lý.
+     */
+    const menu = () => {
         return db.task('get menu', function* (t) {
             /**
             * All side bar left 
@@ -131,6 +134,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
         })
     }
 
+    const checkUserLogin = (req, res, next) => { req.session.passport ? next() : res.redirect('/') }
+
+    /*** Phần hiển thị sản phẩm ***/
     router.get('/san-pham', (req, res) => {
         db.task('getAllproduct', function* (t) {
             // Get all products
@@ -241,7 +247,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 })
             })
     })
+    /** End */
 
+    /*** Sắp xếp sản phẩm theo yêu cầu ***/
     router.post('/sort/products', (req, res) => {
         const info = req.body
         let condition = info.data
@@ -428,7 +436,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 })
             })
     })
+    /** End */
 
+    /*** Giỏ hàng ***/
     router.post('/add_to_cart', (req, res) => {
         // console.log(req.session)
         const quantity = parseInt(req.body.quantity)
@@ -719,9 +729,9 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 console.log('ERROR:', error) // print the error;
             })
     })
+    /** End */
 
-    // chi tiet san pham
-
+    /*** chi tiet san pham ***/
     router.get('/san-pham/chi-tiet-san-pham/:product', (req, res) => {
         const product_id = parseInt(req.params.product.split('-').pop())
         const product_alias = req.params.product.slice(0, -2)
@@ -763,8 +773,11 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
 
     })
+    /** End */
 
-    router.post('/add_to_wishlish', (req, res) => {
+    /*** Các router sau cần phải xác thực user đăng nhập ***/
+    // Trang yêu thích
+    router.post('/add_to_wishlish', checkUserLogin, (req, res) => {
         const product_id = parseInt(req.body.product_id)
         console.log('aaaaaaaaaaaaaaaaaa', req.session.user)
         /**
@@ -810,7 +823,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
     })
 
-    router.post('/delete/wishlish', (req, res) => {
+    router.post('/delete/wishlish', checkUserLogin, (req, res) => {
         const product_id = parseInt(req.body.product_id)
         const customer_id = parseInt(req.session.passport.user.id)
         db.task('remove wishlish product', function* (t) {
@@ -832,7 +845,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
     })
 
-    router.get('/yeu-thich', (req, res) => {
+    router.get('/yeu-thich', checkUserLogin, (req, res) => {
         /**
          * Nếu user mới đăng kí thì customer_id sẽ được lấy ra từ `req.session`.
          * Nếu user đăng nhập thì customer_id sẽ được lấy ra từ `req.session.passport`.
@@ -866,276 +879,285 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
 
     })
+    /** End */
 
-    router.get('/so-dia-chi', (req, res) => {
+    // Trang sổ địa chị
+    router.get('/so-dia-chi', checkUserLogin, (req, res) => {
         /**
          * Nếu ng dùng đăng nhập copy url sang 1 trình duyệt khác,
          * vì lúc này sẽ ko có cookie của ng dùng đăng nhập nên sẽ bị redirect về trang chủ.
          */
-        if (req.session.passport) {
-            let info = req.user
-            const customer_id = parseInt(req.session.passport.user.id)
-            const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} ORDER BY address -> 'address_default' ASC;"
-            db.any(address, {
+        let info = req.user
+        const customer_id = parseInt(req.session.passport.user.id)
+        const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} ORDER BY address -> 'address_default' ASC;"
+        db.any(address, {
+            customer_id: customer_id
+        })
+            .then(data => {
+                // res.json(data)
+                req.flash('info', 'OK')
+                res.render(frontendPath + 'Shop/address', {
+                    title: 'Sổ địa chỉ',
+                    info: info,
+                    addresses: data
+                })
+            })
+
+    })
+
+    router.get('/them-dia-chi', checkUserLogin, (req, res) => {
+        let info = req.user
+        res.render(frontendPath + 'Shop/add-address', {
+            title: 'Sổ địa chỉ',
+            info: info
+        })
+
+    })
+
+    router.post('/them-dia-chi', checkUserLogin, (req, res) => {
+        const info = req.body
+        const customer_id = parseInt(req.session.passport.user.id)
+        let addressInput = {
+            full_name: info.full_name,
+            company: info.company,
+            telephone: info.telephone,
+            region_id: info.region_id,
+            city_id: info.city_id,
+            ward_id: info.ward_id,
+            street: info.street,
+            address_default: info.address_default
+        }
+
+        /**
+         * Sau khi insert địa chỉ thành thì sẽ lấy ra thông tin địa chị, mục đích là để xem đã insert thành công hay chưa?
+         */
+        db.task('insert address of customer', function* (t) {
+            /**
+             * Các bước để thay đổi địa chỉ mặc định:
+             * 1. Lấy ra địa chỉ mặc định từ field address.
+             * 2. Xóa địa chỉ mặc định trong field address.
+             * 3. Cập nhật lại field address.
+             */
+
+            // 1. Lấy ra địa chỉ mặc định từ field address.
+            const addressDefault = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE  cus.id = ${customer_id} AND (address -> 'address_default') is not null"
+            const getStatusDefault = yield t.any(addressDefault, {
                 customer_id: customer_id
             })
-                .then(data => {
-                    // res.json(data)
-                    req.flash('info', 'OK')
-                    res.render(frontendPath + 'Shop/address', {
-                        title: 'Sổ địa chỉ',
-                        info: info,
-                        addresses: data
-                    })
+
+            if (getStatusDefault.length === 1 && info.address_default) {
+                // 2. Xóa địa chỉ mặc định trong field address.
+                const removeAddressDefault = "SELECT jsonb ${address} - 'address_default' AS new_address "
+                const getNewAddress = yield t.one(removeAddressDefault, {
+                    address: getStatusDefault[0].address
                 })
-        } else {
-            res.redirect('/')
-        }
 
-    })
-
-    router.get('/them-dia-chi', (req, res) => {
-        if (req.session.passport) {
-            let info = req.user
-            res.render(frontendPath + 'Shop/add-address', {
-                title: 'Sổ địa chỉ',
-                info: info
-            })
-        } else {
-            res.redirect('/')
-        }
-    })
-
-    router.post('/them-dia-chi', (req, res) => {
-        if (req.session.passport) {
-            const info = req.body
-            const customer_id = parseInt(req.session.passport.user.id)
-            let addressInput = {
-                full_name: info.full_name,
-                company: info.company,
-                telephone: info.telephone,
-                region_id: info.region_id,
-                city_id: info.city_id,
-                ward_id: info.ward_id,
-                street: info.street,
-                address_default: info.address_default
+                // 3. Cập nhật lại field address.
+                const updateAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
+                yield t.any(updateAddress, {
+                    address: getNewAddress.new_address,
+                    id: parseInt(getStatusDefault[0].id)
+                })
             }
 
             /**
-             * Sau khi insert địa chỉ thành thì sẽ lấy ra thông tin địa chị, mục đích là để xem đã insert thành công hay chưa?
+             * Thêm địa chỉ mới.
+             * Viết bên ngoài if bởi vì có 2 trường hợp:
+             * - Thêm địa chỉ mặc đinh mới.
+             * - Thêm địa chỉ nhưng vẫn giữ nguyên địa chỉ mặc định ban đầu.
              */
-            db.task('insert address of customer', function* (t) {
-                /**
-                 * Các bước để thay đổi địa chỉ mặc định:
-                 * 1. Lấy ra địa chỉ mặc định từ field address.
-                 * 2. Xóa địa chỉ mặc định trong field address.
-                 * 3. Cập nhật lại field address.
-                 */
-
-                // 1. Lấy ra địa chỉ mặc định từ field address.
-                const addressDefault = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE  cus.id = ${customer_id} AND (address -> 'address_default') is not null"
-                const getStatusDefault = yield t.any(addressDefault, {
-                    customer_id: customer_id
-                })
-
-                if (getStatusDefault.length === 1) {
-                    // 2. Xóa địa chỉ mặc định trong field address.
-                    const removeAddressDefault = "SELECT jsonb ${address} - 'address_default' AS new_address "
-                    const getNewAddress = yield t.one(removeAddressDefault, {
-                        address: getStatusDefault[0].address
-                    })
-
-                    // 3. Cập nhật lại field address.
-                    const updateAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
-                    yield t.any(updateAddress, {
-                        address: getNewAddress.new_address,
-                        id: parseInt(getStatusDefault[0].id)
-                    })
-                }
-
-                //  Thêm địa chỉ mặc định mới
-                const insertAddress = 'INSERT INTO customer_of_address (address, customer_id) VALUES (${address}, ${customer_id});'
-                yield t.any(insertAddress, {
-                    address: addressInput,
-                    customer_id: customer_id
-                })
-
-                // Chỉnh sửa địa chỉ
-
-
-                // Kiểm tra đã thêm địa chỉ thành công hay chưa?
-                const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
-                return t.any(address, {
-                    customer_id: customer_id
-                })
+            const insertAddress = 'INSERT INTO customer_of_address (address, customer_id) VALUES (${address}, ${customer_id});'
+            yield t.any(insertAddress, {
+                address: addressInput,
+                customer_id: customer_id
             })
-                .then(data => {
-                    // res.json(data)
+
+            // Chỉnh sửa địa chỉ
+
+
+            // Kiểm tra đã thêm địa chỉ thành công hay chưa?
+            const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
+            return t.any(address, {
+                customer_id: customer_id
+            })
+        })
+            .then(data => {
+                const url = req.query.url
+                console.log(url)
+                if (url === 'shipping') {
+                    res.redirect('/shipping')
+                } else {
                     if (data.length !== 0)
                         res.redirect('/so-dia-chi')
                     console.log('Thêm địa chỉ thành công!')
-                    console.log('Không thành công!')
-                })
-        } else {
-            res.redirect('/')
-        }
+                }
+            })
     })
 
-    router.get('/chinh-sua-dia-chi/edit', (req, res) => {
+    router.get('/chinh-sua-dia-chi/edit', checkUserLogin, (req, res) => {
+        console.log('check url', req.url)
         const address_id = parseInt(req.query.id)
-        if (req.session.passport) {
-            const info = req.user
-            const customer_id = parseInt(req.session.passport.user.id)
-            const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} AND cod.id = ${address_id};'
-            db.one(address, {
-                customer_id: customer_id,
-                address_id: address_id
-            })
-                .then(data => {
-                    res.render(frontendPath + 'Shop/add-address', {
-                        title: 'Sổ địa chỉ',
-                        info: info,
-                        data: data
-                    })
+        const info = req.user
+        const customer_id = parseInt(req.session.passport.user.id)
+        const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} AND cod.id = ${address_id};'
+        db.one(address, {
+            customer_id: customer_id,
+            address_id: address_id
+        })
+            .then(data => {
+                res.render(frontendPath + 'Shop/add-address', {
+                    title: 'Sổ địa chỉ',
+                    info: info,
+                    data: data
                 })
-        } else {
-            res.redirect('/')
-        }
+            })
     })
 
-    router.post('/customer/address/edit', (req, res) => {
-        if (req.session.passport) {
-            const addressId = parseInt(req.query.id)
-            const info = req.body
-            const customer_id = parseInt(req.session.passport.user.id)
-            let addressInput = {
-                full_name: info.full_name,
-                company: info.company,
-                telephone: info.telephone,
-                region_id: info.region_id,
-                city_id: info.city_id,
-                ward_id: info.ward_id,
-                street: info.street,
-                address_default: info.address_default
+    router.post('/chinh-sua-dia-chi/edit', checkUserLogin, (req, res) => {
+        const address_id = parseInt(req.query.id)
+        const info = req.user
+        const customer_id = parseInt(req.session.passport.user.id)
+        const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} AND cod.id = ${address_id};'
+        db.one(address, {
+            customer_id: customer_id,
+            address_id: address_id
+        })
+            .then(data => {
+                res.json(data)
+            })
+    })
+
+    router.post('/customer/address/edit', checkUserLogin, (req, res) => {
+        const addressId = parseInt(req.query.id)
+        const info = req.body
+        const customer_id = parseInt(req.session.passport.user.id)
+        let addressInput = {
+            full_name: info.full_name,
+            company: info.company,
+            telephone: info.telephone,
+            region_id: info.region_id,
+            city_id: info.city_id,
+            ward_id: info.ward_id,
+            street: info.street,
+            address_default: info.address_default
+        }
+
+        /**
+         * Sau khi insert địa chỉ thành thì sẽ lấy ra thông tin địa chị, mục đích là để xem đã insert thành công hay chưa?
+         */
+        db.task('insert address of customer', function* (t) {
+            /**
+             * Các bước để thay đổi địa chỉ mặc định:
+             * 1. Lấy ra địa chỉ mặc định từ field address.
+             * 2. Xóa địa chỉ mặc định trong field address.
+             * 3. Cập nhật lại field address.
+             */
+
+            // 1. Lấy ra địa chỉ mặc định từ field address.
+            const addressDefault = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE  cus.id = ${customer_id} AND (address -> 'address_default') is not null"
+            const getStatusDefault = yield t.any(addressDefault, {
+                customer_id: customer_id
+            })
+
+            if (getStatusDefault.length === 1 && info.address_default) {
+                // 2. Xóa địa chỉ mặc định trong field address.
+                const removeAddressDefault = "SELECT jsonb ${address} - 'address_default' AS new_address "
+                const getNewAddress = yield t.one(removeAddressDefault, {
+                    address: getStatusDefault[0].address
+                })
+
+                // 3. Cập nhật lại field address.
+                const updateAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
+                yield t.any(updateAddress, {
+                    address: getNewAddress.new_address,
+                    id: parseInt(getStatusDefault[0].id)
+                })
+
+                /**
+                 * Set địa chỉ mặc định mới.
+                 * Viết bên trong if bởi vì phải tồn tại địa chỉ mặc định mới có thể Set địa chỉ mặc định mới đc.
+                 */ 
+                const setAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
+                yield t.any(setAddress, {
+                    address: addressInput,
+                    id: addressId
+                })
             }
 
-            /**
-             * Sau khi insert địa chỉ thành thì sẽ lấy ra thông tin địa chị, mục đích là để xem đã insert thành công hay chưa?
-             */
-            db.task('insert address of customer', function* (t) {
-                /**
-                 * Các bước để thay đổi địa chỉ mặc định:
-                 * 1. Lấy ra địa chỉ mặc định từ field address.
-                 * 2. Xóa địa chỉ mặc định trong field address.
-                 * 3. Cập nhật lại field address.
-                 */
-
-                // 1. Lấy ra địa chỉ mặc định từ field address.
-                const addressDefault = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE  cus.id = ${customer_id} AND (address -> 'address_default') is not null"
-                const getStatusDefault = yield t.any(addressDefault, {
-                    customer_id: customer_id
-                })
-
-                if (getStatusDefault.length === 1 && info.address_default) {
-                    // 2. Xóa địa chỉ mặc định trong field address.
-                    const removeAddressDefault = "SELECT jsonb ${address} - 'address_default' AS new_address "
-                    const getNewAddress = yield t.one(removeAddressDefault, {
-                        address: getStatusDefault[0].address
-                    })
-
-                    // 3. Cập nhật lại field address.
-                    const updateAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
-                    yield t.any(updateAddress, {
-                        address: getNewAddress.new_address,
-                        id: parseInt(getStatusDefault[0].id)
-                    })
-
-                    //  Set địa chỉ mặc định mới
-                    const setAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
-                    yield t.any(setAddress, {
-                        address: addressInput,
-                        id: addressId
-                    })
-                }
-
-                // Kiểm tra đã thêm địa chỉ thành công hay chưa?
-                const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
-                return t.any(address, {
-                    customer_id: customer_id
-                })
+            // Kiểm tra đã thêm địa chỉ thành công hay chưa?
+            const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
+            return t.any(address, {
+                customer_id: customer_id
             })
-                .then(data => {
-                    // res.json(data)
+        })
+            .then(data => {
+                const url = req.query.url
+                if (url === 'shipping') {
+                    res.redirect('/shipping')
+                } else {
                     if (data.length !== 0)
                         res.redirect('/so-dia-chi')
                     console.log('Thêm địa chỉ thành công!')
-                    console.log('Không thành công!')
-                })
-        } else {
-            res.redirect('/')
-        }
-    })
-
-    router.get('/delete/address', (req, res) => {
-        if (req.session.passport) {
-            let addressId = parseInt(req.query.id)
-            const customer_id = parseInt(req.session.passport.user.id)
-            db.task('delete address', function* (t) {
-                const deleteAddress = 'DELETE FROM customer_of_address WHERE id = ${addressId};'
-                yield t.any(deleteAddress, {
-                    addressId: addressId
-                })
-                // Kiểm tra đã xóa địa chỉ thành công hay chưa?
-                const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
-                return t.any(address, {
-                    customer_id: customer_id
-                })
+                }
             })
-                .then(data => {
-                    if (data.length !== 0) {
-                        req.flash('info','Sổ địa chỉ đã được cập nhật.')
-                        res.redirect('/so-dia-chi')
-                    }
-                })
-        } else {
-            res.redirect('/')
-        }
     })
-    // payment
 
-    router.get('/shipping', (req, res) => {
-        if (req.session.passport) {
-            const customer_id = parseInt(req.session.passport.user.id)
-            const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} ORDER BY address -> 'address_default' ASC;"
-            db.any(address, {
+    router.get('/delete/address', checkUserLogin, (req, res) => {
+        let addressId = parseInt(req.query.id)
+        const customer_id = parseInt(req.session.passport.user.id)
+        db.task('delete address', function* (t) {
+            const deleteAddress = 'DELETE FROM customer_of_address WHERE id = ${addressId};'
+            yield t.any(deleteAddress, {
+                addressId: addressId
+            })
+            // Kiểm tra đã xóa địa chỉ thành công hay chưa?
+            const address = 'SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id};'
+            return t.any(address, {
                 customer_id: customer_id
             })
-                .then(data => {
-                    // res.json(data)
-                    req.flash('info', 'OK')
-                    res.render(frontendPath + 'Shop/Payment/shipping', {
-                        title: 'Shipping',
-                        addresses: data
-                    })
+        })
+            .then(data => {
+                const url = req.query.url
+                if (url === 'shipping') {
+                    res.redirect('/shipping')
+                } else {
+                    if (data.length !== 0)
+                        res.redirect('/so-dia-chi')
+                    console.log('Thêm địa chỉ thành công!')
+                }
+            })
+    })
+    /** End */
+
+    // Phần thanh toán
+    router.get('/shipping', checkUserLogin, (req, res) => {
+        const customer_id = parseInt(req.session.passport.user.id)
+        const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} ORDER BY address -> 'address_default' ASC;"
+        db.any(address, {
+            customer_id: customer_id
+        })
+            .then(data => {
+                res.render(frontendPath + 'Shop/Payment/shipping', {
+                    title: 'Shipping',
+                    addresses: data
                 })
-        } else {
-            res.redirect('/')
-        }
+            })
     })
 
-    router.get('/thanh-toan', (req, res) => {
+    router.get('/thanh-toan', checkUserLogin, (req, res) => {
         res.render(frontendPath + 'Shop/Payment/payment')
     })
 
-    router.get('/order-success', (req, res) => {
+    router.get('/order-success', checkUserLogin, (req, res) => {
         res.render(frontendPath + 'Shop/Order/order-success')
     })
 
-    router.get('/don-hang-cua-toi', (req, res) => {
+    router.get('/don-hang-cua-toi', checkUserLogin, (req, res) => {
         let info = req.user
         res.render(frontendPath + 'Shop/Order/order', {
             title: 'Tài khoản của tôi',
             info: info
         })
     })
+    /** End */
 }

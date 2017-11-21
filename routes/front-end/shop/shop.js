@@ -1145,7 +1145,41 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/thanh-toan', checkUserLogin, (req, res) => {
-        res.render(frontendPath + 'Shop/Payment/payment')
+        const customer_id = parseInt(req.session.passport.user.id)
+        const address_id = parseInt(req.query.id)
+        db.task('payment', function* (t) {
+            const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} AND cod.id = ${address_id};"
+            const getAddress = yield t.one(address, {
+                customer_id: customer_id,
+                address_id: address_id
+            })
+            const cart = 'SELECT attribute_product_id, quantity FROM cart WHERE user_id = ${user_id}'
+            const getCart = yield t.any(cart, {
+                user_id: customer_id
+            })
+            let products = []
+            for (let item in getCart) {
+                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.attributes FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
+                const getProduct = yield t.one(product, {
+                    attribute_product_id: getCart[item].attribute_product_id
+                })
+                if (!getProduct.quantity) getProduct.quantity = getCart[item].quantity
+                products.push(getProduct)
+            }
+            return [getAddress, products]
+        })
+        
+            .then(data => {
+                // res.json(data)
+                res.render(frontendPath + 'Shop/Payment/payment', {
+                    title: 'Thanh toán',
+                    address: data[0].address,
+                    products: data[1]
+                })
+            })
+            .catch(err => {
+                if (err) res.redirect('/')
+            })
     })
 
     router.get('/order-success', checkUserLogin, (req, res) => {

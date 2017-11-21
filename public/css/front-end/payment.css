@@ -244,13 +244,11 @@ td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .
     padding-left: 35px;
     padding-top: 15px;
 }
-.btn-goto, .btn-goto:hover  {
-    background: #4CAF50;
-    border-color: #4CAF50;
+.btn-goto, .btn-goto:hover, .btn-goto:focus, .btn-goto:active  {
+   background: #23CF2A;
+    border-color: #23CF2A;
     color: #fff;
-    margin-bottom: 20px;
     padding: 9px 12px;
-    width: 225px;
-    /*margin-left: 85px;*/
-    margin-top: 15px;
+    width: 100%;
+    font-size: 1.5em;
 }

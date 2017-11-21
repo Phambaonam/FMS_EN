@@ -3,77 +3,230 @@
 <!-- Head -->
 {% include '../../../components/head.html' %}
 <!-- End Head -->
+<style>
+	@media (min-width: 1200px) {
+		.col-lg-4>.cart {
+			margin-top: 39px;
+		}
+
+		.panel.panel-default .panel-body {
+			padding: 10px 15px 0;
+		}
+		.cart .product .item .title {
+			width: auto;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.panel-body:before {
+			content: " ";
+			display: table;
+		}
+	}
+
+	@media (min-width: 640px) {
+		.cart .product .item .title {
+			width: 450px;
+		}
+	}
+
+	.cart .product .item .title a,
+	.cart .product .item .title a:focus,
+	.cart .product .item .title a:hover {
+		color: rgba(0, 127, 240, .8);
+	}
+
+	.cart .order {
+		border-bottom: 1px solid #c9c9c9;
+		padding-bottom: 10px;
+	}
+
+	.cart .order .title {
+		line-height: 31px;
+	}
+
+	.cart .order .btn-custom1 {
+		float: right;
+	}
+
+	.btn-custom1 {
+		border: 1px solid #ccc;
+		padding-left: 14px;
+		padding-right: 14px;
+		height: 31px;
+		outline-color: #ccc;
+		background: linear-gradient(#fff, #f7f7f7);
+		border-radius: 2px;
+	}
+
+	.cart .information {
+		margin-bottom: 15px;
+	}
+
+	.cart .product {
+		margin-bottom: 15px;
+	}
+
+	.cart .product .item {
+		padding-top: 12px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid #c9c9c9;
+	}
+
+	.cart .product .item .price:after,
+	.cart .product .item .price:before,
+	.cart .product .item:after,
+	.cart .product .item:before {
+		display: table;
+		content: "";
+		clear: both;
+	}
+
+	.cart .shipping:after,
+	.cart .shipping:before,
+	.cart .total:after,
+	.cart .total:before,
+	.cart p:after,
+	.cart p:before {
+		display: table;
+		content: "";
+		clear: both;
+	}
+
+	.cart .product .item .title {
+		color: #000;
+		float: left;
+		width: auto;
+		margin-bottom: 0;
+	}
+
+	.cart .product .item .title strong {
+		padding-right: 10px;
+	}
+
+	.cart p .seller-by {
+		display: block;
+		float: none;
+		margin-top: 5px;
+	}
+
+	.cart .product .item .price {
+		float: right;
+		margin-bottom: 0;
+	}
+
+	.cart .product .item .price span {
+		display: block;
+		float: none;
+	}
+
+	.cart .product .item .price span::after {
+		content: ' ₫'
+	}
+
+	.list-info-price span::after {
+		content: ' ₫'
+	}
+
+	.total2 span::after {
+		content: ' ₫'
+	}
+
+	.cart p {
+		margin-bottom: 13px;
+	}
+
+	.cart p span {
+		float: right;
+	}
+
+	.cart .total2 {
+		border-top: 2px solid #c9c9c9;
+		padding-top: 12px;
+		margin-bottom: 0;
+		line-height: 19px;
+		font-weight: 700;
+	}
+
+	.cart p {
+		margin-bottom: 13px;
+	}
+</style>
 <link rel="stylesheet" type="text/css" href="/public/css/front-end/payment.css">
+
 <body>
 
-<div class="shipping-header">
-	<div class="container">
-		<div class="row row-style-1">
-			<div class="col-lg-2 visible-lg-block">
-				<a href="/">
-                    <img src="/public/img/logo-min.png" style="max-width:100px;margin-left: 110px;margin-top: 15px;" class="img-responsive"
-                         alt="Image">
-                </a>
-			</div>
-			<div class="col-lg-8">
-				<div class="row bs-wizard">
-					<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step complete">
-						<div class="text-center bs-wizard-stepnum">
-							<span>Đăng Nhập</span>
-						</div>
-						<div class="progress">
-							<div class="progress-bar"></div>
-						</div>
-						<span class="bs-wizard-dot">1</span>
-					</div>
-					<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step complete">
-						<div class="text-center bs-wizard-stepnum">
-							<span class="hidden-xs">Địa Chỉ Giao Hàng</span>
-							<span class="visible-xs-inline-block">Địa Chỉ</span>
-						</div>
-						<div class="progress">
-							<div class="progress-bar"></div>
-						</div>
-						<span class="bs-wizard-dot">2</span>
-					</div>
-					<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step active">
-						<div class="text-center bs-wizard-stepnum">
-							<span class="hidden-xs">Thanh Toán &amp; Đặt Mua</span>
-							<span class="visible-xs-inline-block">Thanh Toán</span>
-						</div>
-						<div class="progress">
-							<div class="progress-bar"></div>
-						</div>
-						<span class="bs-wizard-dot">3</span>
-					</div>
-
+	<div class="shipping-header">
+		<div class="container">
+			<div class="row row-style-1">
+				<div class="col-lg-2 visible-lg-block">
+					<a href="/">
+						<img src="/public/img/logo-min.png" style="max-width:100px;margin-left: 110px;margin-top: 15px;" class="img-responsive" alt="Image">
+					</a>
 				</div>
-			</div>
-			<div class="col-lg-2 visible-lg-block hotline">
-				<img src="https://vcdn.tikicdn.com/assets/img/hotline.png" height="42" width="176" alt="">
+				<div class="col-lg-8">
+					<div class="row bs-wizard">
+						<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step complete">
+							<div class="text-center bs-wizard-stepnum">
+								<span>Đăng Nhập</span>
+							</div>
+							<div class="progress">
+								<div class="progress-bar"></div>
+							</div>
+							<span class="bs-wizard-dot">1</span>
+						</div>
+						<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step complete">
+							<div class="text-center bs-wizard-stepnum">
+								<span class="hidden-xs">Địa Chỉ Giao Hàng</span>
+								<span class="visible-xs-inline-block">Địa Chỉ</span>
+							</div>
+							<div class="progress">
+								<div class="progress-bar"></div>
+							</div>
+							<span class="bs-wizard-dot">2</span>
+						</div>
+						<div class="col-lg-4 col-md-4 col-xs-4 col-sm-4 bs-wizard-step active">
+							<div class="text-center bs-wizard-stepnum">
+								<span class="hidden-xs">Thanh Toán &amp; Đặt Mua</span>
+								<span class="visible-xs-inline-block">Thanh Toán</span>
+							</div>
+							<div class="progress">
+								<div class="progress-bar"></div>
+							</div>
+							<span class="bs-wizard-dot">3</span>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-lg-2 visible-lg-block hotline">
+					<img src="https://vcdn.tikicdn.com/assets/img/hotline.png" height="42" width="176" alt="">
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 	<div class="container payment-main">
 		<div class="row">
 			<div class="col-xs-12 col-md-8">
-                <h2>1.Chọn hình thức giao hàng</h2>
-                <div class="plan-shipping">
-                    <label for="plan-shipping">
-                        <img src="https://vcdn.tikicdn.com/assets/img/sc-standard.png" height="17" width="31" alt="">
-                    </label>
-                    Giao hàng tiêu chuẩn
-                </div>
-
-                <h2>2.Chọn hình thức thanh toán</h2>
-                <div class="payment-method">
-                    <form method="get">
-                        <input type="radio" name="payment-method" value="1" checked> Thanh toán tiền mặt khi nhận hàng<br>
-                        <input type="radio" name="payment-method" value="2"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)<br>
-                    </form>
+				<h2>1.Chọn hình thức giao hàng</h2>
+				<div class="plan-shipping">
+					<label for="plan-shipping">
+						<img src="https://vcdn.tikicdn.com/assets/img/sc-standard.png" height="17" width="31" alt="">
+					</label>
+					Giao hàng tiêu chuẩn
 				</div>
-				<h4><b>Thông tin người mua:</b></h4>
+
+				<h2>2.Chọn hình thức thanh toán</h2>
+				<div class="payment-method">
+					<form method="get">
+						<input type="radio" name="payment-method" value="1" checked> Thanh toán tiền mặt khi nhận hàng
+						<br>
+						<input type="radio" name="payment-method" value="2"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)
+						<br>
+					</form>
+				</div>
+				<h4>
+					<b>Thông tin người mua:</b>
+				</h4>
 				<div class="form-group row" id="address_default">
 					<div class="col-lg-8 col-md-8">
 						<label for="default" class="icheck-wrap"></label>
@@ -81,57 +234,102 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12 col-md-4">
-				<div class="cart-total">
-					<h3>Thông tin đơn hàng</h3>
-					<table class="cart-brief">
-						<tbody>
-							<tr>
-								<td class="cart-p-thumbnail">
-									<img src="/public/front-end/img/riflesso_1.jpg" class="img-responsive">
-									<div class="cart-p-qty">2</div>
-								</td>
-								<td class="cart-p-name">
-									Tủ Rifleso
-								</td>
-								<td class="cart-p-price">
-									8.800.000₫
-								</td>
-							</tr>
-							<tr>
-								<td class="cart-p-thumbnail">
-									<img src="img/rotonda_1.jpg" class="img-responsive">
-									<div class="cart-p-qty">1</div>
-								</td>
-								<td class="cart-p-name">
-									Bàn La Rotonda
-								</td>
-								<td class="cart-p-price">
-									3.200.000₫
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table>
-						<tbody>
-							<tr class="cart-subtotal">
-								<th>Tạm tính</th>
-								<td>12.000.000</td>
-							</tr>
-							<tr class="deli-fee">
-								<th>Phí giao hàng</th>
-								<td>0</td>
-							</tr>
-							<tr class="order-total">
-								<th>Tổng tiền</th>
-								<td class="amount"><strong>12.000.000</strong></td>
-							</tr>
-						</tbody>
-					</table>
-					<a href="/order-success" class="btn btn-default btn-goto">Đặt hàng</a>
+			<div class="col-lg-4">
+				<div class="panel panel-default cart">
+					<div class="panel-body">
+						<div class="order">
+							<span class="title">
+								Địa chỉ giao hàng
+							</span>
+							<a href="/shipping" class="btn btn-default btn-custom1">Sửa</a>
+						</div>
+						<div class="information">
+							<h4>{{ address.full_name }}</h4>
+							<p class="end">{{ address.street }}, {{ address.ward_id }}, {{ address.region_id }}
+								<br>Số điện thoại: {{ address.telephone }}
+								<br>Việt Nam</p>
+						</div>
+					</div>
 				</div>
+
+				<div id="panel-cart">
+					<div class="panel panel-default cart">
+						<div class="panel-body">
+							<div class="order">
+								<span class="title">Đơn Hàng</span>
+								<span class="title"> ({{ carts }} sản phẩm)</span>
+
+								<a href="/gio-hang" class="btn btn-default btn-custom1">Sửa</a>
+							</div>
+							<div class="product">
+								{% for product in products %}
+								<div class="item">
+									<p class="title">
+										<strong>{{ product.quantity }} x</strong>
+										<a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}" target="_blank">{{ product.product_name }}</a>
+										<span class="seller-by">
+											Cung cấp bởi
+											<strong class="firm">Min</strong>
+										</span>
+									</p>
+
+									<p class="price text-right">
+										<span>{{ product.product_price * product.quantity}} </span>
+									</p>
+								</div>
+								{% endfor %}
+							</div>
+
+							<p class="list-info-price cart-subtotal">
+								<b>Tạm tính: </b>
+								<span>403.50</span>
+							</p>
+							<p class="list-info-price">
+								<b>Giảm giá: </b>
+								<span>0</span>
+							</p>
+							<p class="list-info-price">
+								<b>Phí vận chuyển: </b>
+								<span>0</span>
+							</p>
+
+							<p class="total2">
+								Thành tiền:
+								<span>376.088</span>
+							</p>
+							<p class="text-right">
+								<i>(Đã bao gồm VAT)</i>
+							</p>
+						</div>
+					</div>
+
+
+					<div class="popover bottom tikixu">
+						<div class="arrow"></div>
+						<div class="popover-content">
+							<p class="ship">Đơn hàng bạn sẽ được miễn phí vận chuyển.</p>
+						</div>
+					</div>
+				</div>
+				<a href="/order-success" class="btn btn-goto">Đặt hàng</a>
 			</div>
 		</div>
 	</div>
 </body>
+<script type="text/javascript" src="/public/js/jquery-3.1.1.js"></script>
+<!-- product price -->
+<script>
+	var price_product = $('.price span')
+	var sum = 0
+	var count = 0
+	for (var i = 0; i < price_product.length; i++) {
+		console.log(price_product[i].innerText)
+		price_product[i].innerText = parseInt(price_product[i].innerText).toLocaleString('vi')
+		sum = parseInt(price_product[i].innerText.replace(/[.]/g, ''))
+		count += sum
+	}
+	$('.cart-subtotal span').text(count.toLocaleString('vi'))
+	$('.total2 span').text(count.toLocaleString('vi'))
+</script>
+
 </html>

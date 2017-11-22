@@ -15,6 +15,9 @@
 		.cart .product .item .title {
 			width: auto;
 		}
+		.payment-sub .bank>li a {
+			width: 91px;
+		}
 	}
 
 	@media (min-width: 768px) {
@@ -151,6 +154,83 @@
 	.cart p {
 		margin-bottom: 13px;
 	}
+
+	.row-style-3 {
+		position: relative;
+		width: 100%;
+		margin-top: 20px;
+	}
+
+	.row-style-3>.col-lg-offset-1 {
+		margin-left: 52px;
+		width: 100%;
+		margin-top: 15px;
+	}
+
+	.payment-sub .bank {
+		padding-left: 25px;
+		list-style: none;
+	}
+
+	.payment-sub .bank:after,
+	.payment-sub .bank:before {
+		display: table;
+		content: "";
+		clear: both;
+	}
+
+	.payment-sub .bank>li {
+		float: left;
+		border: 1px dashed #ccc;
+		margin: 3px;
+		height: 65px;
+		border-radius: 3px;
+	}
+
+	.payment-sub .bank>li a {
+		display: block;
+		height: 58px;
+		line-height: 58px;
+		text-align: center;
+		width: 95px;
+	}
+
+	.payment-sub .bank>li a img {
+		display: inline-block;
+		width: 100%;
+		height: auto;
+	}
+
+	.payment-sub .bank>li.active {
+		border: 1px solid red;
+		position: relative;
+	}
+
+	.payment-sub .bank>li.active:hover {
+		border: 1px solid red;
+	}
+
+	.payment-sub .bank>li:hover {
+		border-color: #007FF0;
+	}
+
+	.payment-sub .bank>li.active:after {
+		content: "\e013";
+		position: absolute;
+		background: #fc0303;
+		width: 25px;
+		height: 25px;
+		right: -12px;
+		top: -12px;
+		color: #fff;
+		display: inline-block;
+		font-family: 'Glyphicons Halflings';
+		font-style: normal;
+		font-weight: 300;
+		text-align: center;
+		line-height: 25px;
+		border-radius: 50%;
+	}
 </style>
 <link rel="stylesheet" type="text/css" href="/public/css/front-end/payment.css">
 
@@ -206,130 +286,294 @@
 	</div>
 	<div class="container payment-main">
 		<div class="row">
-			<div class="col-xs-12 col-md-8">
-				<h2>1.Chọn hình thức giao hàng</h2>
-				<div class="plan-shipping">
-					<label for="plan-shipping">
-						<img src="https://vcdn.tikicdn.com/assets/img/sc-standard.png" height="17" width="31" alt="">
-					</label>
-					Giao hàng tiêu chuẩn
-				</div>
+			<form method="post" action="/checkout/payment">
+				<div class="col-xs-12 col-md-8">
+					<h2>1.Hình thức giao hàng</h2>
+					<div class="plan-shipping">
+						<input type="radio" name="transport-method" value="1" checked disabled>
+						<label for="plan-shipping">
+							<img src="https://vcdn.tikicdn.com/assets/img/sc-standard.png" height="17" width="31" alt="">
+						</label>
+						Giao hàng tiêu chuẩn
+					</div>
 
-				<h2>2.Chọn hình thức thanh toán</h2>
-				<div class="payment-method">
-					<form method="get">
-						<input type="radio" name="payment-method" value="1" checked> Thanh toán tiền mặt khi nhận hàng
+					<h2>2.Chọn hình thức thanh toán</h2>
+					<div class="payment-method">
+						<input type="radio" name="payment-method" value="1" id="cod" checked> Thanh toán tiền mặt khi nhận hàng
 						<br>
-						<input type="radio" name="payment-method" value="2"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)
+						<input type="radio" name="payment-method" value="2" id="atm"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)
 						<br>
-					</form>
-				</div>
-				<h4>
-					<b>Thông tin người mua:</b>
-				</h4>
-				<div class="form-group row" id="address_default">
-					<div class="col-lg-8 col-md-8">
-						<label for="default" class="icheck-wrap"></label>
-						<input type="checkbox" name="address_default"> Sử dụng Họ tên & Số điện thoại của địa chỉ giao hàng.
+						<div class="form-group row row-style-3 js-payment-sub" style="display: none;">
+							<div class="panel panel-default payment-sub is-small js-atm-list">
+								<div class="panel-body">
+									<input type="hidden" name="atm-id">
+									<ul class="bank">
+										<li>
+											<a title="BIDV" alt="BIDV" href="javascript:void(0)" class="li-bank" data-atm-id="7">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PBIDV.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Vietcombank" alt="Vietcombank" href="javascript:void(0)" class="li-bank" data-atm-id="1">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PVCB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Sacombank" alt="Sacombank" href="javascript:void(0)" class="li-bank" data-atm-id="2">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PSCB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="ACB" alt="ACB" href="javascript:void(0)" class="li-bank" data-atm-id="3">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PACB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Vietinbank" alt="Vietinbank" href="javascript:void(0)" class="li-bank" data-atm-id="4">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PVTB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="DongA Bank" alt="DongA Bank" href="javascript:void(0)" class="li-bank" data-atm-id="5">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PDAB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="VIB" alt="VIB" href="javascript:void(0)" class="li-bank" data-atm-id="6">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PVIB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="TPBank" alt="TPBank" href="javascript:void(0)" class="li-bank" data-atm-id="8">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PTPB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="VPBank" alt="VPBank" href="javascript:void(0)" class="li-bank" data-atm-id="9">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PVPB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Techcombank" alt="Techcombank" href="javascript:void(0)" class="li-bank" data-atm-id="10">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PTCB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Eximbank" alt="Eximbank" href="javascript:void(0)" class="li-bank" data-atm-id="11">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PEIB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Maritime Bank" alt="Maritime Bank" href="javascript:void(0)" class="li-bank" data-atm-id="12">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PMRTB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Agribank" alt="Agribank" href="javascript:void(0)" class="li-bank" data-atm-id="13">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PAGB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Quân Đội (MBBank)" alt="Quân Đội (MBBank)" href="javascript:void(0)" class="li-bank" data-atm-id="14">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PMB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="SHB" alt="SHB" href="javascript:void(0)" class="li-bank" data-atm-id="15">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PSHB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="SeABank" alt="SeABank" href="javascript:void(0)" class="li-bank" data-atm-id="16">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PSEAB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="HDBank" alt="HDBank" href="javascript:void(0)" class="li-bank" data-atm-id="17">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PHDB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Việt Á" alt="Việt Á" href="javascript:void(0)" class="li-bank" data-atm-id="18">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PVAB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="OceanBank" alt="OceanBank" href="javascript:void(0)" class="li-bank" data-atm-id="19">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123POCEB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="OCB" alt="OCB" href="javascript:void(0)" class="li-bank" data-atm-id="20">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123POCB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Bac A Bank" alt="Bac A Bank" href="javascript:void(0)" class="li-bank" data-atm-id="21">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PBAB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Nam A Bank" alt="Nam A Bank" href="javascript:void(0)" class="li-bank" data-atm-id="22">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PNAB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="NCB" alt="NCB" href="javascript:void(0)" class="li-bank" data-atm-id="23">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PNVB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="BaoVietBank" alt="BaoVietBank" href="javascript:void(0)" class="li-bank" data-atm-id="24">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PBVB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="LienVietPostBank" alt="LienVietPostBank" href="javascript:void(0)" class="li-bank" data-atm-id="25">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PLPB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="GPBank" alt="GPBank" href="javascript:void(0)" class="li-bank" data-atm-id="26">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PGPB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="Saigonbank" alt="Saigonbank" href="javascript:void(0)" class="li-bank" data-atm-id="27">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PSGB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="ABBANK" alt="ABBANK" href="javascript:void(0)" class="li-bank" data-atm-id="28">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PABB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+										<li>
+											<a title="PG Bank" alt="PG Bank" href="javascript:void(0)" class="li-bank" data-atm-id="31">
+												<img src="https://vcdn.tikicdn.com/assets/img/123pay/123PPGB.jpg?v=1" height="74" width="120" alt="">
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-lg-4">
-				<div class="panel panel-default cart">
-					<div class="panel-body">
-						<div class="order">
-							<span class="title">
-								Địa chỉ giao hàng
-							</span>
-							<a href="/shipping" class="btn btn-default btn-custom1">Sửa</a>
-						</div>
-						<div class="information">
-							<h4>{{ address.full_name }}</h4>
-							<p class="end">{{ address.street }}, {{ address.ward_id }}, {{ address.region_id }}
-								<br>Số điện thoại: {{ address.telephone }}
-								<br>Việt Nam</p>
-						</div>
-					</div>
-				</div>
-
-				<div id="panel-cart">
+				<div class="col-lg-4">
 					<div class="panel panel-default cart">
 						<div class="panel-body">
 							<div class="order">
-								<span class="title">Đơn Hàng</span>
-								<span class="title"> ({{ carts }} sản phẩm)</span>
-
-								<a href="/gio-hang" class="btn btn-default btn-custom1">Sửa</a>
+								<span class="title">
+									Địa chỉ giao hàng
+								</span>
+								<a href="/shipping" class="btn btn-default btn-custom1">Sửa</a>
 							</div>
-							<div class="product">
-								{% for product in products %}
-								<div class="item">
-									<p class="title">
-										<strong>{{ product.quantity }} x</strong>
-										<a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}" target="_blank">{{ product.product_name }}</a>
-										<span class="seller-by">
-											Cung cấp bởi
-											<strong class="firm">Min</strong>
-										</span>
-									</p>
+							<div class="information">
+								<h4>{{ address.address.full_name | title }}</h4>
+								<p class="end">{{ address.address.street }}, {{ address.address.ward_id }}, {{ address.address.region_id }}
+									<br>Số điện thoại: {{ address.address.telephone }}
+									<br>Việt Nam
+								</p>
+								<input type="hidden" name="" value="{{ address.id }}">
+							</div>
+						</div>
+					</div>
 
-									<p class="price text-right">
-										<span>{{ product.product_price * product.quantity}} </span>
-									</p>
+					<div id="panel-cart">
+						<div class="panel panel-default cart">
+							<div class="panel-body">
+								<div class="order">
+									<span class="title">Đơn Hàng</span>
+									<span class="title"> ({{ carts }} sản phẩm)</span>
+
+									<a href="/gio-hang" class="btn btn-default btn-custom1">Sửa</a>
 								</div>
-								{% endfor %}
+								<div class="product">
+									{% for product in products %}
+									<div class="item">
+										<p class="title">
+											<strong>{{ product.quantity }} x</strong>
+											<a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}" target="_blank">{{ product.product_name }}</a>
+											<span class="seller-by">
+												Cung cấp bởi
+												<strong class="firm">Min</strong>
+											</span>
+										</p>
+
+										<p class="price text-right">
+											<span>{{ product.product_price * product.quantity}} </span>
+										</p>
+									</div>
+									{% endfor %}
+								</div>
+
+								<p class="list-info-price cart-subtotal">
+									<b>Tạm tính: </b>
+									<span>403.50</span>
+								</p>
+								<p class="list-info-price">
+									<b>Giảm giá: </b>
+									<span>0</span>
+								</p>
+								<p class="list-info-price">
+									<b>Phí vận chuyển: </b>
+									<span>0</span>
+								</p>
+
+								<p class="total2">
+									Thành tiền:
+									<span>376.088</span>
+								</p>
+								<p class="text-right">
+									<i>(Đã bao gồm VAT)</i>
+								</p>
 							</div>
+						</div>
 
-							<p class="list-info-price cart-subtotal">
-								<b>Tạm tính: </b>
-								<span>403.50</span>
-							</p>
-							<p class="list-info-price">
-								<b>Giảm giá: </b>
-								<span>0</span>
-							</p>
-							<p class="list-info-price">
-								<b>Phí vận chuyển: </b>
-								<span>0</span>
-							</p>
 
-							<p class="total2">
-								Thành tiền:
-								<span>376.088</span>
-							</p>
-							<p class="text-right">
-								<i>(Đã bao gồm VAT)</i>
-							</p>
+						<div class="popover bottom tikixu">
+							<div class="arrow"></div>
+							<div class="popover-content">
+								<p class="ship">Đơn hàng bạn sẽ được miễn phí vận chuyển.</p>
+							</div>
 						</div>
 					</div>
-
-
-					<div class="popover bottom tikixu">
-						<div class="arrow"></div>
-						<div class="popover-content">
-							<p class="ship">Đơn hàng bạn sẽ được miễn phí vận chuyển.</p>
-						</div>
-					</div>
+					<button type="submit" class="btn btn-goto">Đặt hàng</button>
 				</div>
-				<a href="/order-success" class="btn btn-goto">Đặt hàng</a>
-			</div>
+			</form>
 		</div>
 	</div>
 </body>
 <script type="text/javascript" src="/public/js/jquery-3.1.1.js"></script>
 <!-- product price -->
-<script>
+<script type="text/javascript">
 	var price_product = $('.price span')
 	var sum = 0
 	var count = 0
 	for (var i = 0; i < price_product.length; i++) {
-		console.log(price_product[i].innerText)
 		price_product[i].innerText = parseInt(price_product[i].innerText).toLocaleString('vi')
 		sum = parseInt(price_product[i].innerText.replace(/[.]/g, ''))
 		count += sum
 	}
 	$('.cart-subtotal span').text(count.toLocaleString('vi'))
 	$('.total2 span').text(count.toLocaleString('vi'))
+</script>
+
+<!-- chọn ngân hàng thanh toán -->
+<script type="text/javascript">
+	$('#cod').click(function () {
+		$('.js-payment-sub').css('display', 'none')
+	})
+	$('#atm').click(function () {
+		$('.js-payment-sub').css('display', 'block')
+	})
+	var banks = $('.bank li')
+	banks.each(function () {
+		$(this).click(function () {
+			$(".bank li").removeClass();
+			$(this).addClass('active')
+		})
+	})
 </script>
 
 </html>

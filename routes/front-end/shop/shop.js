@@ -1173,7 +1173,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 // res.json(data)
                 res.render(frontendPath + 'Shop/Payment/payment', {
                     title: 'Thanh toán',
-                    address: data[0].address,
+                    address: data[0],
                     products: data[1]
                 })
             })

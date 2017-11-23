@@ -1,6 +1,8 @@
 module.exports = function (router, backendPath, db, upload) {
     const fs = require('fs')
     const getAlias = require('../getAlias').getAlias
+    const checkUserLogin = (req, res, next) => { req.session.passport ? next() : res.redirect('/') }
+
     const removeimages = function (imagesDelete) {
         const pathImg = '/home/doremonsun/Desktop/DoAn/FMS_EN/public/images/products/'
         for(let image in imagesDelete) {
@@ -13,7 +15,16 @@ module.exports = function (router, backendPath, db, upload) {
             })
         }
     }
-    router.get('/admin/product', (req, res) => {
+
+    router.get('/admin/login', (req, res) => {
+        res.render(backendPath + 'login')
+    })
+
+    router.get('/admin/dashboard', checkUserLogin, (req, res) => {
+        res.render(backendPath + 'index')
+    })
+
+    router.get('/admin/product', checkUserLogin, (req, res) => {
         db.task('get data' , function * (t) {
             const allProducts = 'SELECT ap.id AS attribute_product_id, ap.rest_of_product, pr.ucp, pr.product_name, pr.id AS product_id, cp.name_category_product, ap.total ,pp.product_price, pp.original_price , pp.time_create FROM product AS pr JOIN category_product AS cp ON cp.id = pr.category_product_id JOIN attribute_product AS ap ON pr.id = ap.product_id JOIN product_price AS pp ON ap.id = pp.attribute_product_id;'
             return yield t.any(allProducts)       
@@ -26,7 +37,8 @@ module.exports = function (router, backendPath, db, upload) {
             })
 
     })
-    router.get('/admin/product/product_detail/:id', (req, res) => {
+
+    router.get('/admin/product/product_detail/:id', checkUserLogin, (req, res) => {
         const attribute_product_id = req.params.id
         db.task('get data' , function * (t) {
             const product = 'SELECT ap.id AS attribute_product_id, pr.ucp, pr.product_name, pr.description, ap.images ,cp.name_category_product, ap.rest_of_product, ap.attributes ,pp.product_price, pp.original_price, pp.sale_off_price , pp.time_create FROM product AS pr JOIN category_product AS cp ON cp.id = pr.category_product_id JOIN attribute_product AS ap ON pr.id = ap.product_id JOIN product_price AS pp ON ap.id = pp.attribute_product_id WHERE ap.id = ${attribute_product_id};'
@@ -42,7 +54,8 @@ module.exports = function (router, backendPath, db, upload) {
             })
        
     })
-    router.get('/admin/product/add_product', (req, res) => {
+
+    router.get('/admin/product/add_product', checkUserLogin, (req, res) => {
         db.task('get category product', function * (t) {
             const dataCategoryproduct = 'SELECT id, name_category_product FROM category_product;'
             return yield t.any(dataCategoryproduct)
@@ -53,6 +66,7 @@ module.exports = function (router, backendPath, db, upload) {
                 })
             })
     })
+
     router.post('/admin/product/add_product',upload.array('photos', 10), (req, res) => {
         const info = req.body
         const photos = req.files
@@ -152,7 +166,7 @@ module.exports = function (router, backendPath, db, upload) {
             })
     })
 
-    router.get('/admin/product/product_edit/:id', (req, res) => {
+    router.get('/admin/product/product_edit/:id', checkUserLogin, (req, res) => {
         const attribute_product_id = req.params.id
         db.task('', function * (t) {
             const dataCategoryProduct = 'SELECT id, name_category_product FROM category_product;'
@@ -235,7 +249,7 @@ module.exports = function (router, backendPath, db, upload) {
             })
     })
 
-    router.get('/admin/product/product_remove/:attribute_product_id/:product_id', (req, res) => {
+    router.get('/admin/product/product_remove/:attribute_product_id/:product_id', checkUserLogin, (req, res) => {
         const info = req.params
 
         db.task('remove product', function * (t) {

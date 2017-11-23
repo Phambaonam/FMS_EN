@@ -1393,13 +1393,13 @@ i.fa-search-plus {
 }
 
 .price {
-    padding: 15px;
+    /* padding: 15px; */
 }
 
 .price strong {
-    padding-right: 10px;
+    /* padding-right: 10px; */
     color: #339966;
-    font-size: 25px;
+    font-size: 23px;
     font-weight: 500;
 }
 
@@ -2185,7 +2185,7 @@ span.fontSize-rating:hover {
 }
 
 .sale-off {
-    font-size: 20px;
+    font-size: 17px;
 }
 
 .sale-off::after {
@@ -4137,7 +4137,9 @@ h3.comment-reply-title {
 .stock {
     font-size: 20px;
 }
-
+.rest-stock {
+    color: #FF534E;
+}
 .in-stock {
     color: #339966;
 }
@@ -4145,7 +4147,13 @@ h3.comment-reply-title {
 .out-stock {
     color: #BD081C;
 }
-
+.sale-tag-square {
+    color: #FF3B26;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-left: 2px;
+}
 
 
 .single-product .product-category {

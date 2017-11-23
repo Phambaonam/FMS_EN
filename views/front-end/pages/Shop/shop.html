@@ -244,6 +244,7 @@
         for (var i = 0; i < products.length; i++) {
             products[i].children['0'].innerText = parseInt(products[i].children['0'].innerText).toLocaleString('vi')
             products[i].children['1'].innerText = parseInt(products[i].children['1'].innerText).toLocaleString('vi')
+            products[i].children['2'].innerText =  '-' + Math.round(products[i].children['2'].innerText) + '%'
         }    
     }
     convert()

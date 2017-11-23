@@ -77,6 +77,28 @@ CREATE TABLE IF NOT EXISTS wishlish (
     attribute_product_id INT REFERENCES attribute_product (id) ON DELETE CASCADE NOT NULL,
     customer_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL
 );
+CREATE TABLE IF NOT EXISTS payment_method (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255)
+);
+CREATE TABLE IF NOT EXISTS fee_transport (
+    id SERIAL PRIMARY KEY,
+    amount_of_purchase BIGINT,
+    fee BIGINT
+);
+CREATE TABLE IF NOT EXISTS purchase(
+    id SERIAL PRIMARY KEY,
+    name_receiver VARCHAR(255),
+    phone_receiver CHAR(15),
+    address_receiver VARCHAR(255),
+    status_purchase SMALLINT,
+    time_order VARCHAR(255),
+    time_delivery VARCHAR(255),
+    customer_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL,
+    transport_method VARCHAR(255),
+    fee_transport_id INT REFERENCES fee_transport(id) ON DELETE CASCADE NOT NULL,
+    payment_method_id INT REFERENCES payment_method(id) ON DELETE CASCADE NOT NULL
+);
 
 \COPY area(id,area_name,area_alias,time_create) FROM '/home/doremonsun/Desktop/DoAn/FMS_EN/database/area.csv' DELIMITER ',' CSV HEADER;
 

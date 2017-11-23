@@ -1,0 +1,218 @@
+<!DOCTYPE html> 
+
+{% include '../../components/head.html' %}
+<body>
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+        <!-- Page Container -->
+        <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+            <!-- Main Sidebar -->
+            <div id="sidebar">
+                <!-- Wrapper for scrolling functionality -->
+                <div id="sidebar-scroll">
+                    <!-- Sidebar Content -->
+                    <div class="sidebar-content">
+                        <!-- Brand -->
+                        <a href="/admin/dashboard" class="sidebar-brand">
+                        <i class="gi gi-home"></i><span class="sidebar-nav-mini-hide"><strong>FMS</strong></span>
+                    </a>
+                        <!-- END Brand -->
+
+                        <!-- User Info -->
+                        {% include '../../components/userInfo.html' %}
+                        <!-- END User Info -->
+
+                        <!-- Sidebar Navigation -->
+                        <ul class="sidebar-nav">
+                            <li>
+                                <a href="/admin/dashboard"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span
+                                    class="sidebar-nav-mini-hide">Dashboard</span></a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="category">
+                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                <i class="gi gi-address_book sidebar-nav-icon"></i>
+                                <span class="sidebar-nav-mini-hide" >Quán Lý Danh Mục</span>
+                                </a>
+                                <ul class="category">
+                                    <li>
+                                        <a href="/admin/category/area">
+                                            <!--<i class="gi gi-keys sidebar-nav-icon"></i>-->
+                                            Danh Mục Khu Vực
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category">
+                                            <!--<i class="gi gi-tags sidebar-nav-icon"></i>-->
+                                            Danh Mục
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category_product">
+                                            <!--<i class="gi gi-tag sidebar-nav-icon"></i>-->
+                                            Danh Mục Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="active">
+                                <a href="#" class="sidebar-nav-menu" id="product">
+                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                <i class="gi gi-shop sidebar-nav-icon"></i>
+                                <span class="sidebar-nav-mini-hide">Quản Lý Sản Phẩm</span>
+                            </a>
+                                <ul class="product">
+
+                                    <li class="active">
+                                        <a href="/admin/product">
+                                        Sản Phẩm
+                                    </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-nav-menu">
+                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                <i class="gi gi-money sidebar-nav-icon"></i>
+                                <span class="sidebar-nav-mini-hide">Quản Lý Đơn Hàng</span>
+                            </a>
+                                <ul>
+                                    <li></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-nav-menu">
+                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                <i class="gi gi-group sidebar-nav-icon"></i>
+                                <span class="sidebar-nav-mini-hide">Quản Lý Người Dùng</span>
+                            </a>
+                                <ul>
+                                    <li></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- END Sidebar Navigation -->
+
+                    </div>
+                    <!-- END Sidebar Content -->
+                </div>
+                <!-- END Wrapper for scrolling functionality -->
+            </div>
+            <!-- END Main Sidebar -->
+
+            <!-- Main Container -->
+            <div id="main-container">
+                <!-- Header -->
+                {% include '../../components/header.html' %}
+                <!-- END Header -->
+
+                <!-- Page content -->
+                <div id="page-content">
+                    <div>
+                        <h3 style="text-align: center;">Chi tiết Sản phẩm</h3>
+                    </div>
+                    <div class="page-content-edit">
+                        <div class="container-fluid">
+                                <div class="row product-detail">
+                                    {% for item  in data %}
+                                        <div class="detail">
+                                            <h3>Tên sản phẩm <span>{{ item.product_name | title }}</span></h3> 
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Thuộc danh mục <span>{{ item.name_category_product | title }}</span> </h3>
+                                        </div>
+                                        <div class="detail">                                   
+                                            <h3>Mã sản phẩm <span>{{ item.ucp }}</span></h3>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Ảnh</h3>
+                                            <div class="images">
+                                                {% for ingredient, amount in item.image %}
+                                                    <img src="/public/images/products/{{amount}}" alt=""> 
+                                                {% endfor %}     
+                                            </div>
+                                        </div>
+                                        <div class="detail">        
+                                            <h3>Giá nhập <span>{{ item.original_price }}.000 VND</span></h3>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Giá bán ra <span>{{ item.product_price }}.000 VND</span></h3>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Khuyến Mại <span>{{ item.sale_off_price }}%</span> </h3>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Mô tả:</h3>
+                                            <h5> {{ item.description }}</h5>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Thông số</h3>
+                                            <table style="width:20%">
+                                                    <tr>
+                                                        {% if item.attributes.manufacturer != "" %}
+                                                            <th>Nhà sản xuất</th>
+                                                            <td>{{ item.attributes.manufacturer }}</td>
+                                                        {% endif%}
+                                                    </tr>
+                                                    <tr>
+                                                        {% if item.attributes.material != "" %}
+                                                            <th>Chất liệu</th>
+                                                            <td>{{ item.attributes.material }}</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                    <tr>
+                                                        {% if item.attributes.color != "" %}
+                                                            <th>Màu sắc</th>
+                                                            <td>{{ item.attributes.color }}</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                    <tr>
+                                                        {% if item.attributes.size.length != "" %}
+                                                            <th>Chiều dài</th>
+                                                            <td>{{ item.attributes.size.length }} cm</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                    <tr>
+                                                        {% if item.attributes.size.width != "" %}
+                                                            <th>Chiều ngang</th>
+                                                            <td>{{ item.attributes.size.width }} cm</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                    <tr>
+                                                        {% if item.attributes.size.hight != "" %}
+                                                            <th>Chiều cao</th>
+                                                            <td>{{ item.attributes.size.hight }} cm</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                        {% if item.attributes.size.diameter != "" %}
+                                                            <th>Đường kính</th>
+                                                            <td>{{ item.attributes.size.diameter }} cm</td>
+                                                        {% endif %}
+                                                    </tr>
+                                            </table>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Còn lại <span>{{ item.rest_of_product }} sản phẩm</span></h3>
+                                        </div>
+                                        <div class="detail">
+                                            <h3>Thời gian tạo <span>{{ item.time_create }}</span></h3>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                        </div>                    
+                    </div>
+                </div>
+                <!-- END Page Content -->
+            </div>
+            <!-- END Main Container -->
+        </div>
+        <!-- END Page Container -->
+    </div>
+    <!-- END Page Wrapper -->
+
+    {% include '../../components/footer.html' %} {% include '../../components/script.html' %}
+</body>
+
+</html>

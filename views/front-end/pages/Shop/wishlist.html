@@ -78,7 +78,7 @@
                                 </td>
                                 <td class="product-price">{{ product.product_price }}</td>
                                 <td class="product-status">
-                                    {% if product.option_status.status_product === 'on' %}
+                                    {% if product.total > 0 %}
                                     <span class="in-stock">Còn hàng</span>
                                     {% else%}
                                     <span class="out-stock">Hết hàng</span>

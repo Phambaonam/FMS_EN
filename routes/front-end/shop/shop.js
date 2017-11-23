@@ -545,7 +545,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
             // console.log(getCarts)
             for (let item in getCarts) {
-                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
+                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images, ap.total FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
                 const getProduct = yield t.one(product, {
                     attribute_product_id: getCarts[item].attribute_product_id
                 })
@@ -565,6 +565,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             return cartDetail
         })
             .then(data => {
+                // res.json(data)
                 if (req.session.url !== req.url) req.session.url = req.url
                 let info = req.user || req.session.user
 
@@ -737,7 +738,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
         const product_alias = req.params.product.slice(0, -2)
         db.task('chi tiet san pham', function* (t) {
             const product_detail = `
-                SELECT ap.id AS product_id, pr.product_name, ca.name_category, ca.category_alias, cp.name_category_product, cp.group_by_category, cp.category_product_alias ,pr.product_alias, ap.option_status, pr.description, pp.product_price, ap.images, ap.attributes, pp.original_price, pp.sale_off_price 
+                SELECT ap.id AS product_id, pr.product_name, ca.name_category, ca.category_alias, cp.name_category_product, cp.group_by_category, cp.category_product_alias ,pr.product_alias, ap.option_status, pr.description, pp.product_price, ap.images, ap.attributes, ap.total, pp.original_price, pp.sale_off_price 
                 FROM product AS pr
                 JOIN attribute_product AS ap ON ap.product_id = pr.id
                 JOIN product_price AS pp ON pp.attribute_product_id = ap.id
@@ -859,7 +860,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
 
             for (let item in getWishlishes) {
-                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images , ap.option_status FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
+                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images , ap.option_status, ap.total FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
                 const getProduct = yield t.one(product, {
                     attribute_product_id: getWishlishes[item].attribute_product_id
                 })
@@ -1159,7 +1160,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
             let products = []
             for (let item in getCart) {
-                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.attributes FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
+                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.attributes, ap.total FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
                 const getProduct = yield t.one(product, {
                     attribute_product_id: getCart[item].attribute_product_id
                 })
@@ -1180,6 +1181,10 @@ module.exports.shopPage = function (db, router, frontendPath) {
             .catch(err => {
                 if (err) res.redirect('/')
             })
+    })
+
+    router.post('/checkout/payment', checkUserLogin, (req, res) => {
+        res.json(req.body)
     })
 
     router.get('/order-success', checkUserLogin, (req, res) => {

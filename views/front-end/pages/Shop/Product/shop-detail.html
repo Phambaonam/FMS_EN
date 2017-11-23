@@ -102,8 +102,17 @@
             <div class="description">
                 <p>{{ data.description }}</p>
             </div>
-            <p class="stock">Tình trạng:
-                <span class="in-stock">Còn hàng</span>
+            <p class="stock">
+                {% if data.total < 10 and data.total > 1 %}
+                    Còn lại:
+                    <span class="rest-stock">{{ data.total }} sản phẩm</span>
+                {% elif data.total === 0 %}
+                Tình trạng:
+                    <span class="out-stock">Hết hàng</span>
+                {% else %}
+                Tình trạng:
+                    <span class="in-stock">Còn hàng</span>
+                {% endif %}
             </p>
             <div class="cart">
                 <span style="font-size:19.5px">Số lượng:</span>

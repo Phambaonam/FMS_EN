@@ -14,6 +14,16 @@ $('#product').click(function() {
     $('.product').slideToggle("fast");
 
 });
+$('#order').click(function () {
+    // $(this).addClass('active')
+    $('.order').slideToggle("fast");
+
+});
+$('#user').click(function () {
+    // $(this).addClass('active')
+    $('.user').slideToggle("fast");
+
+});
 /***
  * Function show calendar, use datetimepicker
  */

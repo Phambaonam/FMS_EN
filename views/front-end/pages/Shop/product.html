@@ -57,6 +57,7 @@
                            <span class="price">
                                 <strong> {{ product.product_price }}</strong>
                                 <del class="sale-off">{{ product.original_price }}</del>
+                                <span class="sale-tag sale-tag-square">{{ 100 - product.product_price / product.original_price * 100 }}</span>
                            </span>
                         </p>
 
@@ -66,7 +67,7 @@
                             <span id="star3" class="star fa fa-star" data-rating="3"></span>
                             <span id="star4" class="star fa fa-star" data-rating="4"></span>
                             <span id="star5" class="star fa fa-star" data-rating="5"></span>
-                            <span id="numberStar">&#40<span id="number_rating">{{ product.attributes[0]['sum_of_rating'] }}</span>&#41</span>
+                            <span id="numberStar">&#40<span id="number_rating">{{ product.attributes[0].sum_of_rating }}5 Nhận xét</span>&#41</span>
                         </div>
                         {% if product.option_status.new_product %}
                             <div class="tag tag-left new"></div>

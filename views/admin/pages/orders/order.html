@@ -1,0 +1,407 @@
+<!DOCTYPE html> {% include '../../components/head.html' %}
+<style>
+    .price::after {
+        content: ' ₫';
+    }
+</style>
+
+<body>
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+        <!-- Page Container -->
+        <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+            <!-- Main Sidebar -->
+            <div id="sidebar">
+                <!-- Wrapper for scrolling functionality -->
+                <div id="sidebar-scroll">
+                    <!-- Sidebar Content -->
+                    <div class="sidebar-content">
+                        <!-- Brand -->
+                        <a href="/admin/dashboard" class="sidebar-brand">
+                            <i class="gi gi-home"></i>
+                            <span class="sidebar-nav-mini-hide">
+                                <strong>FMS</strong>
+                            </span>
+                        </a>
+                        <!-- END Brand -->
+
+                        <!-- User Info -->
+                        {% include '../../components/userInfo.html' %}
+                        <!-- END User Info -->
+
+                        <!-- Sidebar Navigation -->
+                        <ul class="sidebar-nav">
+                            <li>
+                                <a href="/admin/dashboard">
+                                    <i class="gi gi-stopwatch sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="category">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-address_book sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quán Lý Danh Mục</span>
+                                </a>
+                                <ul class="category">
+                                    <li>
+                                        <a href="/admin/category/area">
+                                            Danh Mục Khu Vực
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category">
+                                            Danh Mục
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category_product">
+                                            Danh Mục Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="product">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-shop sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Sản Phẩm</span>
+                                </a>
+                                <ul class="product">
+
+                                    <li>
+                                        <a href="/admin/product">
+                                            Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="order">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-money sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Đơn Hàng</span>
+                                </a>
+                                <ul class="order">
+                                    <li class="active">
+                                        <a href="/admin/order">Đơn hàng</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="user">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-group sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Người Dùng</span>
+                                </a>
+                                <ul class="user">
+                                    <li>
+                                        <a href="/admin/users">Khách hàng</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/administrators">Quản trị viên</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- END Sidebar Navigation -->
+
+                    </div>
+                    <!-- END Sidebar Content -->
+                </div>
+                <!-- END Wrapper for scrolling functionality -->
+            </div>
+            <!-- END Main Sidebar -->
+
+            <!-- Main Container -->
+            <div id="main-container">
+                <!-- Header -->
+                {% include '../../components/header.html' %}
+                <!-- END Header -->
+
+                <!-- Page content -->
+                <div id="page-content">
+                    <div class="row text-center">
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="javascript:void(0)" class="widget widget-hover-effect2">
+                                <div class="widget-extra themed-background">
+                                    <h4 class="widget-content-light">
+                                        Đơn hàng <strong>đang chờ</strong></h4>
+                                </div>
+                                <div class="widget-extra-full">
+                                    <span class="h2 animation-expandOpen">3</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="javascript:void(0)" class="widget widget-hover-effect2">
+                                <div class="widget-extra themed-background-dark">
+                                    <h4 class="widget-content-light">
+                                        Đơn hàng <strong>hôm nay</strong></h4>
+                                </div>
+                                <div class="widget-extra-full">
+                                    <span class="h2 themed-color-dark animation-expandOpen">120</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="javascript:void(0)" class="widget widget-hover-effect2">
+                                <div class="widget-extra themed-background-dark">
+                                    <h4 class="widget-content-light">
+                                         Đơn hàng <strong>tháng này</strong></h4>
+                                </div>
+                                <div class="widget-extra-full">
+                                    <span class="h2 themed-color-dark animation-expandOpen">3.200</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="javascript:void(0)" class="widget widget-hover-effect2">
+                                <div class="widget-extra themed-background-dark">
+                                    <h4 class="widget-content-light">
+                                        Đơn hàng <strong>tháng trước</strong></h4>
+                                </div>
+                                <div class="widget-extra-full">
+                                    <span class="h2 themed-color-dark animation-expandOpen">2.850</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="block full">
+                        <div class="block-title">
+                            <div class="block-options pull-right">
+                                <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default" data-toggle="tooltip" title="" data-original-title="Settings">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                            </div>
+                            <h2>
+                                <strong>Tất cả</strong> đơn hàng</h2>
+                        </div>
+                        <div id="ecom-orders_wrapper" class="dataTables_wrapper form-inline no-footer">
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-5">
+                                    <div class="dataTables_length" id="ecom-orders_length">
+                                        <label>
+                                            <select name="ecom-orders_length" aria-controls="ecom-orders" class="form-control">
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="-1">All</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-xs-7">
+                                    <div id="ecom-orders_filter" class="dataTables_filter">
+                                        <label>
+                                            <div class="input-group">
+                                                <input type="search" class="form-control" placeholder="Search" aria-controls="ecom-orders">
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-search"></i>
+                                                </span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="ecom-orders" class="table table-bordered table-striped table-vcenter dataTable no-footer">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="text-center">STT</th>
+                                        <th class="text-center sorting_desc" style="width: 80px;">Mã đơn hàng</th>
+                                        <th class="visible-lg sorting" style="width: 111px;">Khách hàng</th>
+                                        <th class="text-center visible-lg sorting" style="width: 80px;">Số lượng</th>
+                                        <th class="hidden-xs sorting" style="width: 102px;">Hình thức thanh toán</th>
+                                        <th class="text-right hidden-xs sorting" style="width: 67px;">Tổng tiền</th>
+                                        <th class="sorting" style="width: 74px;">Trạng thái</th>
+                                        <th class="hidden-xs text-center sorting" style="width: 96px;">Ngày nhận</th>
+                                        <th class="text-center sorting_disabled">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd">
+                                        <td class="text-center"></td>
+                                        <td class="text-center sorting_1">
+                                            <a href="page_ecom_order_view.php">
+                                                <strong>ORD.685179</strong>
+                                            </a>
+                                        </td>
+                                        <td class="visible-lg">
+                                            <a href="javascript:void(0)">Harry Medina</a>
+                                        </td>
+                                        <td class="text-center visible-lg">
+                                            <a href="javascript:void(0)">3</a>
+                                        </td>
+                                        <td class="hidden-xs">Paypal</td>
+                                        <td class="text-right hidden-xs">
+                                            <strong>$684,00</strong>
+                                        </td>
+                                        <td>
+                                            <span class="label label-warning">Đang chờ xử lý</span>
+                                        </td>
+                                        <td class="hidden-xs text-center">05/07/2014</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="page_ecom_order_view.php" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="View">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title="" class="btn btn-xs btn-danger" data-original-title="Delete">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr role="row" class="even">
+                                        <td class="text-center"></td>
+                                        <td class="text-center sorting_1">
+                                            <a href="page_ecom_order_view.php">
+                                                <strong>ORD.685178</strong>
+                                            </a>
+                                        </td>
+                                        <td class="visible-lg">
+                                            <a href="javascript:void(0)">Patrick Bates</a>
+                                        </td>
+                                        <td class="text-center visible-lg">
+                                            <a href="javascript:void(0)">3</a>
+                                        </td>
+                                        <td class="hidden-xs">Check</td>
+                                        <td class="text-right hidden-xs">
+                                            <strong>$911,00</strong>
+                                        </td>
+                                        <td>
+                                            <span class="label label-info">Đang vận chuyển</span>
+                                        </td>
+                                        <td class="hidden-xs text-center">17/09/2014</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="page_ecom_order_view.php" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="View">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title="" class="btn btn-xs btn-danger" data-original-title="Delete">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-center"></td>
+                                        <td class="text-center sorting_1">
+                                            <a href="page_ecom_order_view.php">
+                                                <strong>ORD.685177</strong>
+                                            </a>
+                                        </td>
+                                        <td class="visible-lg">
+                                            <a href="javascript:void(0)">Ryan Hopkins</a>
+                                        </td>
+                                        <td class="text-center visible-lg">
+                                            <a href="javascript:void(0)">3</a>
+                                        </td>
+                                        <td class="hidden-xs">Check</td>
+                                        <td class="text-right hidden-xs">
+                                            <strong>$834,00</strong>
+                                        </td>
+                                        <td>
+                                            <span class="label label-success">Đã giao hàng</span>
+                                        </td>
+                                        <td class="hidden-xs text-center">19/02/2014</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="page_ecom_order_view.php" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="View">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title="" class="btn btn-xs btn-danger" data-original-title="Delete">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="text-center"></td>
+                                        <td class="text-center sorting_1">
+                                            <a href="page_ecom_order_view.php">
+                                                <strong>ORD.685161</strong>
+                                            </a>
+                                        </td>
+                                        <td class="visible-lg">
+                                            <a href="javascript:void(0)">Anthony Franklin</a>
+                                        </td>
+                                        <td class="text-center visible-lg">
+                                            <a href="javascript:void(0)">2</a>
+                                        </td>
+                                        <td class="hidden-xs">Credit Card</td>
+                                        <td class="text-right hidden-xs">
+                                            <strong>$365,00</strong>
+                                        </td>
+                                        <td>
+                                            <span class="label label-danger">Đã hủy</span>
+                                        </td>
+                                        <td class="hidden-xs text-center">15/06/2014</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="page_ecom_order_view.php" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="View">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title="" class="btn btn-xs btn-danger" data-original-title="Delete">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-5 hidden-xs">
+                                    <div class="dataTables_info" id="ecom-orders_info" role="status" aria-live="polite">
+                                        <strong>21</strong>-
+                                        <strong>40</strong> of
+                                        <strong>60</strong>
+                                    </div>
+                                </div>
+                                <div class="col-sm-7 col-xs-12 clearfix">
+                                    <div class="dataTables_paginate paging_bootstrap" id="ecom-orders_paginate">
+                                        <ul class="pagination pagination-sm remove-margin">
+                                            <li class="prev">
+                                                <a href="javascript:void(0)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">1</a>
+                                            </li>
+                                            <li class="active">
+                                                <a href="javascript:void(0)">2</a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">3</a>
+                                            </li>
+                                            <li class="next">
+                                                <a href="javascript:void(0)">
+                                                    <i class="fa fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END Page Content -->
+
+            </div>
+            <!-- END Main Container -->
+        </div>
+        <!-- END Page Container -->
+    </div>
+    <!-- END Page Wrapper -->
+    {% include '../../components/footer.html' %} {% include '../../components/script.html' %}
+    <script type="text/javascript">
+        var products = $('.price')
+        for (var i = 0; i < products.length; i++) {
+            products[i].innerText = parseInt(products[i].innerText).toLocaleString('vi')
+        }   
+    </script>
+</body>
+
+</html>

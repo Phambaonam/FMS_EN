@@ -23,11 +23,7 @@ tr td:first-child:before
     counter-increment: Count-Value;
     content:counter(Count-Value);
 }
-tr td:first-child:before
-{
-    counter-increment: Count-Value;
-    content:counter(Count-Value);
-}
+
 h3>span {
     font-size: 20px;
     color: red;
@@ -227,7 +223,7 @@ a.sidebar-brand:hover, a.sidebar-brand:focus, a.sidebar-title:hover, a.sidebar-t
     font-size: 14px;
     text-align: center;
 }
-.sidebar-nav ul.category li.active  {
+.sidebar-nav ul li.active  {
     border-left: 5px solid #1bbae1;
     /*padding-left: 10px;*/
 }
@@ -471,6 +467,7 @@ header.navbar-default, header.navbar-inverse {
 
 .block.full {
     padding: 20px 15px;
+    min-height: 100vh;
 }
 
 .block-title {
@@ -534,14 +531,14 @@ p, .table, .alert, .carousel {
 
 .page-content-edit {
     background: #fff;
-    height: auto;
+    min-height: 100vh;
     padding-bottom: 30px;
 }
 
 .label-success {
     font-size: 13px;
     font-weight: normal;
-    margin-left: 5px;
+    /* margin-left: 5px; */
 }
 /* Small devices, Tablets (>767px) */
 @media screen and (min-width: 768px) {

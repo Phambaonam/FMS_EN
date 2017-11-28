@@ -1,7 +1,7 @@
 module.exports = function (router, backendPath, db, upload) {
     const fs = require('fs')
     const getAlias = require('../getAlias').getAlias
-    const checkUserLogin = (req, res, next) => { req.session.passport ? next() : res.redirect('/') }
+    const checkUserLogin = (req, res, next) => { req.session.passport ? next() : res.redirect('/admin/login') }
 
     const removeimages = function (imagesDelete) {
         const pathImg = '/home/doremonsun/Desktop/DoAn/FMS_EN/public/images/products/'
@@ -15,14 +15,6 @@ module.exports = function (router, backendPath, db, upload) {
             })
         }
     }
-
-    router.get('/admin/login', (req, res) => {
-        res.render(backendPath + 'login')
-    })
-
-    router.get('/admin/dashboard', checkUserLogin, (req, res) => {
-        res.render(backendPath + 'index')
-    })
 
     router.get('/admin/product', checkUserLogin, (req, res) => {
         db.task('get data' , function * (t) {

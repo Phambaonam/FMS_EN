@@ -14,8 +14,11 @@
                     <div class="sidebar-content">
                         <!-- Brand -->
                         <a href="/admin/dashboard" class="sidebar-brand">
-                        <i class="gi gi-home"></i><span class="sidebar-nav-mini-hide"><strong>FMS</strong></span>
-                    </a>
+                            <i class="gi gi-home"></i>
+                            <span class="sidebar-nav-mini-hide">
+                                <strong>FMS</strong>
+                            </span>
+                        </a>
                         <!-- END Brand -->
 
                         <!-- User Info -->
@@ -25,15 +28,17 @@
                         <!-- Sidebar Navigation -->
                         <ul class="sidebar-nav">
                             <li>
-                                <a href="/admin/dashboard"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span
-                                    class="sidebar-nav-mini-hide">Dashboard</span></a>
+                                <a href="/admin/dashboard">
+                                    <i class="gi gi-stopwatch sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Dashboard</span>
+                                </a>
                             </li>
                             <li class="active">
-                                <a href="#" class="sidebar-nav-menu" id="category">
-                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-                                <i class="gi gi-address_book sidebar-nav-icon"></i>
-                                <span class="sidebar-nav-mini-hide" >Quán Lý Danh Mục</span>
-                            </a>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="category">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-address_book sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quán Lý Danh Mục</span>
+                                </a>
                                 <ul class="category">
                                     <li class="active">
                                         <a href="/admin/category/area">
@@ -56,39 +61,43 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#" class="sidebar-nav-menu" id="product">
-                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-                                <i class="gi gi-shop sidebar-nav-icon"></i>
-                                <span class="sidebar-nav-mini-hide">Quản Lý Sản Phẩm</span>
-                            </a>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="product">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-shop sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Sản Phẩm</span>
+                                </a>
                                 <ul class="product" style="display: none;">
 
                                     <li>
-                                        <a href="page_ecom_products.html">
-                                        Sản Phẩm
-                                    </a>
+                                        <a href="/admin/product">
+                                            Sản Phẩm
+                                        </a>
                                     </li>
 
                                 </ul>
                             </li>
                             <li>
-                                <a href="#" class="sidebar-nav-menu">
-                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-                                <i class="gi gi-money sidebar-nav-icon"></i>
-                                <span class="sidebar-nav-mini-hide">Quản Lý Đơn Hàng</span>
-                            </a>
-                                <ul>
-                                    <li></li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="order">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-money sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Đơn Hàng</span>
+                                </a>
+                                <ul class="order">
+                                    <li>
+                                        <a href="/admin/order">Đơn hàng</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="#" class="sidebar-nav-menu">
-                                <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
-                                <i class="gi gi-group sidebar-nav-icon"></i>
-                                <span class="sidebar-nav-mini-hide">Quản Lý Người Dùng</span>
-                            </a>
-                                <ul>
-                                    <li></li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="user">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-group sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Người Dùng</span>
+                                </a>
+                                <ul class="user">
+                                    <li>
+                                        <a href="/admin/users">Người dùng</a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -116,11 +125,11 @@
                                 <div class="tabcordion">
                                     <ul id="myTab" class="nav nav-tabs">
                                         <li class="active">
-                                            <a href="#product_general" data-toggle="tab">General</a>
+                                            <a href="javascript:void(0)product_general" data-toggle="tab">General</a>
                                         </li>
 
                                         <li>
-                                            <a href="#product_reviews" data-toggle="tab">Xem Trước</a>
+                                            <a href="javascript:void(0)product_reviews" data-toggle="tab">Xem Trước</a>
                                         </li>
                                     </ul>
                                     <div id="myTabContent" class="tab-content">
@@ -145,7 +154,7 @@
                                                             <div class='input-group date' id='datetimepicker1'>
                                                                 <input type='text' class="form-control" name="time_create" />
                                                                 <span class="input-group-addon">
-                                                                        <span class="fa fa-calendar"></span>
+                                                                    <span class="fa fa-calendar"></span>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -154,8 +163,10 @@
                                                         <div class="col-md-4"></div>
                                                         <div class="col-md-1"></div>
                                                         <div class="col-md-3">
-                                                            <a href="/admin/category/area" class="btn btn-danger m-r-10 m-t-10"><i class="fa fa-times"></i> Hủy Bỏ</a>
-                                                            <button class="btn btn-success m-t-10" type="submit"><i class="fa fa-check"></i> Lưu Thông Tin</button>
+                                                            <a href="/admin/category/area" class="btn btn-danger m-r-10 m-t-10">
+                                                                <i class="fa fa-times"></i> Hủy Bỏ</a>
+                                                            <button class="btn btn-success m-t-10" type="submit">
+                                                                <i class="fa fa-check"></i> Lưu Thông Tin</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -176,8 +187,14 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td class="text-center"><a href="javascript:void(0)"><strong></strong></a></td>
-                                                                    <td><a href="javascript:void(0)">Phòng khách</a></td>
+                                                                    <td class="text-center">
+                                                                        <a href="javascript:void(0)">
+                                                                            <strong></strong>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="javascript:void(0)">Phòng khách</a>
+                                                                    </td>
                                                                     <td class="hidden-xs text-center">17/01/2014</td>
                                                                 </tr>
                                                             </tbody>

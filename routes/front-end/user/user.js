@@ -32,9 +32,12 @@ module.exports.userInfo = function (db, router, frontendPath) {
         const subject = 'Xác thực tài khoản!'
         const text = `Xin chào ${username}. Đây là email xác thực đăng kí tài khoản của bạn. Bạn hãy click vào link để hoàn thành quá trình đăng ký: http://${req.headers.host}/confirmation/${token}`
 
-
-        const insertUser = 'INSERT INTO customer(username,email,password,phone,image,date_of_birth,general,time_register,address_receiver,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},${phone},null,null,null,null,null,${token_register},null,null);'
+        const currentdate = new Date().toLocaleString().split(' ')[0].split('-')
+        const time_register = `${currentdate[2]}-${currentdate[1]}-${currentdate[0]}`
+        console.log(currentdate)
+        const insertUser = 'INSERT INTO customer(username,email,password,phone,date_of_birth,general,time_register,token_register,verify_token_register,role) VALUES (${username}, ${email}, ${password},${phone},null,null,${time_register},${token_register},null,0);'
         const getEmail = 'SELECT id, username, email, phone, general FROM customer WHERE email = ${email}'
+       
         bcrypt.hash(info.password, saltRounds, (err, hash) => {
             db.task('user resgister accout', function* (t) {
                 yield t.any(insertUser, {
@@ -42,7 +45,8 @@ module.exports.userInfo = function (db, router, frontendPath) {
                     email: info.email,
                     password: hash,
                     phone: phone,
-                    token_register: token
+                    token_register: token,
+                    time_register: time_register
                 })
                 return yield t.one(getEmail, {
                     email: info.email

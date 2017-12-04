@@ -130,7 +130,7 @@
                                         Đơn hàng <strong>đang chờ</strong></h4>
                                 </div>
                                 <div class="widget-extra-full">
-                                    <span class="h2 animation-expandOpen">3</span>
+                                    <span class="h2 animation-expandOpen">{{ ordersPending.count }}</span>
                                 </div>
                             </a>
                         </div>
@@ -220,39 +220,43 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for order in orders %}
                                     <tr role="row" class="odd">
                                         <td class="text-center"></td>
                                         <td class="text-center sorting_1">
-                                            <a href="page_ecom_order_view.php">
-                                                <strong>ORD.685179</strong>
+                                            <a href="/admin/order_detail?code={{ order.code_purchase }}">
+                                                <strong>{{ order.code_purchase }}</strong>
                                             </a>
                                         </td>
-                                        <td class="visible-lg">
-                                            <a href="javascript:void(0)">Harry Medina</a>
+                                        <td class="text-center visible-lg">
+                                            <a href="javascript:void(0)">{{ order.customer | title}}</a>
                                         </td>
                                         <td class="text-center visible-lg">
-                                            <a href="javascript:void(0)">3</a>
+                                            <a href="javascript:void(0)">{{ order.quantity }}</a>
                                         </td>
-                                        <td class="hidden-xs">Paypal</td>
+                                        <td class="text-center hidden-xs">{{ order.payment_method }}</td>
                                         <td class="text-right hidden-xs">
-                                            <strong>$684,00</strong>
+                                            <strong class="price">{{ order.total }}</strong>
                                         </td>
                                         <td>
+                                            {% if order.status_purchase == 'pending' %}
                                             <span class="label label-warning">Đang chờ xử lý</span>
+                                            {% endif %}
                                         </td>
-                                        <td class="hidden-xs text-center">05/07/2014</td>
+                                        <td class="hidden-xs text-center">{{ order.time_order[1] }}</td>
                                         <td class="text-center">
                                             <div class="btn-group btn-group-xs">
-                                                <a href="page_ecom_order_view.php" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="View">
+                                                <a href="/admin/order_detail?code={{ order.code_purchase }}" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                                <a href="javascript:void(0)" data-toggle="tooltip" title="" class="btn btn-xs btn-danger" data-original-title="Delete">
+                                                <!-- <a href="javascript:void(0)" data-toggle="tooltip" title="" class="btn btn-xs btn-danger" data-original-title="Delete">
                                                     <i class="fa fa-times"></i>
-                                                </a>
+                                                </a> -->
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr role="row" class="even">
+                                    {% endfor %}
+                                    <!-- <tr role="row" class="even">
                                         <td class="text-center"></td>
                                         <td class="text-center sorting_1">
                                             <a href="page_ecom_order_view.php">
@@ -347,7 +351,7 @@
                                                 </a>
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                 </tbody>
                             </table>
                             <div class="row">

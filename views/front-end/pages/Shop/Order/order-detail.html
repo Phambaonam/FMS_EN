@@ -1,433 +1,349 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đơn hàng của tôi</title>
-    <link rel="stylesheet" type="text/css" href="plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="owlcarousel/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/order-detail.css">
-    <link rel="stylesheet" type="text/css" href="css/wishlist-order_detail.css">
-    <link href="https://fonts.googleapis.com/css?family=Arsenal" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Cantata+One" rel="stylesheet">
-</head>
+<style>
+    .dashboard-order.have-margin {
+        margin-bottom: 0;
+    }
+
+    .dashboard-order {
+        font-size: 13px;
+        background: #fff;
+        border-radius: 4px;
+    }
+
+    .dashboard-order table tr {
+        padding: 10px;
+    }
+
+    .dashboard-order table.table-responsive-2 {
+        width: 100%;
+        color: #424242;
+        display: table;
+    }
+
+    .dashboard-order table.table-responsive-2 thead {
+        display: table-header-group;
+    }
+
+    .dashboard-order table.table-responsive-2 thead tr {
+        display: table-row;
+    }
+
+    .dashboard-order table.table-responsive-2 thead tr th:first-child {
+        border-left: none;
+    }
+
+    .dashboard-order table.table-responsive-2 thead tr th {
+        display: table-cell;
+        padding: 20px 15px;
+        border-top: none;
+        min-width: 100px;
+    }
+
+    .dashboard-order table.table-responsive-2 thead tr th {
+        position: relative;
+        background: 0 0;
+        color: #787878;
+        font-size: 15px;
+        font-weight: 400;
+        border-bottom: 1px #f4f4f4 solid;
+    }
+
+    .dashboard-order table.table-responsive-2 thead tr th:last-child {
+        text-align: right;
+        min-width: 160px;
+    }
+
+    .dashboard-order table th {
+        background: #f4f4f4;
+        border-width: 1px;
+        font-weight: 500;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody {
+        display: table-row-group;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody tr {
+        border-bottom: 1px #f4f4f4 solid;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody tr:first-child {
+        border-top: none;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody tr td:first-child {
+        border-top: none;
+        border-left: none;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody tr td:last-child {
+        text-align: right;
+        min-width: 160px;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody tr td {
+        border: none;
+        position: relative;
+        display: table-cell;
+        padding: 20px 15px;
+        color: #242424;
+        vertical-align: top;
+        min-width: 100px;
+    }
+
+    .dashboard-order table.table-responsive-2 tbody tr td .thumb {
+        width: 30%;
+        float: left;
+        margin-right: 5px;
+        margin-top: -40px;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot {
+        display: table-row-group;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot tr {
+        display: table-row;
+        border-top: none;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot tr td,
+    .dashboard-order table.table-responsive-2 tfoot tr td:first-child {
+        text-align: right;
+        border-top: none;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot tr:first-child td {
+        padding-top: 30px;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot tr td {
+        display: table-cell;
+        padding: 5px 20px;
+        max-width: 550px;
+        min-width: 125px;
+        color: #242424;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot tr td span {
+        color: #787878;
+        font-size: 14px;
+    }
+
+    .dashboard-order table.table-responsive-2 tfoot tr td span.sum {
+        color: #ff3b27;
+        font-size: 18px;
+    }
+
+    .dashboard-order #valid-canceled-order,
+    .dashboard-order #valid-canceled-order:hover {
+        background-color: #fdd835;
+        border-color: #fdd835;
+        color: #4a4a4a;
+        margin-bottom: 10px;
+    }
+
+    .product-info {
+        width: auto;
+        float: left;
+        margin-left: 21px;
+    }
+    .price::after {
+        content: ' ₫'
+    }
+</style>
+<!-- Head -->
+{% include '../../../components/head.html' %}
+<!-- End Head -->
+
+
 <body>
-<header>
-    <div class="header-form-container">
-        <div class="container">
-            <div class="form-search">
-                <button type="button" class="navbar-toggle" id="menu-scroll">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <form action="#" id="search_form">
-                    <div class="search-wrap">
-                        <input type="text" name="q" placeholder="Tìm sản phẩm, danh mục hay thương hiệu mong muốn ...">
-                        <button type="submit">
-                            <span>Tìm Kiếm</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="header-link">
-                <div class="user-profile ">
-                    <div class="before-log">
-                        <button data-toggle="modal" data-tabs="login" data-target=".user-modal" class="user">Đăng nhập
-                        </button>
-                        <button data-toggle="modal" data-tabs="signup" data-target=".user-modal" class="user">Đăng ký
-                        </button>
-                    </div>
-                    <div class="logged">
-                        <!-- <i class="fa fa-user-o"></i> -->
-                        <img src="img/feedback_1.jpg">
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                                Đỗ Hoàng Hiếu
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="user-account.html">Tài khoản của tôi</a></li>
-                                <li><a href="order.html">Đơn hàng của tôi</a></li>
-                                <li><a href="wishlist.html">Danh sách Yêu thích</a></li>
-                                <li><a href="home.html">Đăng xuất</a></li>
-                            </ul>
-                        </div>
+    <!-- Header -->
+    {% include '../../../components/header.html' %}
+    <div style="height:80px"></div>
+    <div class="container account-main">
+        <div class="row">
+            <nav class="side-nav">
+                <div class="user-top-wrap">
+                    <div class="user-top">
+                        <img src="/public/img/feedback_1.jpg">
+                        <span>{{ info.username }}</span>
                     </div>
                 </div>
-                <div id="header-cart">
-                    <div class="cart-box mycart">
-                        <a href="cart.html" class="header-cart item">
-                            <i class="fa fa-shopping-cart"></i>
-                            Giỏ Hàng
-                            <span class='cart-count total'>0</span>
-                        </a>
-                        <a href="wishlist.html" class="header-cart item">
-                            <i class="fa fa-heart-o"></i>
-                            Yêu Thích
-                            <span class='cart-count'>0</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="menu row">
-                <div class="collapse navbar-collapse" id="menu-collapse">
-                    <ul class="nav navbar-nav navbar-left">
-                        <li><a href="home.html">Trang chủ</a></li>
-                        <li><a href="shop.html">Sản phẩm</a></li>
-                        <li><a href="project.html">Dự án</a></li>
-                        <li><a href="colllection.html">Bộ sưu tập</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="event.html">Event</a></li>
-                        <li><a href="about.html">Về Min</a></li>
-                        <li><a href="blog.html">Blog</a></li>
-                        <li><a href="contact.html">Liên hệ</a></li>
-                    </ul>
-
-                </div>
-            </div>
-        </div>
-        <a class="logo" href="home.html"><img src="img/logo-min.png"></a>
-        <div id="search-form">
-            <form>
-                <input type="text" placeholder="Nhập từ khóa cần tìm">
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </form>
-        </div>
-    </nav>
-    <div class="modal fade user-modal" tabindex="-1">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li id="login-indicator" class="active">
-                        <a href="#login" role="tab" data-toggle="tab">Đăng nhập</a>
+                <ul class="nav nav-stacked">
+                    <li>
+                        <a href="/tai-khoan-cua-toi">Tài khoản của tôi</a>
                     </li>
-                    <li id="signup-indicator">
-                        <a href="#signup" role="tab" data-toggle="tab">Đăng ký</a>
+                    <li class="active">
+                        <a href="/don-hang-cua-toi">Quản lý đơn hàng</a>
+                    </li>
+                    <li>
+                        <a href="/so-dia-chi">Sổ địa chỉ</a>
+                    </li>
+                    <li>
+                        <a href="/yeu-thich">Sản phẩm yêu thích</a>
                     </li>
                 </ul>
-
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active fade in" id="login">
-                        <form>
-                            <div class="input-field">
-                                <input type="email" name="Email" id="email" placeholder="Email"/>
-                            </div>
-                            <div class="input-field">
-                                <input type="password" name="Password" id="password" placeholder="Mật khẩu"/>
-                            </div>
-                            <div class="input-field check-field">
-                                <input type="checkbox" id="remember" name="remember"/><label for="remember">Ghi nhớ tài
-                                khoản</label><br/>
-                            </div>
-                            <div class="input-field">
-                                <input id="login-btn" data-dismiss="modal" value="Đăng nhập"/>
-                            </div>
-                            <button data-toggle="modal" data-target="#reset-password" data-dismiss="modal"
-                                    class="btn btn-default"><i class="fa fa-question-circle-o"></i> Quên mật khẩu?
-                            </button>
-                        </form>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade" id="signup">
-                        <form>
-                            <div class="input-field">
-                                <input type="email" name="Email" id="email" placeholder="Email"/>
-                            </div>
-                            <div class="input-field">
-                                <input type="password" name="Password" id="password" placeholder="Mật khẩu"/>
-                            </div>
-                            <div class="input-field check-field">
-                                <input type="checkbox" id="remember" name="remember"/><label for="remember">Hiển thị mật
-                                khẩu</label><br/>
-                            </div>
-                            <div class="input-field">
-                                <input type="text" name="Name" id="name" placeholder="Họ tên"/>
-                            </div>
-                            <div class="input-field">
-                                <input type="text" name="Phone" id="phone" placeholder="Số điện thoại"/>
-                            </div>
-                            <div class="input-field">
-                                <input id="signup-btn" type="submit" value="Đăng ký"/>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-<div style="height:80px"></div>
-<div class="container account-main">
-    <div class="row">
-        <nav class="side-nav">
-            <div class="user-top-wrap">
-                <div class="user-top">
-                    <img src="img/feedback_1.jpg">
-                    <span>Đỗ Hoàng Hiếu</span>
-                </div>
-            </div>
-            <ul class="nav nav-stacked">
-                <li><a href="user-account.html">Tài khoản của tôi</a></li>
-                <li class="active"><a href="order.html">Quản lý đơn hàng</a></li>
-                <li><a href="wishlist.html">Danh sách yêu thích</a></li>
-            </ul>
-        </nav>
-        <div class="tab-content">
-            <h3>Chi tiết đơn hàng #09052017 - <strong>Giao hàng thành công</strong></h3>
-            <div class="account-order-detail">
-                <div class="note">
-                    <h3>Thông báo</h3>
-                    <div class="ct">
-                        <div class="ct-row">
-                            <div class="ct-left">13:26 28/02/2017</div>
-                            <div class="ct-right">Chúng tôi vừa bàn giao đơn hàng của quý khách đến đối tác vận chuyển
-                                Tiki Team. Dự kiến giao hàng vào Thứ năm, 02/03/2017 -&gt; Thứ sáu, 03/03/2017
+            </nav>
+            <div class="tab-content">
+                <h3>Chi tiết đơn hàng #{{ order.code_purchase }} -
+                    {% if order.status_purchase | trim == 'pending' %}
+                        <strong>Đặt hàng thành công</strong>
+                    {% endif %}
+                </h3>
+                <div class="account-order-detail">
+                    <div class="note">
+                        <h3>Thông báo</h3>
+                        <div class="ct">
+                            <div class="ct-row">
+                                <div class="ct-left">{{ order.time_order }}</div>
+                                <div class="ct-right">Chúng tôi vừa bàn giao đơn hàng của quý khách đến đối tác vận chuyển Min.
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!--<div class="other-1"></div>-->
                 </div>
-                <!--<div class="other-1"></div>-->
-            </div>
-            <div class="row">
-                <div class="header-account-order-detail">
-                    <div class="col-md-4">
-                        <h3>Địa chỉ người nhận </h3>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>Phương thức vận chuyển</h3>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>Phương thức thanh toán</h3>
-                    </div>
-                </div>
-            </div>
-            <div style="height: 150px;background: #fff;border: 1px solid #E7E7E7;">
-                <div class="address-1">
-                    <div>
-                        <p class="name">Phạm Bảo Nam</p>
-                        <p><span>Địa chỉ: </span>Số 14, ngõ 4, Nguyễn Đình Chiểu, Phường Lê Đại Hành, Quận Hai Bà Trưng,
-                            Hà
-                            Nội, Việt Nam</p>
-                        <p><span>Điện thoại:</span> 01638609594</p>
+                <div class="row">
+                    <div class="header-account-order-detail">
+                        <div class="col-md-4">
+                            <h3>Địa chỉ người nhận </h3>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>Phương thức vận chuyển</h3>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>Phương thức thanh toán</h3>
+                        </div>
                     </div>
                 </div>
-                <div class="payment-1">
-                    <div>
-                        <p>Vận chuyển Tiết Kiệm (dự kiến giao hàng vào Thứ năm, 02/03/2017 - Thứ sáu, 03/03/2017)</p>
-                        <p>Phí vận chuyển: 17.000&nbsp;₫</p>
+                <div style="height: 150px;background: #fff;border: 1px solid #E7E7E7;">
+                    <div class="address-1">
+                        <div>
+                            <p class="name">{{ order.name_receiver | title }}</p>
+                            <p>
+                                <span>Địa chỉ: </span>{{ order.address_receiver }}, Việt Nam</p>
+                            <p>
+                                <span>Điện thoại:</span> {{ order.phone_receiver }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="payment-2 has-padding">
-                    <div>
-                        <p>Thanh toán tiền mặt khi nhận hàng</p>
+                    <div class="payment-1">
+                        <div>
+                            <p>
+                                {% if order.transport_method | trim == 'Giao hàng tiêu chuẩn' %}
+                                 Vận chuyển Tiết Kiệm
+                                {% endif %}
+                            </p>
+                            <p>Phí vận chuyển: 
+                                {% if order.fee == 0 %}
+                                     Miễn phí vận chuyển
+                                {% else %}
+                                    <span class="price">{{ order.fee }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
+                    <div class="payment-2 has-padding">
+                        <div>
+                            <p>{{ order.payment_method }}</p>
+                        </div>
 
+                    </div>
+                    <div class="other-1"></div>
                 </div>
-                <div class="other-1"></div>
-            </div>
-            <div style="margin-top: 40px;"></div>
-            <div>
-                <div class="cart-container wishlist-container">
-                    <table class="cart">
+                <div style="margin-top: 40px;"></div>
+                <div class="dashboard-order have-margin">
+                    <table class="table-responsive-2">
                         <thead>
-                        <tr>
-                            <th class="product-thumbnail">Sản phẩm</th>
-                            <th class="product-price"><span class="hidden-xs">Giá</span></th>
-                            <th class="product-status"><span class="hidden-xs">Số lượng</span></th>
-                            <th class="product-action">Giảm giá</th>
-                            <th class="product-total">Tạm tính</th>
-                        </tr>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Giảm giá</th>
+                                <th>Tạm tính</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr class="cart-item">
-                            <td class="product-thumbnail">
-                                <img src="img/riflesso_1.jpg">
-                                <div class="product-name">
-                                    <a class="name-detail" href="shop-detail.html">Tủ Riflesso</a>
-                                    <p class="ncc">by <a href="#">N</a></p>
-                                    <div class="clear-fix">
-                                        <a href="review-product.html" class="btn">Viết nhận xét</a>
+                            {% for item in products %}
+                            <tr>
+                                <td>
+                                    <div class="thumb">
+                                        <a href="/san-pham/chi-tiet-san-pham/{{ item.product.product_alias}}-{{item.product.product_id}}">
+                                            <img class="img-responsive" src="/public/images/products/{{ item.product.images['0'] }}" width="130" height="182" alt="sample text">
+                                        </a>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="product-price">
-                                4400000
-                            </td>
-                            <td class="product-status">
-                                1
-                            </td>
-                            <td class="product-action">
-                                0
-                            </td>
-                            <td class="product-total-price">
-                                4400000
-                            </td>
-                        </tr>
-                        <tr class="cart-item">
-                            <td class="product-thumbnail">
-                                <img src="img/rotonda_1.jpg" alt="">
-                                <div class="product-name">
-                                    <a class="name-detail" href="shop-detail.html">Bàn La Rotonda </a>
-                                    <p class="ncc">by <a href="#">D</a></p>
-                                    <div class="clear-fix">
-                                        <a href="review-product.html" class="btn">Viết nhận xét</a>
+
+                                    <div class="product-info">
+                                        <a class="" href="/san-pham/chi-tiet-san-pham/{{ item.product.product_alias}}-{{item.product.product_id}}">
+                                            {{ item.product.product_name }}
+                                        </a>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="product-price">
-                                3200000
-                            </td>
-                            <td class="product-status">
-                                1
-                            </td>
-                            <td class="product-action">
-                                0
-                            </td>
-                            <td class="product-total-price">
-                                3200000
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="price">{{ item.product_price }}</td>
+                                <td>
+                                    {{ item.quantity }}
+                                </td>
+                                <td>0&nbsp;₫</td>
+
+                                <td class="price">{{ item.product_price * item.quantity }}</td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
+                        <tfoot>
+                            <!--Total Summary List-->
+                            <tr>
+                                <td colspan="4">
+                                    <span>Tổng tạm tính</span>
+                                </td>
+                                <td class="total1 price">{{ total }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <span>Phí vận chuyển</span>
+                                </td>
+                                <td class="fee price">{{ order.fee }}</td>
+                            </tr>
+
+                            <!--Final Total-->
+                            <tr>
+                                <td colspan="4">
+                                    <span>Tổng cộng</span>
+                                </td>
+                                <td>
+                                    <span class="sum price"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"></td>
+                                <td>
+                                    <a id="valid-canceled-order" title="Hủy đơn hàng" class="btn btn-info payment_method_cod ">Hủy đơn hàng</a>
+
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
+                <a href="/don-hang-cua-toi" class="btn btn-info btn-back order-back"> Quay lại đơn hàng của tôi</a>
             </div>
-            <a href="order.html" class="btn btn-info btn-back order-back"> Quay lại đơn hàng của tôi</a>
         </div>
     </div>
-</div>
-<a href="#"><i class="fa fa-angle-up back-top"></i></a>
-<footer>
-    <div class="container">
-        <div class="row footer-top">
-            <div class="col-xs-6 col-md-3 footer-item">
-                <h4>Thông tin liên hệ</h4>
-                <ul>
-                    <li><i class="fa fa-map-marker"></i>Đ/c: 40 Giảng Võ, Đống Đa, Hà Nội</li>
-                    <li><i class="fa fa-mobile"></i>Hotline: 0986090925</li>
-                    <li><i class="fa fa-envelope-o"></i>Email: hieu.do212@gmail.com</li>
-                </ul>
-            </div>
-            <div class="col-xs-6 col-md-3 footer-item">
-                <h4>Thời gian mở cửa</h4>
-                <ul>
-                    <li>Thứ 2 - thứ 6: 8AM - 10PM</li>
-                    <li>Thứ 7: 9AM - 8PM</li>
-                    <li>Nghỉ Chủ Nhật và các ngày Lễ Tết</li>
-                </ul>
-            </div>
-            <div class="col-xs-6 col-md-3 footer-item">
-                <h4>Hỗ trợ khách hàng</h4>
-                <ul>
-                    <li><a href="contact.html">Liên hệ & Góp ý</a></li>
-                    <li><a href="#">Hướng dẫn mua hàng online</a></li>
-                    <li><a href="#">Câu hỏi thường gặp</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                </ul>
-            </div>
-            <div class="col-xs-6 col-md-3 footer-item">
-                <h4>Chính sách mua hàng</h4>
-                <ul>
-                    <li><a href="#">Chính sách bảo hành, đổi trả</a></li>
-                    <li><a href="#">Chính sách hội viên</a></li>
-                    <li><a href="#">Giao hàng và lắp đặt</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="row footer-bot">
-            <a href="#" title="Kết nối qua Facebook"><i class="fa fa-facebook-official"></i></a>
-            <a href="#" title="Kết nối qua Google+"><i class="fa fa-google-plus-official"></i></a>
-            <a href="#" title="Kết nối qua Pinterest"><i class="fa fa-pinterest"></i></a>
-            <a href="#" title="Kết nối qua Instagram"><i class="fa fa-instagram"></i></a>
-        </div>
-    </div>
-    <div class="container-fluid copyright">
-        <div class="row">
-            <p>Copyright 2017 <i class="fa fa-copyright"></i> Designed by Hieudo</p>
-        </div>
-    </div>
-</footer>
-<script type="text/javascript" src="js/jquery-3.1.1.js"></script>
-<script src="owlcarousel/owl.carousel.min.js"></script>
-<script type="text/javascript" src="plugins/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
-<script type="text/javascript">
-    var sum = 0;
-    $(".buy").click(function () {
-        $(this).each(function () {
-            sum += 1
-        })
-        $('.total').text(sum)
-    })
-</script>
-<script type="text/javascript">
+    <!-- Footer -->
+    {% include '../../../components/footer.html' %}
+    <!-- End Footer -->
 
-    $(window).bind('scroll', function () {
-        if ($(window).scrollTop() > 151) {
-            console.log(123);
-            $('header').addClass('fixed')
-            $('button#menu-scroll.navbar-toggle').css('display', 'block')
-            $('header').css('height', '71px')
-        } else {
-            $('header').removeClass('fixed')
-            $('button#menu-scroll.navbar-toggle').css('display', 'none')
-            $('header').css('height', '151px')
-        }
-    });
-    var click = 'onclicked'
-    var temp = 1
-    $(".form-search button").click(function () {
-        /********************
-         * Using if*/
-        if (click === 'onclicked') {
-            $('header').css('height', '151px');
-            $('header .navbar').css('display', 'flex');
-            console.log(click);
-            click = 'clicked again'
-        } else if (click === 'clicked again') {
-            $('header').css('height', '71px');
-            $('header .navbar').css('display', 'none');
-            console.log(click);
-            click = 'onclicked';
-        }
-        /*******************/
+    <!-- script -->
+    {% include '../../../components/script.html' %}
+    <!-- End script -->
+    <!-- get sum order -->
+    <script type="text/javascript">
+        $('.sum').text(parseInt($('.total1').text()) + parseInt($('.fee').text())) 
+    </script>
 
-        /*******************
-         * Using switch ... case
-         switch (temp) {
-            case (1): {
-                $('header').css('height', '151px')
-                $('header .navbar').css('display', 'flex')
-                console.log(temp)
-                temp++
-            }
-                break
-            case(2): {
-                $('header').css('height', '71px')
-                $('header .navbar').css('display', 'none')
-                console.log(temp)
-                temp--
-            }
-                break
-            default:
+    <!-- convert to vnd -->
+    <script type="text/javascript">
+        var price_product = $('.price')
+        for (var i = 0; i < price_product.length; i++) {
+            price_product[i].innerText = parseInt(price_product[i].innerText).toLocaleString('vi')
         }
-         /*******************/
-        $(window).bind('scroll', function () {
-            if (click === 'onclicked' && $(window).scrollTop() < 152) {
-//                console.log(3);
-                $('header .navbar').css('display', 'flex');
-            } else if (click === 'onclicked' && $(window).scrollTop() > 151) {
-//                console.log(4);
-                $('header .navbar').css('display', 'none');
-            }
-        })
-    });
-</script>
-</body>
-</html>
+    </script>

@@ -1,13 +1,13 @@
 /**
  * Created by doremonsun on 8/6/17.
  */
-module.exports.routerFrontEnd = function (db, router, frontendPath) {
+module.exports = function (db, router, frontendPath) {
     /***
      * All router of front end pages
      */
-    const home = require('./home/home').homePage
-    const shop = require('./shop/shop').shopPage
-    const user = require('./user/user').userInfo
+    const homeRouter = require('./home/home').homePage
+    const shopRouter = require('./shop/shop').shopPage
+    const userRouter = require('./user/user').userInfo
 
     class FrontEnd {
         constructor(_db, _router,_frontendPath) {
@@ -16,20 +16,20 @@ module.exports.routerFrontEnd = function (db, router, frontendPath) {
             this.frontendPath = _frontendPath
         }
 
-        home () {
-            home(this.db, this.router, this.frontendPath)
+        getHome () {
+            homeRouter(this.db, this.router, this.frontendPath)
         }
 
-        shop () {
-            shop(this.db, this.router, this.frontendPath)
+        getShop () {
+            shopRouter(this.db, this.router, this.frontendPath)
         }
 
-        user () {
-            user(this.db, this.router, this.frontendPath)
+        getUser () {
+            userRouter(this.db, this.router, this.frontendPath)
         }
     }
     const routerMain = new FrontEnd(db, router, frontendPath)
-    routerMain.home()
-    routerMain.shop()
-    routerMain.user()
+    routerMain.getHome()
+    routerMain.getShop()
+    routerMain.getUser()
 }

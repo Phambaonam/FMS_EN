@@ -298,7 +298,7 @@
                                         Việt Nam </p>
                                     <p class="phone">Điện thoại: {{ address.address.telephone }}</p>
                                     <p class="action">
-                                        <a href="/thanh-toan?id={{ address.id }}" type="button" class="btn btn-default btn-custom1 saving-address is-blue">
+                                        <a href="/thanh-toan?address_id={{ address.id }}" type="button" class="btn btn-default btn-custom1 saving-address is-blue">
                                             Giao đến địa chỉ này
                                         </a>
                                         <button type="button" class="btn btn-default btn-custom1 edit-address {{ address.id }}" id="{{ address.id }}">Sửa</button>
@@ -319,7 +319,7 @@
                                         Việt Nam </p>
                                     <p class="phone">Điện thoại: {{ address.address.telephone }}</p>
                                     <p class="action">
-                                        <a href="/thanh-toan?id={{ address.id }}" type="button" class="btn btn-default btn-custom1 saving-address is-black" data-id="2863249">
+                                        <a href="/thanh-toan?address_id={{ address.id }}" type="button" class="btn btn-default btn-custom1 saving-address is-black" data-id="2863249">
                                             Giao đến địa chỉ này
                                         </a>
                                         <button type="button" class="btn btn-default btn-custom1 edit-address {{ address.id }}" id="{{ address.id }}">Sửa</button>
@@ -610,3 +610,4 @@
             }
         })
     </script>
+    <!--  -->

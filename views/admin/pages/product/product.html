@@ -191,11 +191,12 @@
 {% include '../../components/footer.html' %}
 
 {% include '../../components/script.html' %}
+<!-- convert to vnd -->
 <script type="text/javascript" >
     var products = $('.price')
-        for (var i = 0; i < products.length; i++) {
-            products[i].innerText = parseInt(products[i].innerText).toLocaleString('vi')
-        }   
+    for (var i = 0; i < products.length; i++) {
+        products[i].innerText = parseInt(products[i].innerText).toLocaleString('vi')
+    }   
 </script>
 </body>
 </html>

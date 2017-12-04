@@ -205,7 +205,7 @@
 		border: 1px solid red;
 		position: relative;
 	}
- 
+
 	.payment-sub .bank>li.active:hover {
 		border: 1px solid red;
 	}
@@ -286,7 +286,7 @@
 	</div>
 	<div class="container payment-main">
 		<div class="row">
-			<form method="post" action="/checkout/payment">
+			<form method="post" id="shipping">
 				<div class="col-xs-12 col-md-8">
 					<h2>1.Hình thức giao hàng</h2>
 					<div class="plan-shipping">
@@ -299,10 +299,12 @@
 
 					<h2>2.Chọn hình thức thanh toán</h2>
 					<div class="payment-method">
-						<input type="radio" name="payment-method" value="1" id="cod" checked> Thanh toán tiền mặt khi nhận hàng
+						{% for item in payment_methods %}
+						<input type="radio" name="payment-method" value="{{ item.id }}" id="{{ item.alias }}"> {{ item.name }}
 						<br>
-						<input type="radio" name="payment-method" value="2" id="atm"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)
-						<br>
+						{% endfor %}
+						<!-- <input type="radio" name="payment-method" value="2" id="atm"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)
+						<br> -->
 						<div class="form-group row row-style-3 js-payment-sub" style="display: none;">
 							<div class="panel panel-default payment-sub is-small js-atm-list">
 								<div class="panel-body">
@@ -509,20 +511,26 @@
 
 								<p class="list-info-price cart-subtotal">
 									<b>Tạm tính: </b>
-									<span>403.50</span>
+									<span></span>
 								</p>
 								<p class="list-info-price">
 									<b>Giảm giá: </b>
 									<span>0</span>
 								</p>
+
+
 								<p class="list-info-price">
 									<b>Phí vận chuyển: </b>
-									<span>0</span>
+									{% for item in fee %}
+									<span class="fee-transport" id="{{ item.id }}" style="display: none">{{ item.fee }}</span>
+									{% endfor %}
 								</p>
+
+
 
 								<p class="total2">
 									Thành tiền:
-									<span>376.088</span>
+									<span></span>
 								</p>
 								<p class="text-right">
 									<i>(Đã bao gồm VAT)</i>
@@ -557,6 +565,25 @@
 	}
 	$('.cart-subtotal span').text(count.toLocaleString('vi'))
 	$('.total2 span').text(count.toLocaleString('vi'))
+</script>
+
+<!-- fee transport -->
+<script>
+	var total = parseInt($('.total2 span').text().replace(/[.]/g, ''))
+	var fee = $('.fee-transport')
+	for (var i = 0; i < fee.length; i++) {
+		fee[i].innerText = parseInt(fee[i].innerText).toLocaleString('vi')
+		if (total >= 1000000 && fee[i].id === '2') {
+			$('#' + fee[i].id).css('display', 'block')
+			total += parseInt(fee[i].innerText.replace(/[.]/g, ''))
+			document.getElementById('shipping').action = '/checkout/payment?fee_transport=' + fee[i].id
+		} else if (total < 1000000 && fee[i].id === '1') {
+			$('#' + fee[i].id).css('display', 'block')
+			total += parseInt(fee[i].innerText.replace(/[.]/g, ''))
+			document.getElementById('shipping').action = '/checkout/payment?fee_transport=' + fee[i].id
+		}
+	}
+	$('.total2 span').text(total.toLocaleString('vi'))
 </script>
 
 <!-- chọn ngân hàng thanh toán -->

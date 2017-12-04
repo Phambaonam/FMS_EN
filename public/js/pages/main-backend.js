@@ -22,7 +22,14 @@ $('#order').click(function () {
 $('#user').click(function () {
     // $(this).addClass('active')
     $('.user').slideToggle("fast");
-
+});
+$('#cart').click(function () {
+    // $(this).addClass('active')
+    $('.cart').slideToggle("fast");
+});
+$('#transport').click(function () {
+    // $(this).addClass('active')
+    $('.transport').slideToggle("fast");
 });
 /***
  * Function show calendar, use datetimepicker

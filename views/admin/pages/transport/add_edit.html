@@ -1,0 +1,254 @@
+<!DOCTYPE html> {% include '../../components/head.html' %}
+
+<body>
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+        <!-- Page Container -->
+        <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+            <!-- Main Sidebar -->
+            <div id="sidebar">
+                <!-- Wrapper for scrolling functionality -->
+                <div id="sidebar-scroll">
+                    <!-- Sidebar Content -->
+                    <div class="sidebar-content">
+                        <!-- Brand -->
+                        <a href="/admin/dashboard" class="sidebar-brand">
+                            <i class="gi gi-home"></i>
+                            <span class="sidebar-nav-mini-hide">
+                                <strong>FMS</strong>
+                            </span>
+                        </a>
+                        <!-- END Brand -->
+
+                        <!-- User Info -->
+                        {% include '../../components/userInfo.html' %}
+                        <!-- END User Info -->
+
+                        <!-- Sidebar Navigation -->
+                        <ul class="sidebar-nav">
+                            <li class="active">
+                                <a href="/admin/dashboard">
+                                    <i class="gi gi-stopwatch sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="category">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-address_book sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quán Lý Danh Mục</span>
+                                </a>
+                                <ul class="category">
+                                    <li>
+                                        <a href="/admin/category/area">
+                                            Danh Mục Khu Vực
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category">
+                                            Danh Mục
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category_product">
+                                            Danh Mục Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="product">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-shop sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Sản Phẩm</span>
+                                </a>
+                                <ul class="product">
+
+                                    <li>
+                                        <a href="/admin/product">
+                                            Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="order">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-money sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Đơn Hàng</span>
+                                </a>
+                                <ul class="order">
+                                    <li>
+                                        <a href="/admin/order">Đơn hàng</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="user">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-group sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Người Dùng</span>
+                                </a>
+                                <ul class="user">
+                                    <li>
+                                        <a href="/admin/users">Người dùng</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="cart">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="fa fa-credit-card-alt sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Thanh Toán</span>
+                                </a>
+                                <ul class="cart">
+                                    <li>
+                                        <a href="/admin/payment_method">Hình Thức Thanh Toán</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li  class="active">
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="transport">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="fa fa-truck sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Vận Chuyển</span>
+                                </a>
+                                <ul class="transport">
+                                    <!-- <li>
+                                    <a href="/admin/transport_method">Hình Thức Vận Chuyển</a>
+                                </li> -->
+                                    <li class="active">
+                                        <a href="/admin/fee_transport">Phí Vận Chuyển</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- END Sidebar Navigation -->
+
+                    </div>
+                    <!-- END Sidebar Content -->
+                </div>
+                <!-- END Wrapper for scrolling functionality -->
+            </div>
+            <!-- END Main Sidebar -->
+
+            <!-- Main Container -->
+            <div id="main-container">
+                <!-- Header -->
+                {% include '../../components/header.html' %}
+                <!-- END Header -->
+
+                <!-- Page content -->
+                <div id="page-content">
+                    <div class="page-content-edit">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="tabcordion">
+                                    <ul id="myTab" class="nav nav-tabs">
+                                        <li class="active">
+                                            <a href="javascript:void(0)product_general" data-toggle="tab">General</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="javascript:void(0)product_reviews" data-toggle="tab">Xem Trước</a>
+                                        </li>
+                                    </ul>
+                                    <div id="myTabContent" class="tab-content">
+                                        <div class="tab-pane fade active in" id="product_general">
+                                            <div class="row">
+                                                <div class="edit">
+                                                    <div class="col-md-4">
+                                                        <label class="control-label">Giá Trị Đơn Hàng</label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="control-label">Phí Vận Chuyển</label>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label class="control-label">Ngày Tạo</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <form action="/admin/fee_transport" id="form1" class="form-horizontal" method="post">
+                                                    <div class="input">
+                                                        <div class="col-md-4">
+                                                            <input class="form-control" type="text" name="total_purchase" required/>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <input class="form-control" type="text" name="fee" required/>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class='input-group date' id='datetimepicker1'>
+                                                                <input type='text' class="form-control" name="time_create" required/>
+                                                                <span class="input-group-addon">
+                                                                    <span class="fa fa-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group save">
+                                                        <div class="col-md-4"></div>
+                                                        <div class="col-md-1"></div>
+                                                        <div class="col-md-3">
+                                                            <a href="/admin/fee_transport" class="btn btn-danger m-r-10 m-t-10">
+                                                                <i class="fa fa-times"></i> Hủy Bỏ</a>
+                                                            <button class="btn btn-success m-t-10" type="submit">
+                                                                <i class="fa fa-check"></i> Lưu Thông Tin</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="product_reviews">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="block full">
+                                                        <!-- All Products Content -->
+                                                        <table id="ecom-products" class="table table-bordered table-striped table-vcenter">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-center" style="width: 70px;">ID</th>
+                                                                    <th>Tên Khu Vực</th>
+                                                                    <th class="hidden-xs text-center">Ngày Tạo</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <a href="javascript:void(0)">
+                                                                            <strong></strong>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="javascript:void(0)">Phòng khách</a>
+                                                                    </td>
+                                                                    <td class="hidden-xs text-center">17/01/2014</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- END All Products Content -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END Page Content -->
+            </div>
+            <!-- END Main Container -->
+        </div>
+        <!-- END Page Container -->
+    </div>
+    <!-- END Page Wrapper -->
+
+    {% include '../../components/footer.html' %} 
+    {% include '../../components/script.html' %}
+</body>
+
+</html>

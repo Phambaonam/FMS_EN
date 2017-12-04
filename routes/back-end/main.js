@@ -1,7 +1,7 @@
 /**
  * Created by doremonsun on 8/6/17.
  */
-module.exports.routerAdmin = function (db, router, backendPath, upload) {
+module.exports = function (db, router, backendPath, upload) {
     const areaRouter = require('./categories/area')
     const categoryRouter = require('./categories/category')
     const categoryProductRouter = require('./categories/category_product')
@@ -9,6 +9,9 @@ module.exports.routerAdmin = function (db, router, backendPath, upload) {
     const userRouter = require('./users/user')
     const dashboardRouter = require('./dashboard')
     const orderRouter = require('./orders/order')
+    const paymentMethodRouter = require('./payment-method/payment_method')
+    const transportRouter = require('./transport/transport')
+
     class BackEnd {
         constructor (_db, _router, _backendPath,_upload) {
             this.db = _db
@@ -44,6 +47,14 @@ module.exports.routerAdmin = function (db, router, backendPath, upload) {
         getOrder () {
             orderRouter(this.router, this.backendPath, this.db)
         }
+
+        getPaymentMethod () {
+            paymentMethodRouter(this.router, this.backendPath, this.db)
+        }
+
+        getTransport () {
+            transportRouter(this.router, this.backendPath, this.db)
+        }
     }
     const routerMain = new BackEnd(db, router, backendPath, upload)
     routerMain.getDashboard()
@@ -53,4 +64,6 @@ module.exports.routerAdmin = function (db, router, backendPath, upload) {
     routerMain.getProduct()
     routerMain.getUser()
     routerMain.getOrder()
+    routerMain.getPaymentMethod()
+    routerMain.getTransport()
 }

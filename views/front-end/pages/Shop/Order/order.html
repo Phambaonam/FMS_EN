@@ -3,7 +3,11 @@
 <!-- Head -->
 {% include '../../../components/head.html' %}
 <!-- End Head -->
-
+<style>
+.price::after {
+    content: ' ₫';
+}
+</style>
 <body>
     <!-- Header -->
     {% include '../../../components/header.html' %}
@@ -66,22 +70,30 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for order in orders %}
                                 <tr class="order-item">
                                     <td class="order-no">
-                                        <a href="order-detail.html">09052017</a>
+                                        <a href="/order_detail?code={{ order.code_purchase }}">{{ order.code_purchase }}</a>
                                     </td>
                                     <td class="order-date">
-                                        09/05/2017
+                                        {{ order.time_order[1] }}
                                     </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR IGNATURE CHAIR IGNATURE CHAIR IGNATURE CHAIR </td>
-                                    <td class="order-sum">
-                                        4.400.000₫
+                                    {% if order.product.length === 1 %}
+                                        <td class="order-item-name">{{ order.product[0] }}</td>
+                                    {% else %}
+                                        <td class="order-item-name">{{ order.product[0] }}... và {{ order.product.length - 1 }} sản phẩm khác</td>    
+                                    {% endif %}
+                                    <td class="order-sum price">
+                                       {{ order.total }}
                                     </td>
-                                    <td class="order-status out-stock">
-                                        Chờ xử lý
-                                    </td>
+                                    {% if order.status_purchase === 'pending' %}
+                                        <td class="order-status out-stock">
+                                            Chờ xử lý
+                                        </td>
+                                    {% endif %}
                                 </tr>
-                                <tr class="order-item">
+                                {% endfor %}
+                                <!-- <tr class="order-item">
                                     <td class="order-no">
                                         <a href="order-detail.html">03052017</a>
                                     </td>
@@ -113,81 +125,6 @@
                                 </tr>
                                 <tr class="order-item">
                                     <td class="order-no">
-                                        <a href="order-detail.html">01042017</a>
-                                    </td>
-                                    <td class="order-date">
-                                        01/04/2017
-                                    </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR</td>
-                                    <td class="order-sum">
-                                        10.900.000₫
-                                    </td>
-                                    <td class="order-status order-closed">
-                                        Đã đóng
-                                    </td>
-                                </tr>
-                                <tr class="order-item">
-                                    <td class="order-no">
-                                        <a href="order-detail.html">02032017</a>
-                                    </td>
-                                    <td class="order-date">
-                                        02/03/2017
-                                    </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR</td>
-                                    <td class="order-sum">
-                                        9.400.000₫
-                                    </td>
-                                    <td class="order-status order-canceled">
-                                        Đã hủy
-                                    </td>
-                                </tr>
-                                <tr class="order-item">
-                                    <td class="order-no">
-                                        <a href="order-detail.html">14022017</a>
-                                    </td>
-                                    <td class="order-date">
-                                        14/02/2017
-                                    </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR</td>
-                                    <td class="order-sum">
-                                        14.200.000₫
-                                    </td>
-                                    <td class="order-status order-closed">
-                                        Đã đóng
-                                    </td>
-                                </tr>
-                                <tr class="order-item">
-                                    <td class="order-no">
-                                        <a href="order-detail.html">01012017</a>
-                                    </td>
-                                    <td class="order-date">
-                                        01/01/2017
-                                    </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR</td>
-                                    <td class="order-sum">
-                                        11.000.000₫
-                                    </td>
-                                    <td class="order-status order-closed">
-                                        Đã đóng
-                                    </td>
-                                </tr>
-                                <tr class="order-item">
-                                    <td class="order-no">
-                                        <a href="order-detail.html">02122016</a>
-                                    </td>
-                                    <td class="order-date">
-                                        02/12/2016
-                                    </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR</td>
-                                    <td class="order-sum">
-                                        12.200.000₫
-                                    </td>
-                                    <td class="order-status order-closed">
-                                        Đã đóng
-                                    </td>
-                                </tr>
-                                <tr class="order-item">
-                                    <td class="order-no">
                                         <a href="order-detail.html">11112016</a>
                                     </td>
                                     <td class="order-date">
@@ -200,22 +137,7 @@
                                     <td class="order-status order-canceled">
                                         Đã hủy
                                     </td>
-                                </tr>
-                                <tr class="order-item">
-                                    <td class="order-no">
-                                        <a href="order-detail.html">29092016</a>
-                                    </td>
-                                    <td class="order-date">
-                                        29/09/2016
-                                    </td>
-                                    <td class="order-item-name">SIGNATURE CHAIR</td>
-                                    <td class="order-sum">
-                                        9.900.000₫
-                                    </td>
-                                    <td class="order-status order-closed">
-                                        Đã đóng
-                                    </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -316,6 +238,13 @@
                 }
             })
         });
+    </script>
+    <!-- convert to vnd -->
+    <script type="text/javascript">
+        var products = $('.price')
+        for (var i = 0; i < products.length; i++) {
+            products[i].innerText = parseInt(products[i].innerText).toLocaleString('vi')
+        }   
     </script>
 </body>
 

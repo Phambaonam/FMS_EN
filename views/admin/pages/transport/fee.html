@@ -1,0 +1,234 @@
+<!DOCTYPE html> 
+{% include '../../components/head.html' %}
+<style>
+    .price::after {
+        content: ' ₫';
+    }
+</style>
+<body>
+    <!-- Page Wrapper -->
+    <div id="page-wrapper">
+        <!-- Page Container -->
+        <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+            <!-- Main Sidebar -->
+            <div id="sidebar">
+                <!-- Wrapper for scrolling functionality -->
+                <div id="sidebar-scroll">
+                    <!-- Sidebar Content -->
+                    <div class="sidebar-content">
+                        <!-- Brand -->
+                        <a href="/admin/dashboard" class="sidebar-brand">
+                            <i class="gi gi-home"></i>
+                            <span class="sidebar-nav-mini-hide">
+                                <strong>FMS</strong>
+                            </span>
+                        </a>
+                        <!-- END Brand -->
+
+                        <!-- User Info -->
+                        {% include '../../components/userInfo.html' %}
+                        <!-- END User Info -->
+
+                        <!-- Sidebar Navigation -->
+                        <ul class="sidebar-nav">
+                            <li class="active">
+                                <a href="/admin/dashboard">
+                                    <i class="gi gi-stopwatch sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="category">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-address_book sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quán Lý Danh Mục</span>
+                                </a>
+                                <ul class="category">
+                                    <li>
+                                        <a href="/admin/category/area">
+                                            Danh Mục Khu Vực
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category">
+                                            Danh Mục
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/category/category_product">
+                                            Danh Mục Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="product">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-shop sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Sản Phẩm</span>
+                                </a>
+                                <ul class="product">
+
+                                    <li>
+                                        <a href="/admin/product">
+                                            Sản Phẩm
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="order">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-money sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Đơn Hàng</span>
+                                </a>
+                                <ul class="order">
+                                    <li>
+                                        <a href="/admin/order">Đơn hàng</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="user">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="gi gi-group sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Người Dùng</span>
+                                </a>
+                                <ul class="user">
+                                    <li>
+                                        <a href="/admin/users">Người dùng</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="cart">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="fa fa-credit-card-alt sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Thanh Toán</span>
+                                </a>
+                                <ul class="cart">
+                                    <li>
+                                        <a href="/admin/payment_method">Hình Thức Thanh Toán</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="active">
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="transport">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="fa fa-truck sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Vận Chuyển</span>
+                                </a>
+                                <ul class="transport">
+                                    <!-- <li>
+                                        <a href="/admin/transport_method">Hình Thức Vận Chuyển</a>
+                                    </li> -->
+                                    <li class="active">
+                                        <a href="/admin/fee_transport">Phí Vận Chuyển</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- END Sidebar Navigation -->
+
+                    </div>
+                    <!-- END Sidebar Content -->
+                </div>
+                <!-- END Wrapper for scrolling functionality -->
+            </div>
+            <!-- END Main Sidebar -->
+
+            <!-- Main Container -->
+            <div id="main-container">
+                <!-- Header -->
+                {% include '../../components/header.html' %}
+                <!-- END Header -->
+
+                <!-- Page content -->
+                <div id="page-content">
+                    <!-- Quick Stats -->
+                    <div class=" add-item text-center">
+                        <div class="pull-right">
+                            <a href="/admin/add_fee_transport" class="btn btn-success m-t-10">
+                                <i class="fa fa-plus p-r-10"></i> Thêm Phí Vận Chuyển</a>
+                        </div>
+                    </div>
+                    <!-- END Quick Stats -->
+
+                    <!-- All Products Block -->
+                    <div class="block full">
+                        <!-- All Products Title -->
+                        <div class="block-title">
+                            <div class="block-options pull-right">
+                                <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default" data-toggle="tooltip" title="Settings">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                            </div>
+                            <h2>
+                                <strong>Tất cả</strong>
+                            </h2>
+                        </div>
+                        <!-- END All Products Title -->
+
+                        <!-- All Products Content -->
+                        <table id="ecom-products" class="table table-bordered table-striped table-vcenter">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 70px;">ID</th>
+                                    <th class="text-center">Giá Trị Đơn Hàng</th>
+                                    <th class="text-center">Phí Vận Chuyển</th>
+                                    <th class="hidden-xs text-center">Ngày Tạo</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in fee %}
+                                <tr>
+                                    <td class="text-center area_id">
+                                        <a href="page_ecom_product_edit.html">
+                                            <strong></strong>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)">{{ item.amount_of_purchase }}</a>
+                                    </td>
+                                    <td class="text-center price">{{ item.fee }}</td>
+                                    <td class="hidden-xs text-center">{{ item.time_create }}</td>
+                                    <td class="text-center">
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="/admin/edit_fee_transport?id={{ method.id }}" data-toggle="tooltip" title="Edit" class="btn btn-default">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- END All Products Content -->
+                    </div>
+                    <!-- END All Products Block -->
+                </div>
+                <!-- END Page Content -->
+
+            </div>
+            <!-- END Main Container -->
+        </div>
+        <!-- END Page Container -->
+    </div>
+    <!-- END Page Wrapper -->
+
+    {% include '../../components/footer.html' %} {% include '../../components/script.html' %}
+    <!-- convert to vnd -->
+    <script type="text/javascript">
+        var products = $('.price')
+        for (var i = 0; i < products.length; i++) {
+            products[i].innerText = parseInt(products[i].innerText).toLocaleString('vi')
+        }   
+    </script>
+</body>
+
+</html>

@@ -1437,7 +1437,7 @@ p.manufacturer a {
 }
 
 .price {
-    text-align: center;
+    /* text-align: center; */
 }
 
 .featured .tab-content {

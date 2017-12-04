@@ -17,9 +17,9 @@ const app = express()
 const router = express.Router()
 const port = 3000
 const db = require('./models/main')
-const routerFrontEnd = require('./routes/front-end/main').routerFrontEnd
+const routerFrontEnd = require('./routes/front-end/main')
 const frontendPath = 'front-end/pages/'
-const routerBackEnd = require('./routes/back-end/main').routerAdmin
+const routerBackEnd = require('./routes/back-end/main')
 const backendPath = 'admin/pages/'
 const authentication = require('./authentication/passport/passport')
 const passportLocal = require('./authentication/passport/local/passport-local')
@@ -37,7 +37,7 @@ const product = multer.diskStorage({
         }
     }
 })
-console.log('server')
+
 const uploadProduct = multer({ storage: product })
 
 /***
@@ -46,6 +46,7 @@ const uploadProduct = multer({ storage: product })
  * express.static():  serves static files(sử dụng các file tĩnh trong ứng dụng)
  */
 app.set('trust proxy', 1)
+
 app.use(session({
     secret: 'FMS',
     resave: true,

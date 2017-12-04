@@ -6,6 +6,8 @@ module.exports.shopPage = function (db, router, frontendPath) {
      * Each route can have one or more handler functions, which are executed when the route is matched.
      * Có những router phải xác nhận người dùng đã đăng nhập hay chưa mới tiếp tục dc sử lý.
      */
+    const shortid = require('shortid')
+
     const menu = () => {
         return db.task('get menu', function* (t) {
             /**
@@ -482,7 +484,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                         const qty1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
                         const qty2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id =${user_id};'
                         const qty = (!req.user) ? qty1 : qty2
-                        let getQuality = yield t.any(qty, {
+                        let getQuality = yield t.one(qty, {
                             product_id: product_id,
                             sessID: sessID,
                             user_id: user_id
@@ -491,7 +493,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                         const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id =${user_id};'
                         const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
                         yield t.any(updateQuantity, {
-                            quantity: parseInt(getQuality[0].quantity) + quantity,
+                            quantity: parseInt(getQuality.quantity) + quantity,
                             product_id: product_id,
                             sessID: sessID,
                             user_id: user_id
@@ -1077,7 +1079,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 /**
                  * Set địa chỉ mặc định mới.
                  * Viết bên trong if bởi vì phải tồn tại địa chỉ mặc định mới có thể Set địa chỉ mặc định mới đc.
-                 */ 
+                 */
                 const setAddress = 'UPDATE customer_of_address SET address = ${address} WHERE id = ${id}'
                 yield t.any(setAddress, {
                     address: addressInput,
@@ -1147,17 +1149,27 @@ module.exports.shopPage = function (db, router, frontendPath) {
 
     router.get('/thanh-toan', checkUserLogin, (req, res) => {
         const customer_id = parseInt(req.session.passport.user.id)
-        const address_id = parseInt(req.query.id)
+        const address_id = parseInt(req.query.address_id)
         db.task('payment', function* (t) {
+            // Lấy ra địa chỉ nhận hàng
             const address = "SELECT cod.id, cod.address FROM customer_of_address AS cod JOIN customer AS cus ON cus.id = cod.customer_id WHERE cus.id = ${customer_id} AND cod.id = ${address_id};"
             const getAddress = yield t.one(address, {
                 customer_id: customer_id,
                 address_id: address_id
             })
+            // Lấy ra số sản phẩm và số lượng sản phẩm
             const cart = 'SELECT attribute_product_id, quantity FROM cart WHERE user_id = ${user_id}'
             const getCart = yield t.any(cart, {
                 user_id: customer_id
             })
+            // lấy ra phí vận chuyển
+            const fee_transport = 'SELECT id, fee FROM fee_transport;'
+            const getFeeTransport = yield t.any(fee_transport)
+
+            // lấy ra phương thức thanh toán
+            const payment_method = 'SELECT id, name, alias FROM payment_method;'
+            const getPaymentMethod = yield t.any(payment_method)
+
             let products = []
             for (let item in getCart) {
                 const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.attributes, ap.total FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
@@ -1167,36 +1179,169 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 if (!getProduct.quantity) getProduct.quantity = getCart[item].quantity
                 products.push(getProduct)
             }
-            return [getAddress, products]
+            return [getAddress, products, getFeeTransport, getPaymentMethod]
         })
-        
             .then(data => {
                 // res.json(data)
                 res.render(frontendPath + 'Shop/Payment/payment', {
                     title: 'Thanh toán',
                     address: data[0],
-                    products: data[1]
+                    products: data[1],
+                    fee: data[2],
+                    payment_methods: data[3]
                 })
             })
             .catch(err => {
-                if (err) res.redirect('/')
+                console.log(err.message)
             })
     })
 
     router.post('/checkout/payment', checkUserLogin, (req, res) => {
-        res.json(req.body)
-    })
+        const info = req.body
 
-    router.get('/order-success', checkUserLogin, (req, res) => {
-        res.render(frontendPath + 'Shop/Order/order-success')
+        const customer_id = parseInt(req.session.passport.user.id)
+        db.task('insert info customer into order', function* (t) {
+            const address = 'SELECT address FROM customer_of_address WHERE id = ${address_id};'
+            const getAddress = yield t.one(address, {
+                address_id: parseInt(info.customer_of_address)
+            })
+
+            const products = 'SELECT attribute_product_id, quantity FROM cart WHERE user_id = ${customer_id}'
+            const getProducts = yield t.any(products, {
+                customer_id: customer_id
+            })
+
+            const order = "INSERT INTO purchase(name_receiver, phone_receiver, address_receiver, product, status_purchase, time_order, time_delivery, customer_id, transport_method, fee_transport_id, payment_method_id, code_purchase) VALUES(${customer}, ${phone}, ${address_receiver}, ${product}, 'pending', ${time_order}, null, ${customer_id}, ${transport_method}, ${fee_transport_id}, ${payment_method_id}, ${code_purchase})"
+            // lấy thời gian tạo đơn hàng
+            const time = new Date().toLocaleString().split(' ')
+            const date = time[0].split('-')
+            const hour = time[1]
+            const time_order = hour + ' ' + date[2] + '/' + date[1] + '/' + date[0]
+
+            yield t.any(order, {
+                customer: getAddress.address.full_name,
+                phone: getAddress.address.telephone,
+                address_receiver: getAddress.address.street + ',' + getAddress.address.ward_id + ',' + getAddress.address.region_id,
+                product: getProducts,
+                time_order: time_order,
+                customer_id: customer_id,
+                transport_method: ' Giao hàng tiêu chuẩn',
+                fee_transport_id: req.query.fee_transport,
+                payment_method_id: info['payment-method'],
+                code_purchase: shortid.generate()
+            })
+            const code_purchase = "SELECT code_purchase FROM purchase WHERE customer_id = ${customer_id} ORDER BY id DESC LIMIT 1"
+            return yield t.one(code_purchase, {
+                customer_id: customer_id
+            })
+        })
+            .then(data => {
+                res.render(frontendPath + 'Shop/Order/order-success', {
+                    order_code: data.code_purchase
+                })
+            })
     })
 
     router.get('/don-hang-cua-toi', checkUserLogin, (req, res) => {
         let info = req.user
-        res.render(frontendPath + 'Shop/Order/order', {
-            title: 'Tài khoản của tôi',
-            info: info
+        const customer_id = parseInt(req.session.passport.user.id)
+        db.task('get orders', function* (t) {
+            const orders = 'SELECT code_purchase, time_order, product, status_purchase FROM purchase WHERE customer_id = ${customer_id};'
+            const getOrders = yield t.any(orders, {
+                customer_id: customer_id
+            })
+
+            let allOrders = []
+            let allProducts = []
+            for (let order in getOrders) {
+                let products = getOrders[order]
+                //Tính toán tổng số tiền của từng đơn hàng
+                let total = 0
+                for (let item in products.product) {
+                    let product = JSON.parse(products.product[item])
+                    // lấy giá của từng sản phẩm
+                    const product_price = 'SELECT product_price FROM product_price WHERE attribute_product_id = ${id};'
+                    const getProductPrice = yield t.one(product_price, {
+                        id: product.attribute_product_id
+                    })
+                    // lấy tên của từng sản phẩm
+                    const name_product = 'SELECT product_name FROM product JOIN attribute_product AS ap ON product.id = ap.product_id WHERE ap.id = ${id};'
+                    const getNameProduct = yield t.one(name_product, {
+                        id: product.attribute_product_id
+                    })
+                    // Tên của tất cả sản phẩm
+                    allProducts.push(getNameProduct.product_name)
+                    // tổng số tiền của từng đơn hàng
+                    total += getProductPrice.product_price * product.quantity
+                }
+
+                allOrders.push({
+                    code_purchase: products.code_purchase.trim(),
+                    time_order: products.time_order.split(' '),
+                    total: total,
+                    status_purchase: products.status_purchase.trim(),
+                    product: [...new Set(allProducts)]
+                })
+            }
+            return allOrders
         })
+            .then(data => {
+                res.render(frontendPath + 'Shop/Order/order', {
+                    title: 'Đơn hàng của tôi',
+                    info: info,
+                    orders: data
+                })
+            })
+    })
+
+    router.get('/order_detail', checkUserLogin, (req, res) => {
+        let info = req.user
+        const code_purchase = req.query.code.trim()
+
+        db.task('detail order', function* (t) {
+            const order = 'SELECT name_receiver, phone_receiver, address_receiver, product, status_purchase, time_order, transport_method, code_purchase, pm.name AS payment_method, ft.fee FROM purchase AS pc JOIN fee_transport AS ft ON ft.id = pc.fee_transport_id JOIN payment_method AS pm ON pc.payment_method_id = pm.id WHERE pc.code_purchase = ${code};'
+            const getOrder = yield t.one(order, {
+                code: code_purchase
+            })
+            let products = getOrder.product
+
+            let allProducts = []
+            //Tính toán tổng số tiền của từng đơn hàng
+            let total = 0
+            for (let item in products) {
+                let product = JSON.parse(products[item])
+                // lấy giá của từng sản phẩm
+                const product_price = 'SELECT product_price FROM product_price WHERE attribute_product_id = ${id};'
+                const getProductPrice = yield t.one(product_price, {
+                    id: product.attribute_product_id
+                })
+                // lấy tên của từng sản phẩm
+                const name_product = 'SELECT pr.product_name, ap.images, pr.product_alias, ap.id AS product_id FROM product AS pr JOIN attribute_product AS ap ON pr.id = ap.product_id WHERE ap.id = ${id};'
+                const getNameProduct = yield t.one(name_product, {
+                    id: product.attribute_product_id
+                })
+
+                // tổng số tiền của từng đơn hàng
+                total += getProductPrice.product_price * product.quantity
+                allProducts.push({
+                    product_price: getProductPrice.product_price,
+                    quantity: product.quantity,
+                    product: getNameProduct
+                })
+            }
+            return [getOrder, allProducts, total]
+        })
+            .then(data => {
+                // res.json(data)
+                res.render(frontendPath + 'Shop/Order/order-detail', {
+                    title: 'Chi tiết đơn hàng',
+                    info: info,
+                    order: data[0],
+                    products: data[1],
+                    total: parseInt(data[2])
+                })
+            })
+
     })
     /** End */
 }

@@ -3,6 +3,9 @@
     .price::after {
         content: ' ₫';
     }
+    /* .sum {
+        float: right;
+    } */
 </style>
 
 <body>
@@ -104,6 +107,34 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="cart">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="fa fa-credit-card-alt sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Thanh Toán</span>
+                                </a>
+                                <ul class="cart">
+                                    <li>
+                                        <a href="/admin/payment_method">Hình Thức Thanh Toán</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0)" class="sidebar-nav-menu" id="transport">
+                                    <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+                                    <i class="fa fa-truck sidebar-nav-icon"></i>
+                                    <span class="sidebar-nav-mini-hide">Quản Lý Vận Chuyển</span>
+                                </a>
+                                <ul class="transport">
+                                    <!-- <li>
+                                                                                            <a href="/admin/transport_method">Hình Thức Vận Chuyển</a>
+                                                                                        </li> -->
+                                    <li>
+                                        <a href="/admin/fee_transport">Phí Vận Chuyển</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                         <!-- END Sidebar Navigation -->
 
@@ -181,6 +212,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="block">
                         <div class="block-title">
                             <h2>
@@ -195,10 +227,10 @@
                                         <th class="text-center">STT</th>
                                         <th class="text-center">Mã sản phẩm</th>
                                         <th class="text-center">Tên sản phẩm</th>
-                                        <th class="text-center">Stock</th>
-                                        <th class="text-center">QTY</th>
-                                        <th class="text-right" style="width: 10%;">UNIT COST</th>
-                                        <th class="text-right" style="width: 10%;">PRICE</th>
+                                        <th class="text-center">Còn lại</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-center">Giá</th>
+                                        <th class="text-center">Tạm tính</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -214,51 +246,44 @@
                                         <td class="text-center">
                                             <strong>1</strong>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <strong>$399,00</strong>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <strong>$399,00</strong>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="5" class="text-right text-uppercase">
-                                            <strong>Total Price:</strong>
-                                        </td>
-                                        <td class="text-right">
-                                            <strong>$975,00</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right text-uppercase">
-                                            <strong>Total Paid:</strong>
-                                        </td>
-                                        <td class="text-right">
-                                            <strong>$975,00</strong>
-                                        </td>
-                                    </tr>
-                                    <tr class="active">
-                                        <td colspan="5" class="text-right text-uppercase">
-                                            <strong>Total Due:</strong>
-                                        </td>
-                                        <td class="text-right">
-                                            <strong>$0,00</strong>
                                         </td>
                                     </tr>
                                 </tbody>
+                                
                             </table>
                         </div>
+                        <div class="table-responsive">
+                            <div class="col-md-10">
+                                <p class="text-right" style="font-size: 15px">
+                                    Thành tiền:
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <p class="text-center">
+                                    <strong  style="font-size: 15px">
+                                         15.000.000 ₫
+                                    </strong>
+                                </p>
+                            </div>
+                            
+                        </div>
                     </div>
+
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="block">
                                 <div class="block-title">
                                     <h2>
-                                        <i class="fa fa-building-o"></i>
-                                        <strong>Billing</strong> Address</h2>
+                                        <i class="fa fa-user"></i>
+                                        <strong>Người đặt hàng</strong> 
+                                    </h2>
                                 </div>
-                                <h4>
+                                <h4> Tên:
                                     <strong>Jonathan Taylor</strong>
                                 </h4>
                                 <address>
@@ -279,9 +304,9 @@
                                 <div class="block-title">
                                     <h2>
                                         <i class="fa fa-building-o"></i>
-                                        <strong>Shipping</strong> Address</h2>
+                                        <strong>Địa chỉ nhận hàng</strong></h2>
                                 </div>
-                                <h4>
+                                <h4>Tên:
                                     <strong>Harry Burke</strong>
                                 </h4>
                                 <address>

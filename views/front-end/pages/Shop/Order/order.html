@@ -4,10 +4,11 @@
 {% include '../../../components/head.html' %}
 <!-- End Head -->
 <style>
-.price::after {
-    content: ' ₫';
-}
+    .price::after {
+        content: ' ₫';
+    }
 </style>
+
 <body>
     <!-- Header -->
     {% include '../../../components/header.html' %}
@@ -79,17 +80,25 @@
                                         {{ order.time_order[1] }}
                                     </td>
                                     {% if order.product.length === 1 %}
-                                        <td class="order-item-name">{{ order.product[0] }}</td>
+                                    <td class="order-item-name">{{ order.product[0] }}</td>
                                     {% else %}
-                                        <td class="order-item-name">{{ order.product[0] }}... và {{ order.product.length - 1 }} sản phẩm khác</td>    
+                                    <td class="order-item-name">{{ order.product[0] }}... và {{ order.product.length - 1 }} sản phẩm khác</td>
                                     {% endif %}
                                     <td class="order-sum price">
-                                       {{ order.total }}
+                                        {{ order.total }}
                                     </td>
-                                    {% if order.status_purchase === 'pending' %}
-                                        <td class="order-status out-stock">
-                                            Chờ xử lý
-                                        </td>
+                                    {% if order.status_purchase | trim == 'pending' %}
+                                    <td class="order-status out-stock">
+                                        Chờ xử lý
+                                    </td>
+                                    {% elif order.status_purchase | trim == 'success' %}
+                                    <td class="order-status order-closed">
+                                        Đã giao hàng
+                                    </td>
+                                    {% elif order.status_purchase | trim == 'cancel' %}
+                                    <td class="order-status order-canceled">
+                                        Đã hủy
+                                    </td>
                                     {% endif %}
                                 </tr>
                                 {% endfor %}

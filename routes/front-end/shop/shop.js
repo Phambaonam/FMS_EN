@@ -144,24 +144,24 @@ module.exports.shopPage = function (db, router, frontendPath) {
             // Get all products
             const products = `
             SELECT pr.product_name,pr.product_alias, ap.option_status, pp.product_price, ap.id AS product_id , 
-            ap.images, ap.attributes, pp.original_price, pp.sale_off_price FROM product AS pr
+            ap.images, ap.attributes, ap.rest_of_product, pp.original_price, pp.sale_off_price FROM product AS pr
             JOIN attribute_product AS ap ON ap.product_id = pr.id
             JOIN product_price AS pp ON pp.attribute_product_id = ap.id;`
-            const getDataAllProducts = yield t.any(products)
-            return menu().then(data => {
-                return {
-                    menuArea: data[0],
-                    menuCategory: data[1],
-                    authors: data[2],
-                    materials: data[3],
-                    products: getDataAllProducts,
-                    url: req.url
-                }
-            })
+            const getAllProducts = yield t.any(products)
+            return menu()
+                .then(data => {
+                    return {
+                        menuArea: data[0],
+                        menuCategory: data[1],
+                        authors: data[2],
+                        materials: data[3],
+                        products: getAllProducts,
+                        url: req.url
+                    }
+                })
 
         })
             .then(data => {
-                // res.json(data)
                 if (req.session.url !== req.url) req.session.url = req.url
                 /**
                  * Khi user đăng kí thì thông tin của user được lưu trong session
@@ -547,10 +547,13 @@ module.exports.shopPage = function (db, router, frontendPath) {
             })
             // console.log(getCarts)
             for (let item in getCarts) {
-                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images, ap.total FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
-                const getProduct = yield t.one(product, {
-                    attribute_product_id: getCarts[item].attribute_product_id
-                })
+                const attribute_product_id = getCarts[item].attribute_product_id
+                const product = `
+                SELECT pr.product_name,pr.product_alias, ap.rest_of_product, pp.product_price, ap.id AS product_id, ap.images, ap.total FROM product AS pr 
+                JOIN attribute_product AS ap ON ap.product_id = pr.id 
+                JOIN product_price AS pp ON pp.attribute_product_id = ap.id 
+                WHERE ap.id = ${attribute_product_id};`
+                const getProduct = yield t.one(product)
                 getProduct.quantity = getCarts[item].quantity
                 cartDetail.push(getProduct)
             }
@@ -1246,7 +1249,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
         let info = req.user
         const customer_id = parseInt(req.session.passport.user.id)
         db.task('get orders', function* (t) {
-            const orders = 'SELECT code_purchase, time_order, product, status_purchase FROM purchase WHERE customer_id = ${customer_id};'
+            const orders = 'SELECT id, code_purchase, time_order, product, status_purchase FROM purchase WHERE customer_id = ${customer_id} ORDER BY id DESC;'
             const getOrders = yield t.any(orders, {
                 customer_id: customer_id
             })
@@ -1342,6 +1345,20 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 })
             })
 
+    })
+
+    router.get('/order_cancel', checkUserLogin, (req, res) => {
+        const code_order = req.query.code
+        const orderSuccess = "UPDATE purchase SET status_purchase = 'cancel' WHERE code_purchase = ${code_order};"
+        db.task('update status order', function* (t) {
+            yield t.any(orderSuccess, {
+                code_order: code_order
+            })
+            return 1
+        })
+            .then(() => {
+                res.redirect('/order_detail?code=' + code_order)
+            })
     })
     /** End */
 }

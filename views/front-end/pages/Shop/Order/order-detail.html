@@ -190,6 +190,8 @@
                 <h3>Chi tiết đơn hàng #{{ order.code_purchase }} -
                     {% if order.status_purchase | trim == 'pending' %}
                         <strong>Đặt hàng thành công</strong>
+                    {% elif order.status_purchase | trim == 'cancel' %}
+                        <strong>Đã Hủy</strong>
                     {% endif %}
                 </h3>
                 <div class="account-order-detail">
@@ -314,13 +316,15 @@
                                     <span class="sum price"></span>
                                 </td>
                             </tr>
+                            {% if order.status_purchase | trim != 'cancel' and order.status_purchase | trim != 'success' %}
                             <tr>
                                 <td colspan="4"></td>
                                 <td>
-                                    <a id="valid-canceled-order" title="Hủy đơn hàng" class="btn btn-info payment_method_cod ">Hủy đơn hàng</a>
+                                    <a href="/order_cancel/?code={{ order.code_purchase | trim }}" id="valid-canceled-order" title="Hủy đơn hàng" class="btn btn-info payment_method_cod ">Hủy đơn hàng</a>
 
                                 </td>
                             </tr>
+                            {% endif %}
                         </tfoot>
                     </table>
                 </div>

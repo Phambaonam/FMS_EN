@@ -3,9 +3,12 @@
     .price::after {
         content: ' ₫';
     }
-    /* .sum {
-        float: right;
-    } */
+
+    .order, .order:hover {
+        background: #1BBAE1;
+        border-color: #1BBAE1;
+        color: #ffffff;
+    }
 </style>
 
 <body>
@@ -152,17 +155,34 @@
                 <!-- END Header -->
 
                 <!-- Page content -->
-                <div id="page-content" style="min-height: 1259px;">
+                <div id="page-content">
+                    <div class=" add-item text-center">
+                        <div class="pull-left">
+                            <a href="/admin/order" class="btn order m-t-10">
+                                <i class="gi gi-left_arrow"></i> Quay lại quản lý đơn hàng</a>
+                        </div>
+                        {% if orderInfo.status_purchase | trim != 'success' and orderInfo.status_purchase | trim != 'cancel'%}
+                        <div class="pull-right">
+                            <a href="/admin/order_detali/order_success?code={{ orderInfo.code_purchase }}" class="btn order m-t-10">
+                                <i class="fa fa-check-square-o"></i> Duyệt đơn hàng</a>
+                        </div>
+                        {% endif %}
+                        {% if orderInfo.status_purchase | trim == 'cancel' %}
+                            <h2>Đơn hàng đã bị hủy</h2>
+                        {% elif orderInfo.status_purchase | trim == 'success' %}   
+                            <h2>Giao hàng thành công</h2>
+                        {% endif %}
+                    </div>
                     <div class="row text-center">
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget">
                                 <div class="widget-extra themed-background-success">
                                     <h4 class="widget-content-light">
-                                        <strong>ORD.685195</strong>
+                                        <strong>{{ orderInfo.code_purchase | trim  }}</strong>
                                     </h4>
                                 </div>
                                 <div class="widget-extra-full">
-                                    <span class="h2 text-success animation-expandOpen">15/10/2014</span>
+                                    <span class="h2 text-success animation-expandOpen time-order">{{ orderInfo.time_order }}</span>
                                 </div>
                             </div>
                         </div>
@@ -175,9 +195,23 @@
                                     </h4>
                                 </div>
                                 <div class="widget-extra-full">
+                                   
+                                    {% if orderInfo.status_purchase | trim == 'success' %}
+                                        <span class="h2 text-success animation-expandOpen">
+                                            <i class="fa fa-check"></i>
+                                        </span>
+                                    {% elif orderInfo.status_purchase | trim == 'cancel' %}
+                                        <span class="h2 text-warning animation-expandOpen">
+                                            <i class="fa fa-times"></i>
+                                        </span>
+                                    {% elif orderInfo.status_purchase | trim == 'pending' %}    
                                     <span class="h2 text-success animation-expandOpen">
                                         <i class="fa fa-check"></i>
                                     </span>
+                                    <span class="h2 text-warning animation-expandOpen">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -190,9 +224,29 @@
                                     </h4>
                                 </div>
                                 <div class="widget-extra-full">
+                                    {% if orderInfo.status_purchase | trim == 'success' %}
+                                    <span class="h2 text-success animation-expandOpen">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    {% elif orderInfo.status_purchase | trim == 'packaging' %}
                                     <span class="h2 text-warning">
                                         <i class="fa fa-refresh fa-spin"></i>
                                     </span>
+                                    {% elif orderInfo.status_purchase | trim == 'cancel' %}
+                                    <span class="h2 text-warning animation-expandOpen">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    {% elif orderInfo.status_purchase | trim == 'pending'%}
+                                    <span class="h2 text-success animation-expandOpen">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span class="h2 text-warning">
+                                        <i class="fa fa-refresh fa-spin"></i>
+                                    </span>
+                                    <span class="h2 text-warning animation-expandOpen">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -205,14 +259,34 @@
                                     </h4>
                                 </div>
                                 <div class="widget-extra-full">
+                                    {% if orderInfo.status_purchase | trim == 'success' %}
+                                    <span class="h2 text-success animation-expandOpen">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    {% elif orderInfo.status_purchase | trim == 'Delivery' %}
                                     <span class="h2 text-muted animation-pulse">
                                         <i class="fa fa-ellipsis-h"></i>
                                     </span>
+                                    {% elif orderInfo.status_purchase | trim == 'cancel' %}
+                                    <span class="h2 text-warning animation-expandOpen">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                     {% elif orderInfo.status_purchase | trim == 'pending'%}
+                                    <span class="h2 text-success animation-expandOpen">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span class="h2 text-muted animation-pulse">
+                                        <i class="fa fa-ellipsis-h"></i>
+                                    </span>
+                                    <span class="h2 text-warning animation-expandOpen">
+                                        <i class="fa fa-times"></i>
+                                    </span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="block">
                         <div class="block-title">
                             <h2>
@@ -234,29 +308,47 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for product in products %}
                                     <tr>
                                         <td class="text-center"></td>
-                                        <td class="text-center">95637</td>
+                                        <td class="text-center">{{ product.ucp }}</td>
                                         <td>
-                                            <a href="page_ecom_product_edit.php">Xbox One</a>
+                                            <a href="/admin/product/product_detail/{{ product.product_id }}">{{ product.name_product }}</a>
                                         </td>
                                         <td class="text-center">
-                                            <strong>720</strong>
+                                            <strong>{{ product.rest }}</strong>
                                         </td>
                                         <td class="text-center">
-                                            <strong>1</strong>
+                                            <strong>{{ product.quantity }}</strong>
                                         </td>
-                                        <td class="text-center">
-                                            <strong>$399,00</strong>
+                                        <td class="text-center price">
+                                            <strong>{{ product.product_price }}</strong>
                                         </td>
-                                        <td class="text-center">
-                                            <strong>$399,00</strong>
+                                        <td class="text-center price">
+                                            <strong>{{ product.total }}</strong>
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                 </tbody>
-                                
+
                             </table>
                         </div>
+
+                        <div class="table-responsive">
+                            <div class="col-md-10">
+                                <p class="text-right" style="font-size: 15px">
+                                    Phí vận chuyển:
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <p class="text-right">
+                                    <strong style="font-size: 15px" class="price fee">
+                                        {{ orderInfo.fee }}
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <div class="col-md-10">
                                 <p class="text-right" style="font-size: 15px">
@@ -264,13 +356,12 @@
                                 </p>
                             </div>
                             <div class="col-md-2">
-                                <p class="text-center">
-                                    <strong  style="font-size: 15px">
-                                         15.000.000 ₫
+                                <p class="text-right">
+                                    <strong style="font-size: 15px" class="price sum">
+                                        {{ sum | float + orderInfo.fee | float }}
                                     </strong>
                                 </p>
                             </div>
-                            
                         </div>
                     </div>
 
@@ -280,22 +371,17 @@
                                 <div class="block-title">
                                     <h2>
                                         <i class="fa fa-user"></i>
-                                        <strong>Người đặt hàng</strong> 
+                                        <strong>Người đặt hàng</strong>
                                     </h2>
                                 </div>
-                                <h4> Tên:
-                                    <strong>Jonathan Taylor</strong>
+                                <h4>
+                                    <strong>{{ customer.username }}</strong>
                                 </h4>
                                 <address>
-                                    Sunset Str 620
-                                    <br> Melbourne
-                                    <br> Australia, 21-842
-                                    <br>
-                                    <br>
-                                    <i class="fa fa-phone"></i> (999) 852-11111
+                                    <i class="fa fa-phone"></i> {{ customer.phone }}
                                     <br>
                                     <i class="fa fa-envelope-o"></i>
-                                    <a href="javascript:void(0)">johnathan.taylor@example.com</a>
+                                    <a href="javascript:void(0)">{{ customer.email }}</a>
                                 </address>
                             </div>
                         </div>
@@ -304,114 +390,22 @@
                                 <div class="block-title">
                                     <h2>
                                         <i class="fa fa-building-o"></i>
-                                        <strong>Địa chỉ nhận hàng</strong></h2>
+                                        <strong>Địa chỉ nhận hàng</strong>
+                                    </h2>
                                 </div>
-                                <h4>Tên:
-                                    <strong>Harry Burke</strong>
+                                <h4>
+                                    <strong>{{ orderInfo.name_receiver | title }}</strong>
                                 </h4>
                                 <address>
-                                    Sunset Str 598
-                                    <br> Melbourne
-                                    <br> Australia, 21-852
+                                    {{ orderInfo.address_receiver }}
                                     <br>
+                                    <i class="fa fa-phone"></i> {{ orderInfo.phone_receiver }}
                                     <br>
-                                    <i class="fa fa-phone"></i> (999) 852-22222
-                                    <br>
-                                    <i class="fa fa-envelope-o"></i>
-                                    <a href="javascript:void(0)">harry.burke@example.com</a>
                                 </address>
                             </div>
                         </div>
                     </div>
-                    <div class="block">
-                        <div class="block-title">
-                            <h2>
-                                <i class="fa fa-file-text-o"></i>
-                                <strong>Log</strong> Messages</h2>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-vcenter">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <span class="label label-primary">Order</span>
-                                        </td>
-                                        <td class="text-center">October 17, 2014 - 12:00</td>
-                                        <td>
-                                            <a href="javascript:void(0)">Support</a>
-                                        </td>
-                                        <td class="text-success">
-                                            <i class="fa fa-fw fa-check"></i>
-                                            <strong>Order Completed</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="label label-primary">Order</span>
-                                        </td>
-                                        <td class="text-center">October 17, 2014 - 10:15</td>
-                                        <td>
-                                            <a href="javascript:void(0)">Support</a>
-                                        </td>
-                                        <td class="text-info">
-                                            <i class="fa fa-fw fa-info-circle"></i>
-                                            <strong>Preparing Order</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="label label-success">Payment</span>
-                                        </td>
-                                        <td class="text-center">October 16, 2014 - 17:15</td>
-                                        <td>
-                                            <a href="javascript:void(0)">Harry Burke</a>
-                                        </td>
-                                        <td class="text-success">
-                                            <i class="fa fa-fw fa-check"></i>
-                                            <strong>Payment Completed</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="label label-danger">Email</span>
-                                        </td>
-                                        <td class="text-center">October 16, 2014 - 09:10</td>
-                                        <td>
-                                            <a href="javascript:void(0)">Support</a>
-                                        </td>
-                                        <td class="text-danger">
-                                            <i class="fa fa-fw fa-exclamation-triangle"></i>
-                                            <strong>Missing payment details. Email was sent and awaiting for payment before processing</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="label label-primary">Order</span>
-                                        </td>
-                                        <td class="text-center">October 15, 2014 - 12:26</td>
-                                        <td>
-                                            <a href="javascript:void(0)">Support</a>
-                                        </td>
-                                        <td>
-                                            <strong>All products are available</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <span class="label label-primary">Order</span>
-                                        </td>
-                                        <td class="text-center">October 15, 2014 - 12:15</td>
-                                        <td>
-                                            <a href="javascript:void(0)">Harry Burke</a>
-                                        </td>
-                                        <td>
-                                            <strong>Order Submitted</strong>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+
                 </div>
                 <!-- END Page Content -->
 
@@ -421,13 +415,22 @@
         <!-- END Page Container -->
     </div>
     <!-- END Page Wrapper -->
-    {% include '../../components/footer.html' %} {% include '../../components/script.html' %}
+    <!-- footer -->
+    {% include '../../components/footer.html' %}
+    <!-- endfooter -->
+    {% include '../../components/script.html' %}
     <script type="text/javascript">
         var products = $('.price')
         for (var i = 0; i < products.length; i++) {
             products[i].innerText = parseInt(products[i].innerText).toLocaleString('vi')
         }   
     </script>
+
+    <script type="text/javascript">
+        var time_order = $('.time-order').text().split(' ')
+        $('.time-order').text(time_order[0])
+    </script>
+
 </body>
 
 </html>

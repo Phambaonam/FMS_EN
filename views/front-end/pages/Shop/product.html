@@ -10,27 +10,51 @@
                         </a>
                         <div class="vertical-icon">
                             {% if login_status !== true %}
-                                <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
-                                    <i class="fa fa-heart-o"></i>
-                                </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
-                                    <i class="fa fa-shopping-cart"></i>
-                                </a>
+                                {% if product.rest_of_product == 0 %}
+                                    <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
+                                        <i class="fa fa-heart-o"></i>
+                                    </a><a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#off">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal">
+                                        <i class="fa fa-heart-o"></i>
+                                    </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                {% endif %}
                             {% else %}
                                 {% if listWishlish !== 0 %}
                                     {% set count = 1 %} 
                                     {% for wishlish in listWishlish %} 
                                         {% if wishlish.attribute_product_id === product.product_id %}
+                                            {% if product.rest_of_product == 0 %}
+                                            <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish">
+                                                <i class="wishlished fa fa-heart-o"></i>
+                                            </a><a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#off">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a>
+                                            {% else %}
                                             <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish">
                                                 <i class="wishlished fa fa-heart-o"></i>
                                             </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
                                                 <i class="fa fa-shopping-cart"></i>
                                             </a>
+                                            {% endif %}
                                         {% elif count === listWishlish.length %}
+                                            {% if product.rest_of_product == 0 %}
+                                            <a href="javascript:void(0)" class="add_to_wishlist">
+                                                <i class="fa fa-heart-o"></i>
+                                            </a><a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#off">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a>
+                                            {% else %}
                                             <a href="javascript:void(0)" class="add_to_wishlist">
                                                 <i class="fa fa-heart-o"></i>
                                             </a><a href="javascript:void(0)" id="{{ product.product_id }}" class="add_to-cart">
                                                 <i class="fa fa-shopping-cart"></i>
                                             </a>
+                                            {% endif %}
                                         {% else %} 
                                             {% set count = count + 1 %} 
                                         {% endif %} 
@@ -76,6 +100,10 @@
                         {% if product.option_status. sale_off_price %}
                             <div class="tag tag-right sale"></div>
                             <div class="tag-name-right">Sale!</div>
+                        {% endif %}
+                        {% if product.rest_of_product == 0 %}
+                        <div class="tag tag-right off"></div>
+                        <div class="tag-name-right">Hết</div>
                         {% endif %}
                     </div>
                 </div>

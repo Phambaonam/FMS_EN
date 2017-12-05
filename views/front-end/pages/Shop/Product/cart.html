@@ -45,16 +45,13 @@
                             </td>
                             <td class="product-price">{{product.product_price}}</td>
                             <td class="product-quantity">
-                                {% if product.total > product.quantity %}
-                                    <div class="quantity">
-                                        <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}" type="text" name="quantity" value="{{ product.quantity }}" size="4"><button class="qty-increase" onclick="" type="button">+</button>
-                                    </div>
-                                {% elif product.total === 0 %}
+                               
+                                {% if product.rest_of_product === 0 %}
                                     <input class="{{ product.product_id }}" type="hidden" name="quantity" value="0" size="4" >
                                     <span class="out-stock">Hết hàng</span>
                                 {% else %}
                                     <div class="quantity">
-                                        <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}" type="text" name="quantity" value="{{ product.total }}" size="4"><button class="qty-increase" onclick="" type="button">+</button>
+                                        <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}" type="text" name="quantity" value="{{ product.quantity }}" size="4"><button class="qty-increase" onclick="" type="button">+</button>
                                     </div>
                                 {% endif %}
                             </td>

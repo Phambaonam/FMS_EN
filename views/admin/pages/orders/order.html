@@ -1,4 +1,7 @@
-<!DOCTYPE html> {% include '../../components/head.html' %}
+<!DOCTYPE html> 
+<!-- head -->
+{% include '../../components/head.html' %}
+<!-- end head -->
 <style>
     .price::after {
         content: ' ₫';
@@ -240,7 +243,11 @@
                                         </td>
                                         <td>
                                             {% if order.status_purchase == 'pending' %}
-                                            <span class="label label-warning">Đang chờ xử lý</span>
+                                                <span class="label label-warning">Đang chờ xử lý</span>
+                                            {% elif order.status_purchase | trim == 'success' %}
+                                                <span class="label label-success">Đã giao hàng</span>
+                                            {% elif  order.status_purchase | trim == 'cancel' %}
+                                                <span class="label label-danger">Đã hủy</span>
                                             {% endif %}
                                         </td>
                                         <td class="hidden-xs text-center">{{ order.time_order[1] }}</td>

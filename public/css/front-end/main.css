@@ -1327,7 +1327,9 @@ body {
 .new {
     border-color: #339966 transparent transparent transparent;
 }
-
+.off {
+    border-color: transparent #ec192beb transparent transparent;
+}
 .vertical-icon {
     display: flex;
     flex-direction: column;

@@ -2991,6 +2991,10 @@ td.product-price-wishlist::after {
     padding-left: 5px;
 }
 
+.cart-container table.cart .product-quantity .quantity .qty-increase, .quantity .out-off {
+    padding-left: 5px;
+}
+
 td.product-price::after, td.product-subtotal::after, .cart-subtotal td::after, .cart-discount td::after, .amount::after, .deli-fee td::after {
     content: '₫';
 }

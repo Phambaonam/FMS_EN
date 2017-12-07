@@ -27,7 +27,7 @@
                 <div class="user-top-wrap">
                     <div class="user-top">
                         <img src="/public/img/feedback_1.jpg">
-                        <span>{{ data.username }}</span>
+                        <span>{{ info.username }}</span>
                     </div>
                 </div>
                 <ul class="nav nav-stacked">
@@ -78,7 +78,7 @@
                                 </td>
                                 <td class="product-price">{{ product.product_price }}</td>
                                 <td class="product-status">
-                                    {% if product.total > 0 %}
+                                    {% if product.rest_of_product > 0 %}
                                     <span class="in-stock">Còn hàng</span>
                                     {% else%}
                                     <span class="out-stock">Hết hàng</span>

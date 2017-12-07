@@ -455,11 +455,11 @@ module.exports.shopPage = function (db, router, frontendPath) {
         if (req.session.user) user_id = parseInt(req.session.user.id)
         if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
         if (!req.session.passport && !req.session.user) user_id = null
-
         db.task('add product to cart', function* (t) {
             const status1 = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
             const status2 = 'SELECT count(1) FROM cart WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
-            const status = (!req.user) ? status1 : status2
+            const status = (!req.session.passport) ? status1 : status2
+
             const productExistsIncart = yield t.one(status, {
                 product_id: product_id,
                 sessID: sessID,
@@ -591,17 +591,19 @@ module.exports.shopPage = function (db, router, frontendPath) {
         let user_id
         if (req.session.user) user_id = parseInt(req.session.user.id)
         if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
-        const product_id = req.params.product_id
+        const product_id = parseInt(req.params.product_id)
         const sessID = req.session.id
         db.task('decrease quantity product', function* (t) {
-            const quantity1 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = ${sessID};'
-            const quantity2 = 'SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id = ${user_id};'
-            const quantity = (!req.user) ? quantity1 : quantity2
+            const quantity1 = 'SELECT quantity FROM cart WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
+            const quantity2 = 'SELECT quantity FROM cart WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
+            const quantity = (!req.session.passport) ? quantity1 : quantity2
+
             let getQuality = yield t.one(quantity, {
                 product_id: product_id,
                 sessID: sessID,
                 user_id: user_id
             })
+            console.log('bbbbbbbb', getQuality)
             const updateQuantity1 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
             const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
             const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
@@ -625,6 +627,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
     })
 
     router.get('/increase/qty/:product_id', (req, res) => {
+        console.log(req.url)
         /**
         * user_id chỉ sử dụng cho user đăng nhập và đăng ký.
         * Khi user đăng nhập thì `user_id = parseInt(req.session.passport.user.id)`
@@ -644,22 +647,41 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 sessID: sessID,
                 user_id: user_id
             })
+
+            /**
+             * Lấy ra số lượng còn lại của sản phẩm để so sánh,
+             * 
+             */
+            const rest_of_product = `SELECT rest_of_product FROM attribute_product WHERE id = ${product_id};`
+            const getRestProduct = yield t.one(rest_of_product)
+
             const updateQuantity1 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND session_user_id = ${sessID};'
             const updateQuantity2 = 'UPDATE cart SET quantity = ${quantity} WHERE attribute_product_id = ${product_id} AND user_id = ${user_id};'
-            const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
-            yield t.any(updateQuantity, {
-                quantity: parseInt(getQuality.quantity) + 1,
-                product_id: product_id,
-                sessID: sessID,
-                user_id: user_id
-            })
+            const updateQuantity = (!req.session.passport) ? updateQuantity1 : updateQuantity2
 
-            // update total cart in session
-            req.session.passport ? (req.session.passport.user.sumProduct = parseInt(req.session.passport.user.sumProduct) + 1) : (req.session.sumProduct = parseInt(req.session.sumProduct) + 1)
+            // quantity phải nhỏ hơn rest_of_product để không phải viết thêm câu lệnh lấy quantity ra 1 lần nữa
+            if (+getQuality.quantity < +getRestProduct.rest_of_product) {
+                yield t.any(updateQuantity, {
+                    quantity: parseInt(getQuality.quantity) + 1,
+                    product_id: product_id,
+                    sessID: sessID,
+                    user_id: user_id
+                })
+                // update total cart in session
+                req.session.passport ? (req.session.passport.user.sumProduct = parseInt(req.session.passport.user.sumProduct) + 1) : (req.session.sumProduct = parseInt(req.session.sumProduct) + 1)
+                console.log(1234567)
+                return [getRestProduct.rest_of_product, +getQuality.quantity + 1]
+            } else {
+                console.log('het hang')
+                return [getRestProduct.rest_of_product, 'hết hàng']
+            }
+
+
         })
-            .then(() => {
+            .then(data => {
+                console.log('aaaaaaaaa', req.session.sumProduct)
                 console.log('đã tăng số lượng sản phẩm thành công!')
-                req.session.passport ? (res.json(req.session.passport)) : (res.json(req.session.sumProduct))
+                req.session.passport ? res.json({ total: req.session.passport, quantity: data[1], rest: data[0] }) : res.json({ total: req.session.sumProduct, quantity: data[1], rest: data[0] })
 
             })
             .catch(error => {
@@ -859,16 +881,18 @@ module.exports.shopPage = function (db, router, frontendPath) {
         let customer_id = (req.session.user) ? parseInt(req.session.user.id) : parseInt(req.session.passport.user.id)
         let getWishlishProducts = []
         db.task('wishlish detail', function* (t) {
-            const wishlish = 'SELECT attribute_product_id FROM wishlish WHERE  customer_id = ${customer_id} ORDER BY id ASC;'
-            const getWishlishes = yield t.any(wishlish, {
-                customer_id: customer_id
-            })
+            const wishlish = `SELECT attribute_product_id FROM wishlish WHERE  customer_id = ${customer_id} ORDER BY id ASC;`
+            const getWishlishes = yield t.any(wishlish)
 
             for (let item in getWishlishes) {
-                const product = 'SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images , ap.option_status, ap.total FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id JOIN product_price AS pp ON pp.attribute_product_id = ap.id WHERE ap.id = ${attribute_product_id};'
-                const getProduct = yield t.one(product, {
-                    attribute_product_id: getWishlishes[item].attribute_product_id
-                })
+                let attribute_product_id = getWishlishes[item].attribute_product_id
+                const product = `
+                SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images , ap.option_status, ap.total, ap.rest_of_product FROM product AS pr 
+                JOIN attribute_product AS ap ON ap.product_id = pr.id 
+                JOIN product_price AS pp ON pp.attribute_product_id = ap.id 
+                WHERE ap.id = ${attribute_product_id};`
+
+                const getProduct = yield t.one(product)
                 getProduct.quantity = getWishlishes[item].quantity
                 getWishlishProducts.push(getProduct)
             }
@@ -878,7 +902,7 @@ module.exports.shopPage = function (db, router, frontendPath) {
                 if (req.session.url !== req.url) req.session.url = req.url
                 let info = req.user
                 res.render(frontendPath + 'Shop/wishlist', {
-                    title: 'Chi tiết sản phẩm',
+                    title: 'Trang yêu thích',
                     info: info,
                     products: data
                 })

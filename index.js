@@ -56,14 +56,31 @@ app.use(session({
         secure: false
     }
 }))
+/**
+ * Chú ý là luôn đặt middleware trước router để xử lý các request đầu vào.
+ * Nên khi ta gắn 1 giá trị nào đó ở trong session mà ta muốn sử dụng cho toàn bộ ứng dụng. 
+ * Nếu viết ở phần router thì sẽ không thể gán giá trị thay đổi cho session được, thay vào đó ta viết trực tiếp ở trong middleware
+ */
 
+// middleware tự định nghĩa
 app.use(function (req, res, next) {
     /**
      * - Khi user đăng nhập thì sẽ gán giỏ hàng vào `req.session.passport` ở file `passport-local.js` và
      * update lại số lượng sản phẩm trong  giỏ hàng thông qua các router: `/decrease/qty`, `/increase/qty`, `/delete/product`, `/empty-cart`.
      * - Đối với user chưa đăng nhập thì sẽ gán giỏ hàng vào req.session ở bên router `/add_to_cart`
      */
-    res.locals.carts = (req.session.passport) ? req.session.passport.user.sumProduct : req.session.sumProduct
+    const sessID = req.session.id
+    let user_id
+    if (req.session.user) user_id = parseInt(req.session.user.id)
+    if (req.session.passport) user_id = parseInt(req.session.passport.user.id)
+    const cartProduct1 = `SELECT SUM(quantity) FROM cart WHERE session_user_id = '${sessID}';`
+    const cartProduct2 = `SELECT SUM(quantity) FROM cart WHERE user_id = ${user_id};`
+    const cartProduct = (!req.session.passport) ? cartProduct1 : cartProduct2
+
+    db.one(cartProduct)
+        .then(data => {
+            res.locals.carts = +data.sum
+        })
     /**
      * Có 2 đối tượng:
      * - User đăng kí: 
@@ -93,9 +110,9 @@ app.use(function (req, res, next) {
     /**
      * Viết ở đây mục đích là để khi user vào những trang mà tài khoản bắt buộc phải xác thực, thì
      * ta chỉ phải viêt 1 lần trong midleware mà có thể dùng cho nhiều route
-     */    
-    const veryfiToken = 'SELECT verify_token_register FROM customer WHERE id = ${customer_id}'  
-    db.one(veryfiToken , {
+     */
+    const veryfiToken = 'SELECT verify_token_register FROM customer WHERE id = ${customer_id}'
+    db.one(veryfiToken, {
         customer_id: customer_id
     })
         .then(data => {
@@ -103,16 +120,13 @@ app.use(function (req, res, next) {
         })
         .catch(err => {
             // console.log(`Kiểm tra xác thực tài khoàn ${err.message}`)
-        })  
-    // console.log('res.locals.login_status', res.locals.login_status)
-    // console.log('res.locals.wishlish', res.locals.wishlish)
-    // console.log('res.locals.carts', res.locals.carts)
-    // console.log(`res.locals.carts ${res.locals.carts}`)
-    // console.log('aaaaaaaaaaaaaa', req.session)
+        })
     next()
 })
-
+// built-in middleware của express
 app.use('/public', express.static('public'))
+
+// middleware bodyparser dùng để lấy thông tin của user gửi lên qua method post
 app.use(bodyParser.urlencoded({
     extended: true
 }))
@@ -141,13 +155,16 @@ app.engine('html', nunjucks.render)
  * (engine extension mà bạn sử dụng cho toàn bộ ứng dụng, có thể không cần viết đuôi file)
  */
 app.set('view engine', 'html')
+
 app.use(morgan('dev'))
+
 app.use(passport.initialize())
 app.use(passport.session())
 
 
 passportLocal(passport, Strategy, db)
 authentication(passport, db)
+
 app.use(flash())
 app.use(router)
 /***

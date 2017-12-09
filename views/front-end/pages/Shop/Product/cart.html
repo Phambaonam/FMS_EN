@@ -51,11 +51,11 @@
                                     <span class="out-stock">Hết hàng</span>
                                 {% elif product.rest_of_product <=  product.quantity %}
                                 <div class="quantity">
-                                    <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}" id="quantity" type="text" name="quantity" value="{{ product.rest_of_product }}" size="4"><button class="out-off" data-toggle="modal" data-target="#out-off">+</button>
+                                    <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}"  type="text" name="quantity" value="{{ product.rest_of_product }}" size="4"><button class="out-off" data-toggle="modal" data-target="#out-off">+</button>
                                 </div>
                                 {% else %}
                                     <div class="quantity">
-                                        <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}" id="quantity" type="text" name="quantity" value="{{ product.quantity }}" size="4"><button class="qty-increase" onclick="" type="button">+</button>
+                                        <button class="qty-decrease" onclick="" type="button">-</button><input class="{{ product.product_id }}"  type="text" name="quantity" value="{{ product.quantity }}" size="4"><button class="qty-increase" onclick="" type="button">+</button>
                                     </div>
                                 {% endif %}
                             </td>
@@ -125,6 +125,8 @@
         </div>
     </div>
 </div>
+
+<!-- cảnh báo user phải đăng nhập mới có thể đặt hàng -->
 <div class="modal fade" id="warmingLogin" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,6 +142,7 @@
         </div>
     </div>
 </div>
+<!-- cảnh báo số lượng sản phẩm không đủ để thêm vào giỏ hàng -->
 <div class="modal fade" id="out-off" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -155,6 +158,7 @@
         </div>
     </div>
 </div>
+<!-- cảnh báo user phải xác thực tài khoản mới có thể đặt hàng -->
 <div class="modal fade" id="warmingVeryfiEmail" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -170,6 +174,39 @@
         </div>
     </div>
 </div>
+<!-- cảnh báo có 1 hoặc vài sản phẩm hết hàng, user có muốn tiếp tục đặt hàng hay không -->
+<div class="modal fade" id="continue-order" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                <div class="bootbox-body">
+                    <p style="font-size: 20px;">Có <span id="total-out-off"></span> sản phẩm đã hết hàng. Bạn có muốn tiến hành đặt hàng không?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/san-pham"  class="btn btn-primary pull-left">Quay lại trang sản phẩm</a>
+                <a href="/shipping" class="btn btn btn-primary pull-right">Tiếp tục</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- cảnh báo sản phẩm đã hết hàng, user phải mua hàng để có thể tiếp tục đặt hàng -->
+<div class="modal fade" id="cannot-order" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                <div class="bootbox-body">
+                    <p style="font-size: 20px;">Sản phẩm trong giỏ hàng của bạn đã hết hàng. Bạn không thể tiến hành đặt hàng.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/san-pham" class="btn btn-primary">Quay lại trang sản phẩm</a>
+            </div>
+        </div>
+    </div>
+</div>
                  <!-- Footer -->
     {% include '../../../components/footer.html' %}
                  <!-- End Footer -->
@@ -179,6 +216,7 @@
                  <!-- End script -->
     <script src="/public/js/axios.min.js"></script>             
     <script>
+        // xóa sản phẩm ra khỏi giỏ hàng.
         var cart = document.getElementById('cart-count')
         var removeProducts = document.querySelectorAll('.product-remove button')
         removeProducts.forEach(function (item) {
@@ -191,7 +229,76 @@
                     })
             }
         })
+        // tăng số lượng sản phẩm
+        var qtyIncrease1 = $('.qty-increase')
+            qtyIncrease1.each(function () {
+                $(this).click(function () {
+                    var that = $(this)
+                    var product_idIn = $(this).prev().attr('class')
+                    axios.get('/increase/qty/' + product_idIn)
+                        .then(function (res) {
+                            console.log(res.data)
+                            if (res.data.quantity < res.data.rest) {
+                                cart.innerText = res.data.total
+                                console.log(11)
+                            } else if (res.data.quantity === res.data.rest) {
+                                cart.innerText = res.data.total
+                                $(that)
+                                    .attr("data-toggle", 'modal').attr("data-target", '#out-off')
+                                    .removeClass('qty-increase')
+                                    .addClass('out-off')
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(22)
+                            } else {
+                                $(that)
+                                    .attr("data-toggle", 'modal').attr("data-target", '#out-off')
+                                    .removeClass('qty-increase')
+                                    .addClass('out-off')
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(33)
+                            }
+                        })
+                })
+            })
 
+            $(document).on('click', '.out', function () {
+                $(this).click(function () {
+                    console.log(12345)
+                    var that = $(this)
+                    var product_idIn = $(this).prev().attr('class')
+                    axios.get('/increase/qty/' + product_idIn)
+                        .then(function (res) {
+                            console.log('def', res.data)
+                            if (res.data.quantity < res.data.rest) {
+                                cart.innerText = res.data.total
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(1)
+                            } else if (res.data.quantity === res.data.rest) {
+                                cart.innerText = res.data.total
+                                $(that)
+                                    .attr("data-toggle", 'modal').attr("data-target", '#out-off')
+                                    .removeClass('qty-increase')
+                                    .addClass('out-off')
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(2)
+                            } else {
+                                $(that)
+                                    .attr("data-toggle", 'modal').attr("data-target", '#out-off')
+                                    .removeClass('qty-increase')
+                                    .addClass('out-off')
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(3)
+                            }
+                        })
+                })
+            })
+
+        // giảm số lượng sản phẩm    
         var qtyDecrease = $('.qty-decrease')
         qtyDecrease.each(function () {
             $(this).click(function () {
@@ -199,83 +306,38 @@
                 if ($(this).next().val() > 1) {
                     axios.get('/decrease/qty/' + product_idDe)
                         .then(function (res) {
-                            (typeof res.data === 'number') ? (cart.innerText = res.data) : (cart.innerText = res.data.user['sumProduct'])
+                            console.log(res.data)
+                           cart.innerText = res.data.total
                         })
                 }
-                console.log($('.out-off').parent())
-                // if ($('.out-off')) {
-                //     $('.out-off').attr('onclick', '').attr('type', 'button').addClass('qty-increase out')
-                //         .removeClass('out-off')
-                //         .removeAttr("data-toggle")
-                //         .removeAttr('data-target')
-                // }
+
+                if ($(this).next().next().hasClass('out-off')) {
+                   $(this).next().next().attr('onclick', '').attr('type', 'button').addClass('qty-increase out')
+                        .removeClass('out-off')
+                        .removeAttr("data-toggle")
+                        .removeAttr('data-target')
+                }
             })
         })
 
-        var qtyIncrease1 = $('.qty-increase')
-        qtyIncrease1.each(function () {
-            $(this).click(function () {
-                var that = $(this)
-                var product_idIn = $(this).prev().attr('class')
-                axios.get('/increase/qty/' + product_idIn)
-                .then(function (res) {
-                    console.log(res.data)
-                    if(typeof res.data.quantity === 'number' && res.data.quantity < res.data.rest) {
-                        (typeof res.data.total === 'number') ? cart.innerText = res.data.total  : cart.innerText = res.data.quantity.user['sumProduct']
-                        console.log(11)
-                    } else if (typeof res.data.quantity === 'number' && res.data.quantity == res.data.rest) {
-                        (typeof res.data.total === 'number') ? cart.innerText = res.data.total : cart.innerText = res.data.quantity.user['sumProduct']
-                        $(that)
-                            .attr("data-toggle", 'modal').attr("data-target", '#out-off')
-                            .removeClass('qty-increase')
-                            .addClass('out-off')
-                        $(that).prev().attr('value', res.data.quantity)
-                        $(that).prev().val(res.data.quantity)
-                        console.log(22)
-                    }else {
-                        $(that)
-                        .attr("data-toggle", 'modal').attr("data-target", '#out-off')
-                        .removeClass('qty-increase')
-                        .addClass('out-off')
-                        $(that).prev().attr('value', res.data.rest)
-                        $(that).prev().val(res.data.rest)
-                        console.log(33)
-                    }                        
-                })
-            })
-        })
+    </script>     
 
-        $(document).on('click', '.out', function(){
-            $(this).click(function () {
-                var that = $(this)
-                var product_idIn = $(this).prev().attr('class')
-                axios.get('/increase/qty/' + product_idIn)
-                    .then(function (res) {
-                        console.log('def',res.data)
-                        if (typeof res.data.quantity === 'number' && res.data.quantity < res.data.rest) {
-                            (typeof res.data.total === 'number') ? cart.innerText = res.data.total : cart.innerText = res.data.quantity.user['sumProduct']
-                            console.log(1)
-                        } else if (typeof res.data.quantity === 'number' && res.data.quantity == res.data.rest) {
-                            (typeof res.data.total === 'number') ? cart.innerText = res.data.total : cart.innerText = res.data.quantity.user['sumProduct']
-                            $(that)
-                                .attr("data-toggle", 'modal').attr("data-target", '#out-off')
-                                .removeClass('qty-increase')
-                                .addClass('out-off')
-                            $(that).prev().attr('value', res.data.quantity)
-                            $(that).prev().val(res.data.quantity)
-                            console.log(2)
-                        } else {
-                            $(that)
-                                .attr("data-toggle", 'modal').attr("data-target", '#out-off')
-                                .removeClass('qty-increase')
-                                .addClass('out-off')
-                            $(that).prev().attr('value', res.data.rest)
-                            $(that).prev().val(res.data.rest)
-                            console.log(3)
-                        }
-                    })
-            })
-        })
-    </script>          
+    <!-- Thông báo cho user xem có nên đặt hàng hay không khi có 1 hoặc vài sản phẩm hết hàng -->
+    <script type="text/javascript">
+        var out_off_product = $('.out-stock').length
+        var quantity = $('.quantity').length
+        if(out_off_product > 0 && quantity > 0) {
+            var box1 = '<button class="link-to checkout-button" data-toggle="modal" data-target="#continue-order">Tiến hành đặt hàng<i class="fa fa-angle-right"></i></button>'
+            $('.checkout-button').remove()
+            $('.checkout-proceed').append(box1)
+            $('#total-out-off').text(out_off_product)
+        }
+
+        if (out_off_product > 0 && quantity === 0) {
+                var box1 = '<button class="link-to checkout-button" data-toggle="modal" data-target="#cannot-order">Tiến hành đặt hàng<i class="fa fa-angle-right"></i></button>'
+                $('.checkout-button').remove()
+                $('.checkout-proceed').append(box1)
+        }
+    </script>
 </body>
 </html>

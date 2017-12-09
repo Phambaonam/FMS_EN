@@ -139,7 +139,7 @@
                         <a href="/gio-hang" class="header-cart item">
                             <i class="fa fa-shopping-cart"></i>
                             Giỏ Hàng
-                            {% if carts %}
+                            {% if carts >= 0 %}
                                 <span id="cart-count" class='cart-count total'>{{ carts }}</span>
                             {% else %}
                                 <span id="cart-count" class='cart-count total'>0</span>
@@ -282,7 +282,7 @@
                                 <input onclick="checkPass()" type="text" name="username" id="name" placeholder="Họ tên" required` />
                             </div>
                             <div class="input-field check-field">
-                                <input type="checkbox" id="remember" name="remember" onclick="displayPassword()"/><label for="remember">Hiển thị mật
+                                <input type="checkbox"  name="remember" onclick="displayPassword()"/><label for="remember">Hiển thị mật
                                 khẩu</label><br/>
                             </div>
                             <div class="input-field">

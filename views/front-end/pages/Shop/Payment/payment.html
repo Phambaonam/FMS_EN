@@ -300,7 +300,7 @@
 					<h2>2.Chọn hình thức thanh toán</h2>
 					<div class="payment-method">
 						{% for item in payment_methods %}
-						<input type="radio" name="payment-method" value="{{ item.id }}" id="{{ item.alias }}"> {{ item.name }}
+						<input type="radio" name="payment-method" value="{{ item.id }}" id="{{ item.alias | trim}}"> {{ item.name }}
 						<br>
 						{% endfor %}
 						<!-- <input type="radio" name="payment-method" value="2" id="atm"> Thẻ ATM đăng ký Internet Banking (Miễn phí thanh toán)

@@ -127,14 +127,49 @@ module.exports = function (router, backendPath, db) {
 
     router.get('/admin/order_detali/order_success', checkUserLogin, (req, res) => {
         const code_order = req.query.code
-        const orderSuccess = "UPDATE purchase SET status_purchase = 'success' WHERE code_purchase = ${code_order};"
+        const orderSuccess = `UPDATE purchase SET status_purchase = 'success' WHERE code_purchase = '${code_order}';`
         db.task('update status order', function* (t) {
-            yield t.any(orderSuccess, {
-                code_order: code_order
-            })
-            return 1
+            // thay đổi trạng thái đơn hàng là thành công
+            yield t.any(orderSuccess)
+            // lấy ra những sản phẩm đã mua
+            let order = `SELECT product, customer_id FROM purchase WHERE code_purchase = '${code_order}';`
+            let getProducts = yield t.one(order)
+            /**
+             * thay đổi quyền cho phép user nhận xét sản phẩm đã mua
+             * Chỉ cần đã mua sản phẩm là có thể nhận xét sản phẩm đó, do vậy chỉ cần lưu id của sản phẩm và của user là đủ.
+             */
+            let products = getProducts.product
+            for (let item in products) {
+                let product = JSON.parse(products[item])
+                let permision = true
+                let customer_id = getProducts.customer_id
+                let attribute_product_id = product.attribute_product_id
+                /**
+                 * đầu tiên phải kiểm tra xem khách hàng đó đã mua sản phẩm hay chưa.
+                 * trong bảng customer_review_product mỗi user sẽ có 1 id sản phẩm duy nhất(tránh lặp lại 1 sản phẩm và 1 user xuất hiện trong nhiều row)
+                 */
+                let existProduct = `SELECT count(1) FROM customer_review_product WHERE attribute_product_id = ${attribute_product_id} AND customer_id = ${customer_id};`
+                let status = yield t.one(existProduct)
+                switch (+status.count) {
+                    case 0:
+                        {
+                            let permissionReview = `INSERT INTO customer_review_product(title, content, time_review, star, permision, customer_id, attribute_product_id)
+                                    VALUES(null, null, null, null,${permision}, ${customer_id}, ${attribute_product_id});`
+                            yield t.any(permissionReview)
+                        }
+                        break
+                    case 1:
+                        {
+                            console.log(`sản phẩm có id là ${attribute_product_id} đã được mua bới khách hàng có id là ${customer_id}`)
+                        }
+                        break
+                }
+
+            }
+            return true
         })
             .then(() => {
+                // res.json(data)
                 res.redirect('/admin/order_detail?code=' + code_order)
             })
     })

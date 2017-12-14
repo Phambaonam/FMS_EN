@@ -1,4 +1,4 @@
-module.exports.userInfo = function (db, router, frontendPath) {
+module.exports = function (db, router, frontendPath) {
     const bcrypt = require('bcrypt')
     const saltRounds = 10
     const crypto = require('crypto')

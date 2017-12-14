@@ -152,14 +152,14 @@
                                 <li>
                                     <label for="gender">Giới tính:</label>
                                     <div>
-                                        {% if info.general.trim() === 'Nam' %}
+                                        {% if info.general != null and info.general  | trim == 'Nam' %}
                                             <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" checked /> 
                                         {% else %}
                                             <input type="radio" class="gender radio-update" name="gender" id="male" value="Nam" /> 
                                         {% endif %}
                                         <label class="gender" for="male">Nam</label>
 
-                                        {% if info.general.trim() ==='Nữ' %}
+                                        {% if info.general != null and info.general  | trim =='Nữ' %}
                                             <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" checked /> 
                                         {% else %}
                                             <input type="radio" class="gender radio-update" name="gender" id="female" value="Nữ" /> 

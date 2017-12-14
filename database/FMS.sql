@@ -103,6 +103,16 @@ CREATE TABLE IF NOT EXISTS purchase(
     payment_method_id INT REFERENCES payment_method(id) ON DELETE CASCADE NOT NULL
     code_purchase CHAR(100)
 );
+CREATE TABLE IF NOT EXISTS customer_review_product(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    content TEXT,
+    time_review CHAR(100),
+    star SMALLINT,
+    permision BOOLEAN,
+    customer_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL,
+    attribute_product_id INT REFERENCES attribute_product(id) ON DELETE CASCADE NOT NULL
+);
 
 \COPY area(id,area_name,area_alias,time_create) FROM '/home/doremonsun/Desktop/DoAn/FMS_EN/database/area.csv' DELIMITER ',' CSV HEADER;
 

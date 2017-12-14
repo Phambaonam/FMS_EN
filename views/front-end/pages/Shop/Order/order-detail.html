@@ -192,6 +192,8 @@
                         <strong>Đặt hàng thành công</strong>
                     {% elif order.status_purchase | trim == 'cancel' %}
                         <strong>Đã Hủy</strong>
+                    {% elif order.status_purchase | trim == 'success' %}
+                        <strong>Giao hàng thành công</strong>
                     {% endif %}
                 </h3>
                 <div class="account-order-detail">

@@ -1,7 +1,7 @@
 /**
  * Created by doremonsun on 8/6/17.
  */
-module.exports.homePage = function (db, router, frontendPath) {
+module.exports = function (db, router, frontendPath) {
     router.get('/', (req, res) => {
         // console.log('req.user trang chu', req.user)
         // console.log('session trang chu', req.session)

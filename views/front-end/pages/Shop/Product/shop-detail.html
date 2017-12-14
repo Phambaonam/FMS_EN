@@ -3,7 +3,19 @@
 <!-- Head -->
 {% include '../../../components/head.html' %}
 <!-- End Head -->
+<style>
 
+#success {
+    text-align: center;
+    /* border: 1px solid; */
+    height: 40px;
+    background: #23CF2A;
+}
+#success p {
+    font-size: 1.8em;
+    color: #fff;
+}
+</style>
 <body>
     <!-- Header -->
     {% include '../../../components/header.html' %}
@@ -27,27 +39,31 @@
         <div class="images">
             <div id="single-1" class="carousel slide" data-ride="carousel" data-interval="false">
                 <ol class="carousel-indicators">
-                    {% for index, image in data.images %} {% if index === '0' %}
-                    <li data-target="#single-1" data-slide-to="0" class="active">
-                        <img src="/public/images/products/{{ image }}" class="img-responsive">
-                    </li>
-                    {% else %}
-                    <li data-target="#single-1" data-slide-to="{{ index }}">
-                        <img src="/public/images/products/{{ image }}" class="img-responsive">
-                    </li>
-                    {% endif %} {% endfor %}
+                    {% for index, image in data.images %} 
+                        {% if index === '0' %}
+                        <li data-target="#single-1" data-slide-to="0" class="active">
+                            <img src="/public/images/products/{{ image }}" class="img-responsive">
+                        </li>
+                        {% else %}
+                        <li data-target="#single-1" data-slide-to="{{ index }}">
+                            <img src="/public/images/products/{{ image }}" class="img-responsive">
+                        </li>
+                        {% endif %} 
+                    {% endfor %}
                 </ol>
 
                 <div class="carousel-inner" role="listbox">
-                    {% for index, image in data.images %} {% if index === '0' %}
-                    <div class="item active">
-                        <img src="/public/images/products/{{ image }}" class="img-responsive">
-                    </div>
-                    {% else%}
-                    <div class="item ">
-                        <img src="/public/images/products/{{ image }}" class="img-responsive">
-                    </div>
-                    {%endif%} {% endfor %}
+                    {% for index, image in data.images %} 
+                        {% if index === '0' %}
+                        <div class="item active">
+                            <img src="/public/images/products/{{ image }}" class="img-responsive">
+                        </div>
+                        {% else%}
+                        <div class="item ">
+                            <img src="/public/images/products/{{ image }}" class="img-responsive">
+                        </div>
+                        {%endif%} 
+                    {% endfor %}
                 </div>
                 <a class="left carousel-control" href="#single-1" data-slide="prev">
                     <i class="fa fa-long-arrow-left"></i>
@@ -62,19 +78,21 @@
             {% if status > 1 %}
             <div>
                 <span class="stock">Sản phẩm cùng loại:</span>
-                {% for image in images %} {% if data.product_id === image.product_id %}
-                <a href="/san-pham/chi-tiet-san-pham/{{ image.product_alias}}-{{ image.product_id }}">
-                    <img style="width: 10%; margin: 15px 26px; border: 1px solid #CCCCCC; " src="/public/images/products/{{ image.images['0'] }}"
-                        class="color" alt="{{ image.product_alias }}">
-                </a>
-                {% else %}
-                <a href="/san-pham/chi-tiet-san-pham/{{ image.product_alias}}-{{ image.product_id }}">
-                    <img style="width: 10%;" src="/public/images/products/{{ image.images['0'] }}" class="color" alt="{{ image.product_alias }}">
-                </a>
-                {% endif %} {% endfor %}
+                {% for image in images %} 
+                    {% if data.product_id === image.product_id %}
+                    <a href="/san-pham/chi-tiet-san-pham/{{ image.product_alias}}-{{ image.product_id }}">
+                        <img style="width: 10%; margin: 15px 26px; border: 1px solid #CCCCCC; " src="/public/images/products/{{ image.images['0'] }}"
+                            class="color" alt="{{ image.product_alias }}">
+                    </a>
+                    {% else %}
+                    <a href="/san-pham/chi-tiet-san-pham/{{ image.product_alias}}-{{ image.product_id }}">
+                        <img style="width: 10%;" src="/public/images/products/{{ image.images['0'] }}" class="color" alt="{{ image.product_alias }}">
+                    </a>
+                    {% endif %} 
+                {% endfor %}
             </div>
             {% endif%}
-            <ul class="review">
+            <!-- <ul class="review">
                 <li>
                     <a href="javascript:void(0)">
                         <span class="rating-detail">
@@ -94,7 +112,7 @@
                 <li class="fontSize-rating">
                     <a href="javascript:void(0)">2K Saves</a>
                 </li>
-            </ul>
+            </ul> -->
             <div class="single-price">
                 <ins>{{ data.product_price }}đ</ins>
                 <del class="sale-off-detail">{{ data.original_price }}đ</del>
@@ -103,14 +121,13 @@
                 <p>{{ data.description }}</p>
             </div>
             <p class="stock">
-                {% if data.total < 10 and data.total > 1 %}
-                    Còn lại:
-                    <span class="rest-stock">{{ data.total }} sản phẩm</span>
-                {% elif data.total === 0 %}
-                Tình trạng:
+                {% if data.rest_of_product === 0 %} Tình trạng:
                     <span class="out-stock">Hết hàng</span>
-                {% else %}
-                Tình trạng:
+                {% elif data.rest_of_product <=5 %} 
+                    Còn lại: 
+                    <span class="rest-stock">{{ data.rest_of_product }} sản phẩm</span>
+                {% else %} 
+                    Tình trạng:
                     <span class="in-stock">Còn hàng</span>
                 {% endif %}
             </p>
@@ -122,7 +139,7 @@
                     <button class="qty-increase" onclick="" type="button">+</button>
                 </div>
                 <div class="cart-button">
-                    <button type="submit" id="add-to-cart" class="add-to-cart link-to">Thêm vào giỏ hàng</button>
+                    <button id="add-to-cart" class="add-to-cart link-to">Thêm vào giỏ hàng</button>
                     {% if login_status !== true %}
                     <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#myModal" style="width: 27px;">
                         <i class="fa fa-heart-o"></i>
@@ -130,15 +147,15 @@
                     {% elif listWishlish %} 
                         {% for wishlish in listWishlish %} 
                             {% if wishlish.attribute_product_id === data.product_id %}
-                                <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish" style="width: 27px;">
-                                    <i class="wishlished fa fa-heart-o"></i>
-                                </a>
+                            <a href="javascript:void(0)" type="button" data-toggle="modal" data-target="#existsWishlish" style="width: 27px;">
+                                <i class="wishlished fa fa-heart-o"></i>
+                            </a>
                             {% endif %} 
                         {% endfor %} 
                     {% else %}
-                        <a href="javascript:void(0)" id="add_to_wishlist" style="width: 27px;">
-                            <i class="fa fa-heart-o"></i>
-                        </a>
+                    <a href="javascript:void(0)" id="add_to_wishlist" style="width: 27px;">
+                        <i class="fa fa-heart-o"></i>
+                    </a>
                     {% endif %}
                 </div>
             </div>
@@ -173,19 +190,24 @@
                     <p style="font-size:18px;">{{ data.description }}.</p>
                 </div>
                 <div class="tab-pane fade" id="tab-info">
-                    {% for attribute in [data.attributes] %} {% if attribute.material %}
-                    <p style="font-size:18px;">
-                        <strong>Chất Liệu</strong>: {{ attribute.material | title }}
-                    </p>
-                    {% endif %} {% if attribute.color %}
-                    <p style="font-size:18px;">
-                        <strong>Màu sắc</strong>: {{ attribute.color | title }}
-                    </p>
-                    {% endif %} {% if attribute.manufacturer %}
-                    <p style="font-size:18px;">
-                        <strong>Nhà sản xuất</strong>: {{ attribute.manufacturer | title }}
-                    </p>
-                    {% endif %}
+                    {% for attribute in [data.attributes] %} 
+                        {% if attribute.material %}
+                        <p style="font-size:18px;">
+                            <strong>Chất Liệu</strong>: {{ attribute.material | title }}
+                        </p>
+                        {% endif %} 
+
+                        {% if attribute.color %}
+                        <p style="font-size:18px;">
+                            <strong>Màu sắc</strong>: {{ attribute.color | title }}
+                        </p>
+                        {% endif %} 
+
+                        {% if attribute.manufacturer %}
+                        <p style="font-size:18px;">
+                            <strong>Nhà sản xuất</strong>: {{ attribute.manufacturer | title }}
+                        </p>
+                        {% endif %}
 
                     <p style="font-size:18px;">
                         <strong>Kích thước</strong>: {% for size in [attribute.size] %} {% if size.length %} Dài: {{ size.length
@@ -193,7 +215,8 @@
                         Cao: {{ size.hight }} cm {% endif %} {% if size.diameter %} Đường kính: {{ size.diameter }} cm {%
                         endif %} {% endfor %}
                     </p>
-                    {% endfor %} {% if data.product_id %}
+                    {% endfor %} 
+                    {% if data.product_id %}
                     <p style="font-size:18px;">
                         <strong>Mã sản phẩm</strong>: {{ data.product_id }}
                     </p>
@@ -228,31 +251,27 @@
 
                             <div class="product-customer-col-1">
                                 <h4>Đánh Giá Trung Bình</h4>
-                                <p class="total-review-point">4.5/5</p>
+                                <p class="total-review-point">{{ data.rate }}/5</p>
                                 <div class="item-rating" style="text-align: center">
-                                    <p class="rating">
-                                        <span class="rating-box">
-                                            <i class="star"></i>
-                                            <i class="star"></i>
-                                            <i class="star"></i>
-                                            <i class="star"></i>
-                                            <i class="star"></i>
-                                            <span style="width: 90%;">
-                                                <i class="star"></i>
-                                                <i class="star"></i>
-                                                <i class="star"></i>
-                                                <i class="star"></i>
-                                                <i class="star"></i>
-                                            </span>
+                                    <p class="rating"></p>
+                                        <span class="rating-detail">
+                                        {% set stars = [1,2,3,4,5] %} 
+                                        {% for i in stars %} 
+                                            {% if data.rate >= i %}
+                                                <span id="star{{i}}" class="stared fa fa-star" data-rating="{{i}}"></span>
+                                            {% else %}
+                                                <span id="star{{i}}" class="fa fa-star" data-rating="{{i}}"></span>
+                                            {% endif %} 
+                                        {% endfor %}
                                         </span>
                                     </p>
 
                                     <p class="comments-count">
-                                        <a href="nha-gia-kim-p378448/nhan-xet">(2145 nhận xét)</a>
+                                        <a href="javascript:void(0)">({{ data.numberReviews }} nhận xét)</a>
                                     </p>
                                 </div>
                             </div>
-                            <div class="product-customer-col-2">
+                            <!-- <div class="product-customer-col-2">
                                 <div class="item rate-5">
                                     <span class="rating-num">5</span>
                                     <div class="progress">
@@ -298,95 +317,93 @@
                                     </div>
                                     <span class="rating-num-total">1%</span>
                                 </div>
-                            </div>
+                            </div> -->
+                            <div id="myDiv"></div>
+
+                            <!-- <h1>{{ info.id }}</h1> -->
                             <div class="product-customer-col-3">
                                 <h4>Chia sẻ nhận xét về sản phẩm</h4>
-
-                                <button type="button" class="btn btn-default js-customer-button">Viết nhận xét của bạn</button>
+                                {% if login_status !== true %}
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Viết nhận xét của bạn</button>
+                                {% elif permision === true %}
+                                    {% set temp = 0 %}
+                                    {% for review in reviews %} 
+                                        {% if review.customer_id === info.id %}
+                                        {% set temp = info.id %}
+                                        {% endif %} 
+                                    {% endfor %}
+                                    {% if temp === info.id %}
+                                    <button type="button" class="btn btn-default js-customer-button">Chỉnh sửa nhận xét</button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-default js-customer-button">Viết nhận xét của bạn</button>
+                                    {% endif %}
+                                {% else %}
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#permison">Viết nhận xét của bạn</button>
+                                {% endif %}
                             </div>
 
                             <div class="clearfix"></div>
                             <h3 class="js-customer-h3">Gửi nhận xét của bạn</h3>
                             <div class="product-customer-col-4 js-customer-col-4">
-                                <form action="" method="post" id="addReviewFrm" novalidate="novalidate" class="bv-form">
-                                    <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
-                                    <input type="hidden" name="entity_pk_value" value="378448" id="entity_pk_value">
-                                    <input type="hidden" name="productset_id" value="251" id="productset_id">
+                                <div style="display: block; margin-top: 0em;">
                                     <div class="rate form-group has-feedback" id="rating_wrapper">
+                                        <input type="hidden" name="product_id" id="product-id" value="{{ data.product_id }}">
+                                        <p id="star_err" style="color:#fa0500; display: none" >Bạn vui lòng rating cho sản phẩm này.</p>
                                         <label>1. Đánh giá của bạn về sản phẩm này:</label>
                                         <div class="rating-input">
-                                            <i class="glyphicon glyphicon-star-empty" data-value="1"></i>
-                                            <i class="glyphicon glyphicon-star-empty" data-value="2"></i>
-                                            <i class="glyphicon glyphicon-star-empty" data-value="3"></i>
-                                            <i class="glyphicon glyphicon-star-empty" data-value="4"></i>
-                                            <i class="glyphicon glyphicon-star-empty" data-value="5"></i>
+                                            <span id="star1" class="star rated fa fa-star" data-rating="1"></span>
+                                            <span id="star2" class="star rated fa fa-star" data-rating="2"></span>
+                                            <span id="star3" class="star rated fa fa-star" data-rating="3"></span>
+                                            <span id="star4" class="star rated fa fa-star" data-rating="4"></span>
+                                            <span id="star5" class="star rated fa fa-star" data-rating="5"></span>
+                                            <span id="numberStar">
+                                                <input id="number_rating" name="star" type="hidden">
+                                            </span>
                                             <a class="rating-clear" style="display:none;" href="javascript:void(0)">
                                                 <span class="glyphicon glyphicon-remove"></span> xóa
                                             </a>
-                                            <input type="number" name="rating_star" id="rating_star" data-clearable="xóa" class="rating hidden" data-min="1" data-max="5"
+                                            <!-- <input type="number" name="rating_star" id="rating_star" data-clearable="xóa" class="rating hidden" data-min="1" data-max="5"
                                                 data-bv-field="rating_star">
-                                            <i class="form-control-feedback" data-bv-icon-for="rating_star" style="display: none;"></i>
+                                            <i class="form-control-feedback" data-bv-icon-for="rating_star" style="display: none;"></i> -->
                                         </div>
-                                        <small class="help-block" data-bv-validator="callback" data-bv-for="rating_star" data-bv-result="NOT_VALIDATED" style="display: none;">
+                                        <!-- <small class="help-block" data-bv-validator="callback" data-bv-for="rating_star" data-bv-result="NOT_VALIDATED" style="display: none;">
                                             Vui lòng chọn đánh giá của bạn về sản phẩm này.
                                         </small>
                                         <small class="help-block" data-bv-validator="integer" data-bv-for="rating_star" data-bv-result="NOT_VALIDATED" style="display: none;">Please enter a valid number
-                                        </small>
+                                        </small> -->
                                     </div>
 
                                     <div class="title form-group" id="title_wrapper">
+                                        <p id="title_err" style="color:#fa0500 ;display: none">Bạn vui lòng nhập tiêu đề cho nhận xét.</p>
                                         <label for="review_title">2. Tiêu đề của nhận xét:</label>
-                                        <input type="text" placeholder="Nhập tiêu đề nhận xét (không bắt buộc)" name="title" id="review_title" class="form-control input-sm">
+                                        <input type="text" placeholder="Nhập tiêu đề nhận xét" name="title" id="review_title" class="form-control input-sm">
                                     </div>
 
                                     <div class="review-content form-group has-feedback has-error">
+                                        <p id="content_err" style="color:#fa0500; display: none">Bạn vui lòng viết nhận xét vào ô bên dưới..</p>
                                         <label for="review_detail">3. Viết nhận xét của bạn vào bên dưới:</label>
-                                        <textarea placeholder="Nhận xét của bạn về sản phẩm này" class="form-control" name="detail" id="review_detail" cols="30"
+                                        <textarea placeholder="Nhận xét của bạn về sản phẩm này" class="form-control" name="content" id="review_detail" cols="30"
                                             rows="10" data-bv-field="detail"></textarea>
                                     </div>
 
                                     <div class="action">
-                                        <button type="submit" class="btn btn-default btn-add-review ">Gửi nhận xét</button>
+                                        <button class="btn btn-default btn-add-review ">Gửi nhận xét</button>
                                     </div>
-                                </form>
-
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="customer-review">
-                        <div itemprop="itemReviewed">
-                            <span itemprop="name" content=""></span>
-                        </div>
-                        <div class="product-col-1">
-                            <p class="image">
-                            </p>
-                            <div class="avatar-img" style="background-image: url(http://pic.qqtn.com/file/2013/2014-12/2014121609253730810.jpg);"></div>
-                            <p></p>
-                            <p class="name" itemprop="author">Minh Hà</p>
-                            <p class="from">
-                                <!-- react-text: 104 -->đến từ
-                                <!-- /react-text -->
-                                <span>Vĩnh Phúc</span>
-                            </p>
-                            <p class="days">19 ngày trước</p>
-                        </div>
-                        <div class="product-col-2">
-                            <div class="infomation">
-                                <p class="review" itemprop="name">Sách rất hay và ý nghĩa</p>
-                                <p class="buy-already">Đã mua sản phẩm này tại Min</p>
-                                <div class="description js-description">
-                                    <p class="review_detail" itemprop="reviewBody">
-                                        <span>
-                                            Tiki giao sách nhanh chóng và sách thì được đóng gói rất cẩn thận. Sách hay khỏi phải bàn. Mỗi lần cầm quyển sách này lên
-                                            đọc là mình lại có động lực ngay để bắt đầu làm mọi điều mà mình muốn
-                                            <br>
-                                        </span>
-                                    </p>
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
+                    <div id="success" style="display: none">
+                        <p>Bạn đã nhận xét cho sản phẩm này!</p>
+                    </div>
+                    <div id="review">
+                        <!-- review -->
+                        {% include './review-customer.html' %}
+                        <!-- end -->
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -446,158 +463,281 @@
     <!-- Footer -->
     {% include '../../../components/footer.html' %}
     <!-- End Footer -->
+    <!-- cảnh báo user không có quyền viết nhận xét -->
+    <div class="modal fade" id="permison" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                    <div class="bootbox-body">
+                        <p style="font-size: 20px;">Bạn không thể viết nhận xét khi chưa mua sản phẩm này.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="confirm" type="button" class="btn btn btn-primary" id="remove-wishlish" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- cảnh báo số lượng sản phẩm không đủ để thêm vào giỏ hàng -->
+    <div class="modal fade" id="out-off" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                    <div class="bootbox-body">
+                        <p style="font-size: 20px;">Số lượng sản phẩm trong kho không đủ!</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="confirm" type="button" class="btn btn btn-primary" id="remove-wishlish" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- script -->
     {% include '../../../components/script.html' %}
     <!-- End script -->
     <!-- display or hide notification when customer add to cart -->
     <script type="text/javascript">
         if ('{{ info.username }}') {
-            $('#add-to-cart').click(function () {
+            $('#add-to-cart').click(() => {
                 $('.add-to-cart-success1').css('display', 'block')
-                setTimeout(function () {
+                setTimeout(() => {
                     $('.add-to-cart-success1').css('display', 'none')
                 }, 5000);
             })
 
-            $('.close1').click(function () {
+            $('.close1').click(() => {
                 $('.add-to-cart-success1').css('display', 'none')
             })
         } else {
-            $('#add-to-cart').click(function () {
+            $('#add-to-cart').click(() => {
                 $('.add-to-cart-success').css('display', 'block')
-                setTimeout(function () {
+                setTimeout(() => {
                     $('.add-to-cart-success').css('display', 'none')
                 }, 5000);
             })
 
-            $('.close').click(function () {
+            $('.close').click(() => {
                 $('.add-to-cart-success').css('display', 'none')
             })
         }
     </script>
-    <script type="text/javascript">
 
-        // $(window).bind('scroll', function () {
-        //     if ($(window).scrollTop() > 460) {
-        //         $('header').addClass('fixed')
-        //         $('button#menu-scroll.navbar-toggle').css('display', 'block')
-        //         $('header').css('height', '71px')
-        //     } else {
-        //         $('header').removeClass('fixed')
-        //         $('button#menu-scroll.navbar-toggle').css('display', 'none')
-        //         $('header').css('height', '151px')
-        //     }
-        // });
-        var click = 'onclicked'
-        var temp = 1
-        $(".form-search button").click(function () {
+    <script type="text/javascript">
+        let clicked = 'onclicked'
+        let temp = 1
+        $(".form-search button").click(() => {
             /********************
              * Using if*/
-            if (click === 'onclicked') {
+            if (clicked === 'onclicked') {
                 $('header').css('height', '151px');
                 $('header .navbar').css('display', 'flex');
-                console.log(click);
-                click = 'clicked again'
+                console.log(clicked);
+                clicked = 'clicked again'
             } else if (click === 'clicked again') {
                 $('header').css('height', '71px');
                 $('header .navbar').css('display', 'none');
-                console.log(click);
-                click = 'onclicked';
+                console.log(clicked);
+                clicked = 'onclicked';
             }
-            /*******************/
 
-            /*******************
-             * Using switch ... case
-             switch (temp) {
-                case (1): {
-                    $('header').css('height', '151px')
-                    $('header .navbar').css('display', 'flex')
-                    console.log(temp)
-                    temp++
-                }
-                    break
-                case(2): {
-                    $('header').css('height', '71px')
-                    $('header .navbar').css('display', 'none')
-                    console.log(temp)
-                    temp--
-                }
-                    break
-                default:
-            }
-             /*******************/
-            $(window).bind('scroll', function () {
-                if (click === 'onclicked' && $(window).scrollTop() < 460) {
+            $(window).bind('scroll', () => {
+                if (clicked === 'onclicked' && $(window).scrollTop() < 460) {
                     console.log(3);
                     $('header .navbar').css('display', 'flex');
-                } else if (click === 'onclicked' && $(window).scrollTop() > 460) {
+                } else if (clicked === 'onclicked' && $(window).scrollTop() > 460) {
                     console.log(4);
                     $('header .navbar').css('display', 'none');
                 }
             })
         });
     </script>
+
     <script type="text/javascript">
-        $('.review_action').click(function () {
-            $(this).each(function () {
+        $('.review_action').click(() => {
+            $(this).each(() => {
                 $('.quick-reply').css('display', 'block')
             })
         });
-        $('.js-customer-button').click(function () {
-            var buttonValue = $('.js-customer-button').text()
+        $('.js-customer-button').click(() => {
+            let buttonValue = $('.js-customer-button').text()
             if (buttonValue === 'Viết nhận xét của bạn') {
                 $('.product-customer-col-4').css('display', 'block')
-                $('.js-customer-button').text('Đóng');
+                $('.js-customer-button').text('Đóng')
             } else if (buttonValue === 'Đóng') {
                 $('.product-customer-col-4').css('display', 'none')
-                $('.js-customer-button').text('Viết nhận xét của bạn');
+                $('.js-customer-button').text('Viết nhận xét của bạn')
+            } else if (buttonValue === 'Chỉnh sửa nhận xét') {
+                $('.product-customer-col-4').css('display', 'block')
+                $('.js-customer-button').text('Hủy')
+                $('.btn-add-review').addClass('review-again')
+                /* 
+                * Khi user cập nhật nhận xét, nhưng chưa vừa ý lại muốn sửa lại thì ta phải xóa đi những thông tin trước đó.
+                * 
+                */
+                let stars = $('.rated')
+                for (let star = 0; star < stars.length; star++) {
+                    stars[star].style.color = '#8e8877'
+                }
+                $('#review_title').val('')
+                $('#review_detail').val('')
+                $('#success').css('display', 'none')
+            } if (buttonValue === 'Hủy') {
+                $('.product-customer-col-4').css('display', 'none')
+                $('.js-customer-button').text('Chỉnh sửa nhận xét')
+                let stars = $('.rated')
+                for (let star = 0; star < stars.length; star++) {
+                    stars[star].style.color = '#8e8877'
+                }
+                $('#review_title').val('')
+                $('#review_detail').val('')
             }
         });
     </script>
+
     <!-- add to cart -->
     <script type="text/javascript">
-        var product_id = document.getElementById('qty').className
-        var add_to_cart = document.getElementById('add-to-cart')
-        add_to_cart.onclick = function () {
-            var qty = document.getElementById('qty').value
-            var total = document.getElementById('cart-count')
-            axios({
-                method: 'post',
-                url: '/add_to_cart',
-                data: {
-                    product_id: product_id,
-                    quantity: qty
-                }
+
+        $('.qty-increase').click(() => {
+            $(document).ready(() => {
+                let qty = parseInt($('#qty').val())
+                let rest = parseInt($('.rest-stock').text())
+                if (qty > rest) $('#add-to-cart').attr("data-toggle", 'modal').attr("data-target", '#out-off')
             })
-                .then(function (res) {
-                    total.innerText = res.data
+
+
+        })
+
+        $('.qty-decrease').click(() => {
+            $(document).ready(() => {
+                let rest = parseInt($('.rest-stock').text())
+                let qty = parseInt($('#qty').val())
+                if (qty <= rest) $('#add-to-cart').removeAttr("data-toggle").removeAttr("data-target")
+            })
+        })
+
+        $(document).ready(() => {
+            $('#add-to-cart').click(() => {
+                console.log(123)
+                axios({
+                    method: 'post',
+                    url: '/add_to_cart',
+                    data: {
+                        product_id: $('#qty').attr('class'),
+                        quantity: $('#qty').val()
+                    }
                 })
-        }
+                    .then(res => {
+                        $('#cart-count').text(res.data)
+                    })
+            })
+        })
+
     </script>
+
     <!-- add to wishlish -->
     <script type="text/javascript">
-        var product_id = document.getElementById('qty').className
-        var wishlish = document.getElementById('add_to_wishlist')
-        wishlish.onclick = function () {
-            var totalWish = document.getElementById('add_to-wishlist')
+        $('#add_to_wishlist').click = () => {
             axios({
                 method: 'post',
                 url: '/add_to_wishlish',
                 data: {
-                    product_id: product_id
+                    product_id: $('#qty').attr('class')
                 }
             })
-                .then(function (res) {
-                    totalWish.innerText = res.data
+                .then(res => {
+                    $('#add_to-wishlist').text(res.data)
                 })
         }
     </script>
-    <script>
-            var sum = $('.single-price')[0].children
-            for (var i = 0; i < sum.length; i++) {
-                sum[i].innerText = parseInt(sum[i].innerText).toLocaleString('vi')
+    <script type="text/javascript">
+        let product_price = $('.single-price')[0].children
+        for (let i = 0; i < product_price.length; i++) {
+            product_price[i].innerText = parseInt(product_price[i].innerText).toLocaleString('vi')
+        }
+    </script>
+
+    <!-- send review -->
+    <script type="text/javascript">
+        $('.btn-add-review').click(() => {
+            let product_id = $('#product-id').val()
+            let title = $('#review_title').val()
+            let content = $('#review_detail').val()
+            let star = $('#number_rating').val()
+            if(star === '') {
+                $('#star_err').css('display', 'block')
+            } else {
+                $('#star_err').css('display', 'none')
             }
+                    
+            if(title === '') {
+                $('#title_err').css('display', 'block')
+            } else{
+                $('#title_err').css('display', 'none')
+            }
+                
+            if(content === '') {
+                 $('#content_err').css('display', 'block')
+            } else {
+                $('#content_err').css('display', 'none')
+            }
+                   
+            if (star !== '' && title !== '' && content !== '') {
+                $('.js-customer-col-4').css('display','none')
+                $('.js-customer-button').text('Viết nhận xét của bạn')
+                $('html, body').animate({
+                    scrollTop: $("#myDiv").offset().top
+                }, 1500);
+                axios({
+                    method: 'post',
+                    url: '/review-product',
+                    data: {
+                        product_id: product_id,
+                        title: title,
+                        content: content,
+                        star: star
+                    }
+                })
+                    .then(res => {
+                        $('#success').css('display','block')
+                        // sau khi đăng nhận xét thành công thì hiển thị thông báo và hiện nút cho phép user sửa nhận xét.
+                        if ($('.review-again')) {
+                            $('#success p').text('Bạn đã chỉnh sửa nhận xét thành công.')
+                            $('.js-customer-button').text('Chỉnh sửa nhận xét')
+                        }
+                        $('#review').html(res.data)
+                    })
+            }
+
+        })
+        $(document).ready(() => {
+            
+        })
+    </script>
+
+    <!-- user rating product -->
+    <script type="text/javascript">
+        $(".star").click(function () {
+            $(this).css("color", "#eeee10");
+            $(this).prevAll().css("color", "#eeee10");
+            $(this).nextAll().css("color", "#8e8877");
+            // $("#number_rating").css("color", "#8e8877");
+            $("#number_rating").val($(this).attr("data-rating"));
+
+        });
+    </script>
+
+    <!-- định dạng lại ngày giờ -->
+    <script type="text/javascript">
+    let days = $('.days')
+    for(let day = 0; day < days.length; day++) {
+        let time = days[day].innerText.trim().split(' ')
+        let ddmmyy = time[0].split('-')
+        days[day].innerText = `${time[1]} ${ddmmyy[2]}-${ddmmyy[1]}-${ddmmyy[0]}`
+    }
     </script>
 </body>
 

@@ -4,7 +4,7 @@
 }
 
 .event-heading {
-    background: url(../img/shop-banner.jpeg);
+    background: url(../../img/shop-banner.jpeg);
     background-size: cover;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .sale-off-middle-mggicon {
-    background-image: url("../img/coupon-icon-sprite.png");
+    background-image: url("../../img/coupon-icon-sprite.png");
     background-repeat: no-repeat;
     display: inline-block;
     margin: -3px 3px 0 0;

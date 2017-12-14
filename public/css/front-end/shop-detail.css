@@ -68,14 +68,14 @@
     padding: 0 10px;
 }
 
-.customer-review .product-col-1 .image {
+.avatar-img img{
     width: 65px;
     height: 65px;
     overflow: hidden;
     position: relative;
-    margin-right: auto;
-    margin-left: auto;
+   margin: 0 30%;
     border-radius: 50%;
+    /* background-image: url(../../img/feedback_1.jpg) */
 }
 
 .customer-review .product-col-1 .name {
@@ -129,7 +129,7 @@
 .customer-review .product-col-2 .infomation .buy-already {
     font-size: 12px;
     padding: 1px 0 1px 22px;
-    background: url(../img/chech-buy.png) no-repeat;
+    background: url(../../img/chech-buy.png) no-repeat;
     margin: 6px 0;
     color: #22b345;
     font-weight: 400;
@@ -316,7 +316,7 @@
 }
 
 .product-customer-box .product-customer-content .product-customer-col-2 .item .rating-num:after {
-    content: "\e924";
+    content: "☆";
     font-family: icomoon;
     position: absolute;
     left: 13px;
@@ -505,6 +505,7 @@
     padding: 7px 8px;
     border: 1px solid #dfdfdf;
     font-weight: 300;
+    font-size: 1.1em;
 }
 .product-customer-box .product-customer-content .product-customer-col-4 .review-content {
     margin: 0 0 24px;
@@ -521,6 +522,7 @@
     font-weight: 400;
     resize: none;
     box-shadow: none;
+    font-size: 1.1em;
 }
 .product-customer-box .product-customer-content .product-customer-col-4 .action button {
     font-weight: 500;

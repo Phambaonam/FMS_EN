@@ -1,0 +1,54 @@
+{% block review %} 
+    {% for review in reviews %}
+    <div class="customer-review">
+
+
+        <div class="product-col-1">
+            <!-- <p class="image">
+                                                        </p> -->
+            <div class="avatar-img">
+                <img src="/public/img/doremon.jpeg" alt="avatar">
+            </div>
+            <!-- <div class="avatar-img" style="background-image: url(http://pic.qqtn.com/file/2013/2014-12/2014121609253730810.jpg);"></div> -->
+            <p></p>
+            <p class="name" itemprop="author">{{ review.customer_name | title}}</p>
+            <p class="from">
+                đến từ
+                <span>{{ review.address }}</span>
+            </p>
+            <p class="days">{{ review.time_review }}</p>
+        </div>
+        <div class="product-col-2">
+            <div class="rating-input">
+
+                {% set stars = [1,2,3,4,5] %} 
+                {% for i in stars %} 
+                    {% if review.star >= i %}
+                <span id="star{{i}}" class="stared fa fa-star" data-rating="{{i}}"></span>
+                    {% else %}
+                <span id="star{{i}}" class="fa fa-star" data-rating="{{i}}"></span>
+                    {% endif %} 
+                {% endfor %}
+                <a class="rating-clear" style="display:none;" href="javascript:void(0)">
+                    <span class="glyphicon glyphicon-remove"></span> xóa
+                </a>
+                <!-- <input type="number" name="rating_star" id="rating_star" data-clearable="xóa" class="rating hidden" data-min="1" data-max="5"
+                                                                                                                                data-bv-field="rating_star">
+                                                                                                                            <i class="form-control-feedback" data-bv-icon-for="rating_star" style="display: none;"></i> -->
+            </div>
+            <div class="infomation">
+                <p class="review" itemprop="name">{{ review.title }}</p>
+                <p class="buy-already">Đã mua sản phẩm này tại Min</p>
+                <div class="description js-description">
+                    <p class="review_detail" itemprop="reviewBody">
+                        <span>
+                            {{ review.content }}
+                            <br>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %} 
+{% endblock %}

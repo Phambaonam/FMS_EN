@@ -73,9 +73,9 @@
 
                     </div>
                     <div class="name description">
-                        <h3><a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a></h3>
+                        <h3><a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name | title }}</a></h3>
                         <p class="manufacturer" style="height:20px">
-                            <a href="/san-pham/tac-gia/{{ product.attributes.manufacturer | replace(' ', '-') }}">{{ product.attributes.manufacturer }}</a>
+                            <a href="/san-pham/tac-gia/{{ product.attributes.manufacturer | replace(' ', '-') }}">{{ product.attributes.manufacturer | title }}</a>
                         </p>
                         <p>
                            <span class="price">
@@ -86,12 +86,21 @@
                         </p>
 
                         <div class="rating">
-                            <span id="star1" class="star fa fa-star" data-rating="1"></span>
+                            <!-- <h1>{{ product.rate }}</h1> -->
+                            <!-- <span id="star1" class="star fa fa-star" data-rating="1"></span>
                             <span id="star2" class="star fa fa-star" data-rating="2"></span>
                             <span id="star3" class="star fa fa-star" data-rating="3"></span>
                             <span id="star4" class="star fa fa-star" data-rating="4"></span>
-                            <span id="star5" class="star fa fa-star" data-rating="5"></span>
-                            <span id="numberStar">&#40<span id="number_rating">{{ product.attributes[0].sum_of_rating }}5 Nhận xét</span>&#41</span>
+                            <span id="star5" class="star fa fa-star" data-rating="5"></span> -->
+                             {% set stars = [1,2,3,4,5] %} 
+                             {% for i in stars %} 
+                             {% if product.rate >= i %}
+                            <span id="star{{i}}" class="stared fa fa-star" data-rating="{{i}}"></span>
+                            {% else %}
+                            <span id="star{{i}}" class="fa fa-star" data-rating="{{i}}"></span>
+                            {% endif %} 
+                            {% endfor %}
+                            <span id="numberStar">&#40<span id="number_rating">{{ product.numberReviews }} Nhận xét</span>&#41</span>
                         </div>
                         {% if product.option_status.new_product %}
                             <div class="tag tag-left new"></div>

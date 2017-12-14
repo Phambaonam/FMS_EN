@@ -140,8 +140,6 @@
                         <option value="sort1">Thứ tự theo sản phẩm mới</option>
                         <option value="sort2">Thứ tự theo giá: thấp đến cao</option>
                         <option value="sort3">Thứ tự theo giá: cao đến thấp</option>
-                        <option value="sort4">Thứ tự theo lượng review</option>
-                        <option value="sort5">Sản phẩm giảm giá</option>
                         <option value="sort6">Mặc định</option>
                     </select>
                 </form>
@@ -382,16 +380,18 @@
         wishlish.forEach(function (item) {
             var id = item.nextSibling.id
             item.onclick = function () {
+                console.log(id)
                 var totalWish = document.getElementById('add_to-wishlist')
                 axios({
                     method: 'post',
-                    url: 'add_to_wishlish',
+                    url: '/add_to_wishlish',
                     data: {
                         product_id: id
                     }
                 })
                     .then(function (res) {
-                        totalWish.innerHTML = res.data
+                        console.log(res.data)
+                        totalWish.innerText = res.data
                     })
             }
         })

@@ -1,88 +1,88 @@
-var sum = 0, total, discount, discountRate=0;
+var sum = 0, total, discount, discountRate = 0;
 var $navMenuCont;
-$(document).ready(function(){
-     
+$(document).ready(function () {
+
     // $('.box').css({'transform':'translateX(0)','opacity':1});
     // $('.box-title').css({'transform':'translateX(0)','opacity':1});
-    $(window).scroll(function(){
+    $(window).scroll(function () {
         checkY();
     });
-    
+
     // Do this on load just in case the user starts half way down the page
     checkY();
-    
+
     $(".brand-owl").owlCarousel({
-        loop:true,
-        margin:20,
+        loop: true,
+        margin: 20,
         dots: false,
-        autoplay:true,
-        autoplayTimeout:3000,
+        autoplay: true,
+        autoplayTimeout: 3000,
         autoplaySpeed: 1500,
         // autoplayHoverPause:true,
-        responsiveClass:true,
-        responsive:{
-            0:{
-                items:1
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1
             },
-            350:{
-                items:2
+            350: {
+                items: 2
             },
-            550:{
-                items:3
+            550: {
+                items: 3
             },
-            768:{
-                items:4,
-                margin:30
+            768: {
+                items: 4,
+                margin: 30
             },
-            992:{
-                items:5,
-                margin:40
+            992: {
+                items: 5,
+                margin: 40
             },
-            1200:{
-                items:6,
-                margin:50
+            1200: {
+                items: 6,
+                margin: 50
             }
         }
     });
-    
+
     $('.box').each(function () {
         var countTo = Number($(this).find('.count').text());
-        $(this).mouseenter( function() {
-            $(this).find('.count').prop('counter',0).animate({
+        $(this).mouseenter(function () {
+            $(this).find('.count').prop('counter', 0).animate({
                 counter: countTo
             }, {
-                duration: 800,
-                easing: 'swing',
-                step: function (now) {
-                    $(this).text(Math.ceil(now));
-                }
-            });
-        }); 
+                    duration: 800,
+                    easing: 'swing',
+                    step: function (now) {
+                        $(this).text(Math.ceil(now));
+                    }
+                });
+        });
     });
 
     // Solution 1
     projectResponsive();
 
-    $(window).resize(function(){
+    $(window).resize(function () {
         projectResponsive();
     });
 
-    $('[data-toggle="slide-collapse"]').on('click', function() {
+    $('[data-toggle="slide-collapse"]').on('click', function () {
         $navMenuCont = $($(this).data('target'));
-        $navMenuCont.animate({'width':'toggle'}, 350);
-        
+        $navMenuCont.animate({ 'width': 'toggle' }, 350);
+
 
         // $navMenuCont.find('.nav').click(function(event){
-            // return false;
-            // event.stopPropagation();
+        // return false;
+        // event.stopPropagation();
         // });
         return false;
         // event.stopPropagation();
     });
 
-    $(window).click(function() {
+    $(window).click(function () {
         if ($('.side-nav').css("display") == "block" && window.innerWidth < 768) {
-            $('.side-nav').animate({'width':'toggle'}, 350);
+            $('.side-nav').animate({ 'width': 'toggle' }, 350);
             event.stopPropagation();
         } else {
             event.stopPropagation();
@@ -90,7 +90,7 @@ $(document).ready(function(){
     });
 
     $('[data-toggle="filter-display"]').each(function () {
-        $(this).on('click', function() {
+        $(this).on('click', function () {
             displayTarget = $(this).data('target');
             $('.product-group, .sub-group, .tags button').removeClass('active');
             $(this).addClass('active');
@@ -100,43 +100,43 @@ $(document).ready(function(){
             // $('.col-item').not(displayTarget).css('display','none');
         });
     });
-    $('[data-toggle="display-all"]').on('click', function() {
+    $('[data-toggle="display-all"]').on('click', function () {
         $('.product-group, .sub-group, .tags button').removeClass('active');
         $('.col-item').fadeIn(600);
     });
 
     $('.qty-decrease').each(function () {
-        $(this).on('click', function() {
+        $(this).on('click', function () {
             var updateQty = Number($(this).next('input').attr('value'));
             if (updateQty > 1) {
                 updateQty--;
             }
-            $(this).next('input').attr('value',updateQty);
+            $(this).next('input').attr('value', updateQty);
             $(this).next('input').val(updateQty);
-            updateSubtotal(this,updateQty);
+            updateSubtotal(this, updateQty);
             updateTotal();
         });
     });
     $('.qty-increase').each(function () {
-        $(this).on('click', function() {
+        $(this).on('click', function () {
             var updateQty = Number($(this).prev('input').attr('value'));
             updateQty++;
-            $(this).prev('input').attr('value',updateQty);
+            $(this).prev('input').attr('value', updateQty);
             $(this).prev('input').val(updateQty);
-            updateSubtotal(this,updateQty);
+            updateSubtotal(this, updateQty);
             updateTotal();
         });
     });
     $('.product-quantity input').each(function () {
-        $(this).change(function(){
+        $(this).change(function () {
             var currentQty = $(this).val();
-            $(this).attr('value',currentQty);
-            updateSubtotal(this,currentQty);
+            $(this).attr('value', currentQty);
+            updateSubtotal(this, currentQty);
             updateTotal();
         });
     });
     $('.product-remove button').each(function () {
-        $(this).on('click', function() {
+        $(this).on('click', function () {
             $(this).parents('.cart-item').remove();
             updateTotal();
         });
@@ -146,17 +146,17 @@ $(document).ready(function(){
     // add wishlish
     $('.add_to_wishlist').each(function () {
         $(this).on('click', function () {
-            $(this).children('i.fa.fa-heart-o').css('color','red');
+            $(this).children('i.fa.fa-heart-o').css('color', 'red');
         });
-});
+    });
 
-    $('.apply-coupon').click(function(){
+    $('.apply-coupon').click(function () {
         discountRate = $(this).prev('input').val();
         $('.discount-rate').text(discountRate + '%');
         $('.cart-discount td').text(discount.toLocaleString('vi'));
         updateTotal();
     });
-    $('.open-option').change(function() {
+    $('.open-option').change(function () {
         if (this.checked) {
             $('.optional').slideDown();
         } else {
@@ -177,62 +177,57 @@ $(document).ready(function(){
         $(this).find('.tab-pane#' + tabId).addClass('active in');
     });
 
-    $('#login-btn').click(function(){
+    $('#login-btn').click(function () {
         $('.before-log').hide();
-        $('.logged').css('display','flex');
+        $('.logged').css('display', 'flex');
     });
-    $('#logout-btn').click(function(){
+    $('#logout-btn').click(function () {
         $('.logged').hide();
         $('.before-log').show();
         event.preventDefault();
     });
-    $("#to-about").click(function() {
+    $("#to-about").click(function () {
         $('html,body').animate({
-            scrollTop: $("#about-min").offset().top},
+            scrollTop: $("#about-min").offset().top
+        },
             'slow');
         return false;
     });
 
     $('.back-top').on('click', function () {
-		$('html,body').animate({
-			scrollTop: 0
-		}, 1000);
-		return false;
-	});
-    // star tú viêt
-     $(".star").click(function() {
-       $(this).css("color","yellow");
-       $(this).prevAll().css("color","green");
-        $(this).nextAll().css("color","#8e8877");
-      $("#number_rating").css("color","#8e8877");
-       $("#number_rating").text($(this).attr("data-rating"));
-
+        $('html,body').animate({
+            scrollTop: 0
+        }, 1000);
+        return false;
     });
+    // star tú viêt
 
-    $(".star").hover(function() {
-            $(this).css("color","yellow");
-            $(this).prevAll().css("color","yellow");
-            $(this).nextAll().css("color","#8e8877");
 
-        }, function() {
-            $(".star[data-rating=" + $("#number_rating").html() + "]").click();
-        }
-    );// end star tú viết
-    
+    // $(".star").hover(function() {
+    //         $(this).css("color","yellow");
+    //         $(this).prevAll().css("color","yellow");
+    //         $(this).nextAll().css("color","#8e8877");
+
+    //     }, function() {
+    //         $(".star[data-rating=" + $("#number_rating").html() + "]").click();
+    //     }
+    // );
+    // end star tú viết
+
     // reload page
-    $(window).on('beforeunload', function() {
+    $(window).on('beforeunload', function () {
         $(window).scrollTop(0);
     });
     // end reload page
 });
 
-$('td.product-price').each(function () {   
+$('td.product-price').each(function () {
     var item = $(this).text();
     sum += Number($(this).text());
-    discount = sum*discountRate/100;
+    discount = sum * discountRate / 100;
     total = sum - discount;
     var qty = $(this).next('td').find('input').attr('value');
-    var subTotal = (Number(item)*Number(qty)).toLocaleString('vi');
+    var subTotal = (Number(item) * Number(qty)).toLocaleString('vi');
     var num = Number(item).toLocaleString('vi');
     $(this).text(num);
     $(this).siblings('.product-subtotal').text(subTotal);
@@ -248,33 +243,33 @@ $('.cart-subtotal td').text(count.toLocaleString('vi'))
 $('.amount').text(count.toLocaleString('vi'));
 // console.log(count.toLocaleString('vi'))
 
-function updateSubtotal (currentItem,currentQty) {
+function updateSubtotal(currentItem, currentQty) {
     var item = $(currentItem).parents('.product-quantity').siblings('.product-price').text().replace(/\./g, "");
-    var subTotal = (Number(item)*currentQty).toLocaleString('vi');
+    var subTotal = (Number(item) * currentQty).toLocaleString('vi');
     $(currentItem).parents('.product-quantity').siblings('.product-subtotal').text(subTotal);
 }
-function updateTotal () {
+function updateTotal() {
     sum = 0;
     $('td.product-subtotal').each(function () {
         sum += Number($(this).text().replace(/\./g, ""));
     });
-    discount = sum*discountRate/100;
+    discount = sum * discountRate / 100;
     total = sum - discount;
     $('.cart-subtotal td').text(sum.toLocaleString('vi'));
-    $('.cart-discount td').text(discount.toLocaleString('vi'));    
+    $('.cart-discount td').text(discount.toLocaleString('vi'));
     $('.amount').text(total.toLocaleString('vi'));
 }
 
 function projectResponsive() {
-    if (window.innerWidth >= 768 && window.innerWidth <=991) {
+    if (window.innerWidth >= 768 && window.innerWidth <= 991) {
         $('.project-container:nth-child(odd)').each(function () {
             $(this).hover(
                 function () {
-                    $(this).css('width','66.67%');
-                    $(this).prev().css('width','33.33%');
+                    $(this).css('width', '66.67%');
+                    $(this).prev().css('width', '33.33%');
                 }, function () {
-                    $(this).css('width','50%');
-                    $(this).prev().css('width','50%');
+                    $(this).css('width', '50%');
+                    $(this).prev().css('width', '50%');
                 }
             );
         });
@@ -282,11 +277,11 @@ function projectResponsive() {
         $('.project-container:nth-child(even)').each(function () {
             $(this).hover(
                 function () {
-                    $(this).css('width','66.67%');
-                    $(this).next().css('width','33.33%');
+                    $(this).css('width', '66.67%');
+                    $(this).next().css('width', '33.33%');
                 }, function () {
-                    $(this).css('width','50%');
-                    $(this).next().css('width','50%');
+                    $(this).css('width', '50%');
+                    $(this).next().css('width', '50%');
                 }
             );
         });
@@ -296,13 +291,13 @@ function projectResponsive() {
     }
 }
 
-function checkY(){
-    if( $(window).scrollTop() > 0 ){
-        $('.box').css({'transform':'translateX(0)','opacity':1});
-        $('.box-title').css({'transform':'translateX(0)','opacity':1});
-        $('.slogan').find('h1').css({'transform':'translateY(0)','opacity':1});
-        $('.slogan').find('a').css({'transform':'translateY(0)','opacity':1});
-        $('.slogan').find('h3').animate({width:'200px',opacity:1},1500);
+function checkY() {
+    if ($(window).scrollTop() > 0) {
+        $('.box').css({ 'transform': 'translateX(0)', 'opacity': 1 });
+        $('.box-title').css({ 'transform': 'translateX(0)', 'opacity': 1 });
+        $('.slogan').find('h1').css({ 'transform': 'translateY(0)', 'opacity': 1 });
+        $('.slogan').find('a').css({ 'transform': 'translateY(0)', 'opacity': 1 });
+        $('.slogan').find('h3').animate({ width: '200px', opacity: 1 }, 1500);
     }
     if ($(window).scrollTop() > 500) {
         $('.back-top').fadeIn('slow');

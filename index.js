@@ -96,25 +96,32 @@ app.use(function (req, res, next) {
     }
     if (req.session.user) {
         res.locals.login_status = true
-        res.locals.wishlish = 0
+
+        if (req.session.user.sumWishlish) {
+            res.locals.wishlish = req.session.user.sumWishlish
+        } else {
+            res.locals.wishlish = 0
+        }
+        
         customer_id = parseInt(req.session.user.id)
     }
-
-    const listWishlish = 'SELECT attribute_product_id FROM wishlish WHERE customer_id = ${customer_id};'
-    db.any(listWishlish, {
-        customer_id: customer_id
-    })
-        .then(data => {
-            data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
-        })
+    /**
+     * Lấy ra danh sách các sản phẩm yêu thích của user.
+     * vì sản phẩm có thể xuất hiện ở nhiều trang.
+     */
+    if (customer_id) {
+        const listWishlish = `SELECT attribute_product_id FROM wishlish WHERE customer_id = ${customer_id};`
+        db.any(listWishlish)
+            .then(data => {
+                data.length === 0 ? res.locals.listWishlish = 0 : res.locals.listWishlish = data
+            })
+    }
     /**
      * Viết ở đây mục đích là để khi user vào những trang mà tài khoản bắt buộc phải xác thực, thì
      * ta chỉ phải viêt 1 lần trong midleware mà có thể dùng cho nhiều route
      */
-    const veryfiToken = 'SELECT verify_token_register FROM customer WHERE id = ${customer_id}'
-    db.one(veryfiToken, {
-        customer_id: customer_id
-    })
+    const veryfiToken = `SELECT verify_token_register FROM customer WHERE id = ${customer_id};`
+    db.one(veryfiToken)
         .then(data => {
             res.locals.messageVerify = (data.verify_token_register !== null) ? true : 'Một email đã được gửi đến hòm thư của bạn. Bạn vui lòng xác thực để hoàn thành quá trình đăng kí!'
         })

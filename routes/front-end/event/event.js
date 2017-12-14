@@ -3,7 +3,9 @@
  */
 module.exports = function (db, router, frontendPath) {
     router.get('/event', (req, res) => {
+        let info = req.user || req.session.user
         res.render(frontendPath + 'Event/event', {
+            info: info,
             title: 'Event'
         })
     })

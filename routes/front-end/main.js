@@ -15,6 +15,7 @@ module.exports = function (db, router, frontendPath) {
     const blogRouter = require('./blog/blog')
     const contactRouter = require('./contact/contact')
     class FrontEnd {
+
         constructor(_db, _router, _frontendPath) {
             this.db = _db
             this.router = _router

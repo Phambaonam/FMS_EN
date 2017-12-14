@@ -46,7 +46,8 @@
                 </ul>
             </nav>
             <div class="tab-content">
-                <h3>Danh sách yêu thích (<span id="count-wishlish">{{ wishlish }}</span>)</h3>
+                <h3>Danh sách yêu thích (
+                    <span id="count-wishlish">{{ wishlish }}</span>)</h3>
                 <div class="cart-container wishlist-container">
                     <table class="cart">
                         <thead>
@@ -66,29 +67,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                           {% for product in products %}
+                            {% for product in products %}
                             <tr class="cart-item">
                                 <td class="product-thumbnail">
                                     <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">
-                                        <img src="/public/images/products/{{ product.images["0"]}}">
+                                        <img src="/public/images/products/{{ product.images["0"] }}">
                                     </a>
                                 </td>
                                 <td class="product-name">
-                                    <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias}}-{{product.product_id}}">{{ product.product_name }}</a>
+                                    <a href="/san-pham/chi-tiet-san-pham/{{ product.product_alias }}-{{ product.product_id }}">{{ product.product_name }}</a>
                                 </td>
                                 <td class="product-price">{{ product.product_price }}</td>
                                 <td class="product-status">
                                     {% if product.rest_of_product > 0 %}
                                     <span class="in-stock">Còn hàng</span>
-                                    {% else%}
+                                    {% else %}
                                     <span class="out-stock">Hết hàng</span>
                                     {% endif %}
                                 </td>
                                 <td class="product-action {{ product.product_id }}">
-                                    <button class="link-to">
+                                    {% if product.rest_of_product <= product.quantity %} 
+                                        <button class="link-to" data-toggle="modal" data-target="#out-off">
                                         <span class="hidden-xs hidden-sm">Thêm vào giỏ hàng </span>
                                         <i class="fa fa-shopping-cart"></i>
-                                    </button>
+                                        </button>
+                                        {% else %} 
+                                        <button class="link-to add_to-cart">
+                                            <span class="hidden-xs hidden-sm">Thêm vào giỏ hàng </span>
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </button>
+                                    {% endif %}
                                 </td>
                                 <td class="wishlish-remove {{ product.product_id }}">
                                     <button data-toggle="modal" data-target="#removeWishlish">
@@ -96,9 +104,25 @@
                                     </button>
                                 </td>
                             </tr>
-                           {% endfor %}
+                            {% endfor %}
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- cảnh báo số lượng sản phẩm không đủ để thêm vào giỏ hàng -->
+    <div class="modal fade" id="out-off" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true" style="margin-top: -10px;">×</button>
+                    <div class="bootbox-body">
+                        <p style="font-size: 20px;">Số lượng sản phẩm trong kho không đủ!</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="confirm" type="button" class="btn btn btn-primary" id="remove-wishlish" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
@@ -128,49 +152,76 @@
 
     <!-- add to cart -->
     <script type="text/javascript">
-        var add_to_cart = document.querySelectorAll('.product-action')
-        add_to_cart.forEach(function(item) {
-            item.onclick = function () {
-                var product_id = item.className.charAt(item.className.length - 1)
-                var total = document.getElementById('cart-count')
-                axios({
-                    method: 'post',
-                    url: '/add_to_cart',
-                    data: {
-                        product_id: product_id,
-                        quantity: 1
-                    }
-                })
-                    .then(function (res) {
-                        total.innerText = res.data
+            $('.product-action').each(function () {
+                $(this).click(function () {
+                    let product_id = $(this).attr('class').charAt($(this).attr('class').length - 1)
+                    let total = $('#cart-count')
+                    var that = $(this)
+                    axios({
+                        method: 'post',
+                        url: '/add_to_cart',
+                        data: {
+                            product_id: product_id,
+                            quantity: 1
+                        }
                     })
-            }
-        })
+                        .then(function (res) {
+                            console.log(res.data)
+                            if (res.data.quantity < res.data.rest) {
+                                total.text(res.data.total)
+                                console.log(11)
+                            } else if (res.data.quantity === res.data.rest) {
+                                total.text(res.data.total)
+                                $(that)
+                                    .attr("data-toggle", 'modal').attr("data-target", '#out-off')
+                                    .removeClass('qty-increase')
+                                    .addClass('out-off')
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(22)
+                            } else {
+                                $(that)
+                                    .attr("data-toggle", 'modal').attr("data-target", '#out-off')
+                                    .removeClass('qty-increase')
+                                    .addClass('out-off')
+                                $(that).prev().attr('value', res.data.quantity)
+                                $(that).prev().val(res.data.quantity)
+                                console.log(33)
+                            }
+                        })
+                })
+            })
+        
     </script>
 
     <!-- remove wishlish -->
     <script type="text/javascript">
         var wishlish_product = document.querySelectorAll('.wishlish-remove')
-        var remove_wishlish = document.getElementById('remove-wishlish')
-        wishlish_product.forEach(function (item) {
-            var product_id = item.className.charAt(item.className.length - 1)
-            var totalWish = document.getElementById('add_to-wishlist')
-            var countWishlish = document.getElementById('count-wishlish')
-            item.onclick = function () {
-                remove_wishlish.onclick = function () {
-                    $(item).parents('.cart-item').remove()
-                    axios({
-                        method: 'post',
-                        url: '/delete/wishlish',
-                        data: {
-                            product_id: product_id
-                        }
-                    })
-                        .then(function (res) {
-                            totalWish.innerText = res.data
-                            countWishlish.innerText = res.data
-                        })
-                }
+        var remove_wishlish = $('#remove-wishlish')
+            remove_wishlish.onclick = function () {
+                console.log(123)
             }
-        })
+        // wishlish_product.forEach(function (item) {
+        //     var product_id = item.className.charAt(item.className.length - 1)
+        //     var totalWish = document.getElementById('add_to-wishlist')
+        //     var countWishlish = document.getElementById('count-wishlish')
+        //     // item.onclick = function () {
+        //         remove_wishlish.onclick = function () {
+        //             alert(123)
+        //             // $(item).parents('.cart-item').remove()
+        //             // axios({
+        //             //     method: 'post',
+        //             //     url: '/delete/wishlish',
+        //             //     data: {
+        //             //         product_id: product_id
+        //             //     }
+        //             // })
+        //             //     .then(function (res) {
+        //             //         console.log(res.data)
+        //             //         totalWish.innerText = res.data
+        //             //         countWishlish.innerText = res.data
+        //             //     })
+        //         }
+        //     // }
+        // })
     </script>

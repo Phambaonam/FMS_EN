@@ -231,8 +231,9 @@
         })
         // tăng số lượng sản phẩm
         var qtyIncrease1 = $('.qty-increase')
-            qtyIncrease1.each(function () {
+        qtyIncrease1.each(function () {
                 $(this).click(function () {
+                    console.log($(this))
                     var that = $(this)
                     var product_idIn = $(this).prev().attr('class')
                     axios.get('/increase/qty/' + product_idIn)

@@ -247,36 +247,6 @@
     }
     convert()
 </script>
-    <!-- display or hide notification when customer add to cart -->
-    <script type="text/javascript">
-        if('{{ info.username }}') {
-            $('.add_to-cart').each(function () {
-                $(this).click(function () {
-                    $('.add-to-cart-success1').css('display', 'block')
-                    setTimeout(function () {
-                        $('.add-to-cart-success1').css('display', 'none')
-                    }, 5000);
-                })
-            })
-
-            $('.close1').click(function () {
-                $('.add-to-cart-success1').css('display', 'none')
-            })
-        } else {
-            $('.add_to-cart').each(function () {
-                $(this).click(function () {
-                    $('.add-to-cart-success').css('display', 'block')
-                    setTimeout(function() {
-                        $('.add-to-cart-success').css('display', 'none')
-                    }, 5000);
-                })
-            })
-
-            $('.close').click(function () {
-                $('.add-to-cart-success').css('display', 'none')
-            })
-        }
-    </script>
 
     <!--  Sort product  -->
     <script type="text/javascript">
@@ -366,7 +336,8 @@
                     }
                 })
                     .then(function (res) {
-                        total.innerText = res.data
+                        // total.innerText = res.data
+                        console.log(res.data)
                     })
 
             }

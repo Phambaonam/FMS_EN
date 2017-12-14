@@ -1,5 +1,5 @@
 module.exports = function (passport, Strategy, db) {
-    const bcrypt = require('bcrypt')
+    const bcrypt = require('bcryptjs')
     passport.use('login', new Strategy({
         usernameField: 'email',
         passwordField: 'password',

@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS cart (
     session_user_id VARCHAR(255),
     attribute_product_id INT REFERENCES attribute_product(id) ON DELETE CASCADE NOT NULL,
     quantity INT,
+    user_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL,
     event_id INT,
     total FLOAT
 );
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS purchase(
     customer_id INT REFERENCES customer(id) ON DELETE CASCADE NOT NULL,
     transport_method VARCHAR(255),
     fee_transport_id INT REFERENCES fee_transport(id) ON DELETE CASCADE NOT NULL,
-    payment_method_id INT REFERENCES payment_method(id) ON DELETE CASCADE NOT NULL
+    payment_method_id INT REFERENCES payment_method(id) ON DELETE CASCADE NOT NULL,
     code_purchase CHAR(100)
 );
 CREATE TABLE IF NOT EXISTS customer_review_product(

@@ -4,6 +4,36 @@
 <script type="text/javascript" src="/public/plugins/bootstrap/js/bootstrap.min.js"></script>
 <script src="/public/js/axios.min.js"></script>
 <script type="text/javascript" src="/public/js/script.js" ></script>
+    <!-- display or hide notification when customer add to cart -->
+    <script type="text/javascript">
+        if ('{{ info.username }}') {
+            $('.add_to-cart').each(function () {
+                $(this).click(function () {
+                    $('.add-to-cart-success1').css('display', 'block')
+                    setTimeout(function () {
+                        $('.add-to-cart-success1').css('display', 'none')
+                    }, 5000);
+                })
+            })
+
+            $('.close1').click(function () {
+                $('.add-to-cart-success1').css('display', 'none')
+            })
+        } else {
+            $('.add_to-cart').each(function () {
+                $(this).click(function () {
+                    $('.add-to-cart-success').css('display', 'block')
+                    setTimeout(function () {
+                        $('.add-to-cart-success').css('display', 'none')
+                    }, 5000);
+                })
+            })
+
+            $('.close').click(function () {
+                $('.add-to-cart-success').css('display', 'none')
+            })
+        }
+    </script>
 <script>
     function checkEmail() {
         var email = document.getElementById('email_reg').value

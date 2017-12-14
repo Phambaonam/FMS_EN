@@ -561,44 +561,63 @@ module.exports = function (db, router, frontendPath) {
             const productExistsIncart = yield t.one(status)
 
             switch (productExistsIncart.count) {
-                case '0':
+                case '0': // sản phẩm này chưa có trong giỏ hàng.
                     {
                         const cart = `INSERT INTO cart(session_user_id,attribute_product_id,quantity,user_id,event_id,total) VALUES('${sessID}', ${product_id},${quantity},${user_id},null,null);`
                         yield t.any(cart)
+                        const sum1 = `SELECT SUM(quantity) FROM cart  WHERE session_user_id = '${sessID}';`
+                        const sum2 = `SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};`
+                        const sum = (!req.user) ? sum1 : sum2
+                        const getSum = yield t.one(sum)
+                        // để trong array vì lúc thêm 1 sản phẩm nữa sẽ  có thể xảy ra tình trạng hết hàng.
+                        return [+getSum.sum]
                     }
                     break
 
-                case '1':
+                case '1': // sản phẩm đã tồn tại trong giỏ hàng
                     {
+                        // lấy ra số lượng của sản phẩm ở trong giỏ hàng
                         const qty1 = `SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND cart.session_user_id = '${sessID}';`
                         const qty2 = `SELECT quantity FROM cart WHERE cart.attribute_product_id = ${product_id} AND user_id =${user_id};`
                         const qty = (!req.user) ? qty1 : qty2
                         let getQuality = yield t.one(qty)
 
+                        // Lấy ra số lượng còn lại của từng sản phẩm
+                        const rest_of_product = `SELECT rest_of_product FROM attribute_product WHERE id = ${product_id};`
+                        const getRestProduct = yield t.one(rest_of_product)
+
+                        // update số lượng của từng sản phẩm ở bên trong giỏ 
                         let quantityUpdate = parseInt(getQuality.quantity) + quantity
                         const updateQuantity1 = `UPDATE cart SET quantity = ${quantityUpdate} WHERE attribute_product_id = ${product_id} AND session_user_id = '${sessID}';`
                         const updateQuantity2 = `UPDATE cart SET quantity = ${quantityUpdate} WHERE attribute_product_id = ${product_id} AND user_id =${user_id};`
                         const updateQuantity = (!req.user) ? updateQuantity1 : updateQuantity2
-                        yield t.any(updateQuantity)
+
+                        // Lấy ra tổng số sản phẩm có trong giỏ hàng.
+                        const sum1 = `SELECT SUM(quantity) FROM cart  WHERE session_user_id = '${sessID}';`
+                        const sum2 = `SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};`
+                        const sum = (!req.user) ? sum1 : sum2
+                        const getSum = yield t.one(sum)
+
+                        // Khi update số lượng của từng sản phẩm thì số lượng ở trong giỏ hàng không được vượt quá số lượng còn lại ở trong kho.
+                        if (+getQuality.quantity < +getRestProduct.rest_of_product) {
+                            yield t.any(updateQuantity)
+                            // + 1 là để không phải viết thêm câu lệnh truy vấn lấy ra quantity sau khi tăng số lượng sản phẩm 1 lần nữa 
+                            return [+getSum.sum + 1, +getQuality.quantity + 1, +getRestProduct.rest_of_product]
+                        } else {
+                            console.log('het hang')
+                            return [+getSum.sum, +getQuality.quantity, 'hết hàng']
+                        }
                     }
                     break
             }
 
-            const sum1 = `SELECT SUM(quantity) FROM cart  WHERE session_user_id = '${sessID}';`
-            const sum2 = `SELECT SUM(quantity) FROM cart  WHERE user_id = ${user_id};`
-            const sum = (!req.user) ? sum1 : sum2
-            const getSum = yield t.one(sum)
-
-            // update total cart in session
-            // req.session.passport ? (req.session.passport.user.sumProduct = parseInt(getSum.sum)) : (req.session.sumProduct = parseInt(getSum.sum))
-            return getSum.sum
         })
             .then(data => {
                 /**
                  * Khi sử dụng axios : để gán 1 thuộc tính nào vào trong cookie ta phải trả lại cho client 1 dữ liệu nào đó.
                  * Khi đó ta mới gán thuộc tính vào session thành công
                  */
-                res.send(data)
+                res.json({ total: data[0], quantity: data[1], rest: data[2] })
             })
             .catch(err => {
                 console.log(err.message)
@@ -618,13 +637,13 @@ module.exports = function (db, router, frontendPath) {
         db.task('gio hang', function* (t) {
             // Lấy thông tin của từng sản phẩm và số lượng của chúng có trong giỏ hàng
             let cartDetail = []
-            const cart1 = `SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = '${sessID}' ORDER BY id ASC;`
-            const cart2 = `SELECT attribute_product_id, quantity FROM cart WHERE  user_id = ${user_id} ORDER BY id ASC;`
-            const cart = (!req.user) ? cart1 : cart2
-            const getCarts = yield t.any(cart)
+            let cart1 = `SELECT attribute_product_id, quantity FROM cart WHERE session_user_id = '${sessID}' ORDER BY id ASC;`
+            let cart2 = `SELECT attribute_product_id, quantity FROM cart WHERE  user_id = ${user_id} ORDER BY id ASC;`
+            let cart = (!req.user) ? cart1 : cart2
+            let getCarts = yield t.any(cart)
             for (let item in getCarts) {
                 let attribute_product_id = +getCarts[item].attribute_product_id
-                const product = `
+                let product = `
                 SELECT pr.product_name,pr.product_alias, ap.rest_of_product, pp.product_price, ap.id AS product_id, ap.images, ap.total FROM product AS pr 
                 JOIN attribute_product AS ap ON ap.product_id = pr.id 
                 JOIN product_price AS pp ON pp.attribute_product_id = ap.id 
@@ -634,7 +653,7 @@ module.exports = function (db, router, frontendPath) {
                 cartDetail.push(getProduct)
                 // khi số sản phẩm ở trong kho hết thì số lượng sản phẩm ở trong giỏ hàng cũng = 0
                 if (+getProduct.rest_of_product === 0) {
-                    const updateQuantity = `UPDATE cart SET quantity = 0 WHERE attribute_product_id = ${attribute_product_id} AND user_id = ${user_id};`
+                    let updateQuantity = `UPDATE cart SET quantity = 0 WHERE attribute_product_id = ${attribute_product_id} AND user_id = ${user_id};`
                     yield t.any(updateQuantity)
                 }
             }
@@ -841,7 +860,7 @@ module.exports = function (db, router, frontendPath) {
             if (!getDataProductDetail.numberReviews) getDataProductDetail.numberReviews = +getNumberReviews.count
             let rate = +getNumberReviews.sum / +getNumberReviews.count || 0
             if (!getDataProductDetail.rate) getDataProductDetail.rate = Math.round(rate)
-            
+
             let count = `SELECT COUNT(ap.id) AS sum_products FROM product AS pr JOIN attribute_product AS ap ON ap.product_id = pr.id WHERE pr.product_alias = '${product_alias}';`
             let count_product = yield t.one(count)
 
@@ -1028,15 +1047,20 @@ module.exports = function (db, router, frontendPath) {
 
             for (let item in getWishlishes) {
                 let attribute_product_id = getWishlishes[item].attribute_product_id
-                const product = `
-                SELECT pr.product_name,pr.product_alias, pp.product_price, ap.id AS product_id, ap.images , ap.option_status, ap.total, ap.rest_of_product FROM product AS pr 
+                let product = `
+                SELECT pr.product_name,pr.product_alias, ap.rest_of_product, pp.product_price, ap.id AS product_id, ap.images, ap.total FROM product AS pr 
                 JOIN attribute_product AS ap ON ap.product_id = pr.id 
                 JOIN product_price AS pp ON pp.attribute_product_id = ap.id 
                 WHERE ap.id = ${attribute_product_id};`
 
-                const getProduct = yield t.one(product)
+                let getProduct = yield t.one(product)
                 getProduct.quantity = getWishlishes[item].quantity
                 getWishlishProducts.push(getProduct)
+                // khi số sản phẩm ở trong kho hết thì số lượng sản phẩm ở trong giỏ hàng cũng = 0
+                if (+getProduct.rest_of_product === 0) {
+                    let updateQuantity = `UPDATE cart SET quantity = 0 WHERE attribute_product_id = ${attribute_product_id} AND user_id = ${user_id};`
+                    yield t.any(updateQuantity)
+                }
             }
             return getWishlishProducts
         })

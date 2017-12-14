@@ -1,5 +1,5 @@
 module.exports = function (db, router, frontendPath) {
-    const bcrypt = require('bcrypt')
+    const bcrypt = require('bcryptjs')
     const saltRounds = 10
     const crypto = require('crypto')
     const nodeMail = require('../../reuse/sendMail')
